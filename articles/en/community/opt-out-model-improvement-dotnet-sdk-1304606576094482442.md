@@ -4,36 +4,7 @@ To opt out of the Deepgram Model Improvement Partnership (MIP) for sensitive con
 
 ## Opting Out Using .NET SDK
 
-The Deepgram .NET SDK does not natively include the `mip_opt_out` in the `PreRecordedSchema`. However, it allows for passing custom parameters to the API call, which you can use to set this option. Here's a quick example of how to do this:
-
-### Code Example:
-```csharp
-using Deepgram;
-using Deepgram.Models;
-
-class Program
-{
-    static async Task Main(string[] args)
-    {
-        var deepgramClient = new DeepgramClient("YOUR_API_KEY");
-        var options = new PreRecordedTranscriptionOptions
-        {
-            // Add custom parameter to opt-out of MIP
-            CustomParameters = new Dictionary<string, string>
-            {
-                { "mip_opt_out", "true" }
-            }
-        };
-
-        var transcription = await deepgramClient.Transcription.PreRecordedAsync(
-            new Uri("YOUR_AUDIO_FILE_URL"),
-            options
-        );
-
-        Console.WriteLine(transcription.Transcript);
-    }
-}
-```
+The Deepgram .NET SDK does not natively include the `mip_opt_out` in the `PreRecordedSchema`. However, it allows for passing custom parameters to the API call, which you can use to set this option.
 
 ### Important Considerations:
 
