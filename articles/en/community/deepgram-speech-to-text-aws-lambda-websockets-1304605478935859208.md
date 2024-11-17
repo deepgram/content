@@ -15,43 +15,6 @@ Deepgram provides robust APIs for both pre-recorded and live transcription, idea
 - Basic understanding of AWS Lambda and WebSockets.
 - Familiarity with any programming language supported by Deepgram SDKs: Node.js, Python, C#, Go, or Rust.
 
-### Setup Deepgram SDK
-
-Start by setting up the Deepgram SDK in your preferred programming language. Examples for basic setups are:
-
-**JavaScript (Node.js)**:
-
-```javascript
-const deepgram = new Deepgram('YOUR_DEEPGRAM_API_KEY');
-const response = await deepgram.transcription.preRecorded({
-  buffer: audioBuffer,
-  mimetype: 'audio/wav'
-});
-```
-
-**Python**:
-
-```python
-from deepgram import Deepgram
-
-dg_client = Deepgram('YOUR_DEEPGRAM_API_KEY')
-response = dg_client.transcription.prerecorded(audio_url='YOUR_AUDIO_FILE_URL')
-```
-
-**C# (.NET)**:
-
-```csharp
-DeepgramClient deepgram = new DeepgramClient("YOUR_DEEPGRAM_API_KEY");
-Transcript response = await deepgram.Transcription.PrerecordedAsync("YOUR_AUDIO_FILE_URL");
-```
-
-**Go**:
-
-```go
-deepgram := deepgram.NewClient("YOUR_DEEPGRAM_API_KEY")
-response, _ := deepgram.Transcription().Prerecorded(deepgram.AudioURL{URL: "YOUR_AUDIO_FILE_URL"}).Do()
-```
-
 ### AWS Lambda Integration
 
 1. **Create a Lambda Function**:
@@ -79,3 +42,4 @@ Embedding Deepgram's transcription services within AWS serverless architecture s
 - Deepgram Go SDK: [GitHub](https://github.com/deepgram/deepgram-go-sdk)
 - Deepgram .NET SDK: [GitHub](https://github.com/deepgram/deepgram-dotnet-sdk)
 - Deepgram Documentation: [Developers Portal](https://developers.deepgram.com/)
+- [AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
