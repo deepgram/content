@@ -14,44 +14,6 @@ To obtain the cost, use the ManageClient's `GetUsageRequest` method in the relev
 
 To efficiently acquire the cost data without interrupting the workflow, it's recommended to set up a system that queries for cost information at intervals until it becomes available. Implementing a message queue or a scheduled task can be a practical solution.
 
-#### Example in Python
-```python
-import time
-from deepgram import Deepgram
-
-deepgram = Deepgram('YOUR_API_KEY')
-project_id = "your_project_id"
-request_id = "your_request_id"
-
-while True:
-    usage = deepgram.project_usage.get_usage(project_id, request_id)
-    if usage:
-        print("Usage cost:", usage['cost'])
-        break
-    time.sleep(10)  # Waits 10 seconds before trying again
-```
-
-#### Example in JavaScript/Node.js
-```javascript
-const { Deepgram } = require('@deepgram/sdk');
-const deepgram = new Deepgram('YOUR_API_KEY');
-const projectId = "your_project_id";
-const requestId = "your_request_id";
-
-const getUsageCost = async () => {
-  let usage;
-  do {
-    usage = await deepgram.projects.getUsage(projectId, requestId);
-    if (!usage) {
-      await new Promise(resolve => setTimeout(resolve, 10000)); // Waits 10 seconds
-    }
-  } while (!usage);
-  console.log("Usage cost:", usage['cost']);
-};
-
-gitUsageCost();
-```
-
 ### Potential Considerations
 - **Rate Limits**: Be mindful of API rate limits when polling for cost information.
 - **Retries**: Implement retry logic to handle and recover from transient API errors.
