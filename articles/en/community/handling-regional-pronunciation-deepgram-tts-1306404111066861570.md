@@ -25,4 +25,3 @@ For more details on Deepgram's TTS capabilities, see the [Text-to-Speech Prompti
 ## References
 
 - [Deepgram Text-to-Speech API](https://developers.deepgram.com/docs/tts-rest)
-- [Deepgram Community Slack Thread](#)
