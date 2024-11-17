@@ -12,7 +12,7 @@ If you are experiencing requests still processing beyond 20 minutes, there are a
 
 2. **Minimize Request Duration**: For long audio files, consider breaking them into smaller segments to avoid hitting the timeout limit and improve processing efficiency.
 
-3. **Contact Support**: If issues persist or the system behavior seems inconsistent, reaching out for support will help to resolve these backend issues.
+3. **Contact Support**: If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: https://discord.gg/deepgram
 
 4. **Keep Systems Updated**: Ensure that all SDKs and libraries used for interfacing with Deepgram's API are up-to-date. Updated SDKs may offer more robust handling of long-running requests.
 
