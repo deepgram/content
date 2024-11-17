@@ -8,36 +8,6 @@ When integrating Speech-to-Text (STT) and Text-to-Speech (TTS) capabilities usin
 
 For STT functionality, maintaining an open connection is generally recommended. Deepgram’s live transcription WebSocket API is designed to efficiently handle continuous streams of data. By keeping the connection open, interim results can be returned, providing a real-time transcription experience that balances speed and accuracy. Pooling connections and reusing them as necessary can mitigate the concerns around having too many open connections or delays in establishing new ones.
 
-In Node.js or Python, setting up a persistent WebSocket connection might look like this:
-
-**Node.js Example:**
-```javascript
-const WebSocket = require('ws');
-
-const ws = new WebSocket('wss://api.deepgram.com/v1/listen', {
-  headers: {
-    Authorization: 'Token YOUR_DEEPGRAM_API_KEY'
-  }
-});
-
-ws.on('message', function incoming(data) {
-  console.log(JSON.parse(data));
-});
-```
-
-**Python Example:**
-```python
-import websocket
-
-ws = websocket.WebSocket()
-ws.connect('wss://api.deepgram.com/v1/listen', header=["Authorization: Token YOUR_DEEPGRAM_API_KEY"])
-
-def on_message(ws, message):
-    print(message)
-
-ws.run_forever(on_message=on_message)
-```
-
 ### Transition Between TTS and STT
 
 An important aspect of the architecture is handling the transition between TTS output and restarting STT input. This can be achieved by implementing state management that detects when the TTS playback concludes. Using an audio API, TTS playback can be monitored, and upon completion, a state change can trigger the resumption of STT.
