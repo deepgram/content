@@ -33,6 +33,22 @@ When building a chatbot, you might configure your speech recognition as follows:
 
 In a typical flow:
 
+```mermaid
+graph TD;
+    start((Start)) --> workingAsExpected{Working as Expected}
+    workingAsExpected --> |speech_final=false| partialTranscript[Partial Transcript]
+    partialTranscript --> workingAsExpected
+    workingAsExpected --> |speech_final=true| speechEnd[End of Speech]
+    speechEnd --> utteranceEnd((UtteranceEnd))
+    utteranceEnd --> ignore[Ignore Event]
+    
+    noiseCases{Missed Speech Final Due to Noise} --> severalFalse{Several speech_final=false}
+    severalFalse --> utteranceEndNoTrue[(UtteranceEnd without speech_final=true)]
+    utteranceEndNoTrue --> processLastTranscript[Process Last-received Transcript as Completed Speech]
+
+    start --> noiseCases
+```
+
 - **Working as Expected:**
   - `speech_final=false` results in a partial transcript
   - `speech_final=true` indicates the end of speech
