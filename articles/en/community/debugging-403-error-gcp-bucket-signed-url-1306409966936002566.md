@@ -23,6 +23,8 @@ Signed URLs provide limited permission and allow anyone with the URL to perform 
 
 Deepgram supports various cloud storage services for retrieval of audio files using their URLs, and GCP buckets can be used effectively as long as URL permissions are managed correctly.
 
+Refer to our pre-signed URL documentation: https://developers.deepgram.com/docs/using-aws-s3-presigned-urls-with-the-deepgram-api#accessing-deepgram-from-aws-lambda
+
 ### Conclusion
 
 If all configurations seem correct and issues persist, further debugging may be needed by enabling verbose logging or utilizing tools such as curl with verbose output to gain more insight into the interactions between your application and the GCP bucket.
