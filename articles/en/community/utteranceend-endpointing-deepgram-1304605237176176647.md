@@ -71,3 +71,8 @@ Using `UtteranceEnd` in conjunction with `endpointing` allows for more reliable 
 
 #### References
 For more information on configuring these settings, refer to Deepgram’s [Documentation](https://developers.deepgram.com/docs/understanding-end-of-speech-detection#using-utteranceend-and-endpointing).
+
+- Deepgram JavaScript SDK: [GitHub](https://github.com/deepgram/deepgram-js-sdk)
+- Deepgram Python SDK: [GitHub](https://github.com/deepgram/deepgram-python-sdk)
+- Deepgram Go SDK: [GitHub](https://github.com/deepgram/deepgram-go-sdk)
+- Deepgram .NET SDK: [GitHub](https://github.com/deepgram/deepgram-dotnet-sdk)
