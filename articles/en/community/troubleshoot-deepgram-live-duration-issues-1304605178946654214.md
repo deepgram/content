@@ -29,50 +29,11 @@ Additionally, requests transitioning from **Pending** to **Unknown** to **Lost**
 
 - **Reference Examples:** Borrow and adapt setup examples from Deepgram's example solutions to verify stability across different implementations.
 
-```python
-# Python Example
-import websocket
-# WebSocket setup and audio streaming code goes here
-
-```
-
-```javascript
-// JavaScript Example
-const ws = new WebSocket('wss://api.deepgram.com/v1/listen');
-// WebSocket setup and audio streaming code goes here
-
-```
-
-```dotnet
-// .NET Example
-var client = new WebSocket('wss://api.deepgram.com/v1/listen');
-// WebSocket setup and audio streaming code goes here
-
-```
-
-```rust
-// Rust Example
-use WebSocket;
-WebSocket setup and audio streaming code goes here
-
-```
-
-```go
-// Go Example
-var conn WebSocket
-// WebSocket setup and audio streaming code goes here
-
-```
-
----
-
 Finding and fixing these issues often resolves the problem and ensures stable communication with the Deepgram API.
 
 ## Conclusion
 
 Properly configuring and testing your audio streaming setup is crucial to making the best use of Deepgram’s live transcription. Regularly consult logs, test stream different scenarios, and adhere to consistent debugging protocols. For deeper issues, revisit the foundational setup of the WebSocket and audio source to ensure clarity and correct operation.
-
----
 
 ### References
 
