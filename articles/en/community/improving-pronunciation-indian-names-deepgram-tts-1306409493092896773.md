@@ -14,45 +14,6 @@ Until these improvements are rolled out, there are several strategies you could 
 
 2. **Using Tips and Tricks from Deepgram**: Deepgram provides documentation for TTS prompting that can offer guidance on how to get better pronunciation by adjusting text inputs: [Text-to-Speech Prompting](https://developers.deepgram.com/docs/text-to-speech-prompting#pronunciation).
 
-### Example Implementations in SDKs
-
-Here are examples of how you might adjust phonetic spelling in several Deepgram SDKs:
-
-#### Python SDK
-```python
-# Example if using Python SDK for TTS
-text_to_speak = "spell phonetically"
-tts_client.synthesize_voice(text_to_speak)
-```
-
-#### Node.js SDK
-```javascript
-// Example if using Node.js SDK for TTS
-const textToSpeak = "spell phonetically";
-ttsClient.synthesizeVoice(textToSpeak);
-```
-
-#### .NET SDK
-```csharp
-// Example if using .NET SDK for TTS
-var textToSpeak = "spell phonetically";
-ttsClient.SynthesizeVoice(textToSpeak);
-```
-
-#### Rust SDK
-```rust
-// Example in Rust SDK
-let text_to_speak = "spell phonetically";
-tts_client.synthesize_voice(text_to_speak);
-```
-
-#### Go SDK
-```go
-// Example in Go SDK
-textToSpeak := "spell phonetically"
-ttsClient.SynthesizeVoice(textToSpeak)
-```
-
 ### Conclusion
 
 Addressing pronunciation issues for specific names can be challenging but can often be enhanced by using phonetic spellings and adjustments to your input text. While waiting for improved support for diverse name pronunciation in future Deepgram updates, employing these strategies can lead to more satisfying TTS output.
