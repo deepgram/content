@@ -20,44 +20,6 @@ Deepgram's live transcription services can be integrated with Twilio for real-ti
 
 3. **Connect to Deepgram API**: Use the WebSocket endpoint for real-time data streaming. Connect your Twilio audio streams to this endpoint to start receiving live transcriptions.
 
-### Example Code Snippets
-
-#### Node.js
-```javascript
-const WebSocket = require('ws');
-
-const socket = new WebSocket('wss://api.deepgram.com/v1/listen', {
-  headers: {
-    Authorization: `Token YOUR_TRIAL_API_KEY`,
-  },
-});
-
-socket.on('open', () => {
-  console.log('Connection established.');
-  // Stream Twilio audio here
-});
-
-socket.on('message', (data) => {
-  console.log('Received data:', data);
-});
-```
-
-#### .NET (C#)
-```csharp
-using WebSocketSharp;
-
-var ws = new WebSocket("wss://api.deepgram.com/v1/listen");
-ws.SetCredentials("YOUR_TRIAL_API_KEY", "", true);
-
-ws.OnMessage += (sender, e) => 
-{
-    Console.WriteLine("Received data: " + e.Data);
-};
-
-ws.Connect();
-// Stream Twilio audio here
-```
-
 ### Trial Limitations
 
 - **Quota**: Confirm the free credits or usage limitations associated with your trial account.
