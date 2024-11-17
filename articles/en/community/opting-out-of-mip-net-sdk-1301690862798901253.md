@@ -6,31 +6,6 @@ To customize your Deepgram transcription requests and manage how your data is us
 
 The `mip_opt_out` parameter is not directly visible in the `PreRecordedSchema` in Deepgram's SDKs including .NET. However, you can pass it as a custom parameter when making an API request.
 
-Here’s how you can do it in .NET:
-
-### Using Custom Parameters
-
-In the Deepgram .NET SDK, you have the ability to pass custom parameters. Here’s a sample on how to implement opting out of MIP using custom parameters:
-
-```csharp
-using Deepgram;
-using Deepgram.Models;
-
-var deepgramClient = new DeepgramClient("YOUR_DEEPGRAM_API_KEY");
-
-var options = new PreRecordedTranscriptionOptions
-{
-    // Your existing options
-};
-
-options.AddCustomParameter("mip_opt_out", "true");
-
-var transcriptionResponse = await deepgramClient.Transcription.PreRecordedAudioAsync(
-    new Uri("YOUR_AUDIO_FILE_URI"),
-    options
-);
-```
-
 ### Things to Consider
 
 - **Price Adjustment**: Opting out leads to a price adjustment. You can verify this by checking the usage log for the transcription. 
