@@ -12,61 +12,6 @@ When implementing in-browser speech-to-text using API keys, it is crucial to man
 
 4. **Auth and Monitoring**: Always ensure that your keys, especially when used in client-side applications, are accessed only through a secure authentication mechanism. Recording which API key was created for each user session can help you track potential misuse. If suspicious activity is detected, you can trace back which key was used and take appropriate action.
 
-## Example: Managing Keys in Different SDKs
-Here's how you might create a short-lived key and delete it in various SDK environments:
-
-### Python
-```python
-import deepgram_sdk
-
-client = deepgram_sdk.Client(api_key="YOUR_SUPER_SECRET_API_KEY")
-# Create key, use it, then delete it
-key_id = client.create_key(user_id="123456")
-# after use
-client.delete_key(key_id)
-```
-
-### JavaScript/Node
-```javascript
-const deepgram_sdk = require('deepgram-sdk');
-const client = new deepgram_sdk.Client("YOUR_SUPER_SECRET_API_KEY");
-// Create key, use it, then delete it
-const keyId = client.createKey({ userId: "123456" });
-// after use
-client.deleteKey(keyId);
-```
-
-### .NET
-```csharp
-using Deepgram;
-var client = new DeepgramClient("YOUR_SUPER_SECRET_API_KEY");
-var keyId = client.CreateKey("123456");
-// after use
-client.DeleteKey(keyId);
-```
-
-### Rust
-```rust
-use deepgram;
-let client = deepgram::Client::new("YOUR_SUPER_SECRET_API_KEY");
-let key_id = client.create_key("123456");
-client.delete_key(key_id);
-```
-
-### Go
-```go
-package main
-
-import "github.com/deepgram/deepgram-go"
-
-func main() {
-    client := deepgram.NewClient("YOUR_SUPER_SECRET_API_KEY")
-    keyId := client.CreateKey("123456")
-    // after use
-    client.DeleteKey(keyId)
-}
-```
-
 ## Conclusion
 Effective management of short-lived API keys ensures both security and flexibility in deploying speech-to-text technology in client-side applications. Always monitor usage and enforce strict authentication to mitigate risks.
 
