@@ -14,53 +14,6 @@ Deepgram's advanced language models, including our multilingual model, are desig
 
 To utilize Deepgram's model capable of detecting and transcribing multiple languages, indicate your preference by setting the `model=multi` parameter when utilizing Deepgram's API.
 
-Here are examples in various SDKs to facilitate the integration:
-
-### Node.js
-```javascript
-const deepgram = require('@deepgram/sdk');
-const deepgramClient = new deepgram('YOUR_API_KEY');
-
-deepgramClient.transcription.preRecorded({
-  url: 'YOUR_AUDIO_URL',
-  model: 'multi',
-}).then((response) => {
-  console.log(response.data.transcription);
-});
-```
-
-### Python
-```python
-from deepgram import Deepgram
-import asyncio
-
-deepgramClient = Deepgram('YOUR_API_KEY')
-
-async def main():
-    response = await deepgramClient.transcription.prerecorded({
-        'url': 'YOUR_AUDIO_URL',
-        'model': 'multi'
-    })
-    print(response['data']['transcription'])
-
-asyncio.run(main())
-```
-
-### .NET
-```csharp
-using Deepgram;
-
-var deepgramClient = new DeepgramClient("YOUR_API_KEY");
-var response = await deepgramClient.Transcriptions.PrerecordedAsync(new Uri("YOUR_AUDIO_URL"), model: "multi");
-Console.WriteLine(response.Transcription);
-```
-
-### Rust
-Consider utilizing the [Deepgram Rust SDK documentation](https://github.com/deepgram) for full code examples.
-
-### Go
-Refer to the [Deepgram Go SDK documentation](https://github.com/deepgram) for comprehensive implementation details.
-
 ## Conclusion
 Multilingual transcription and language detection for streaming audio enhances accessibility and understanding across different linguistic backgrounds. Keep an eye on Deepgram developments for expanded language support and further improvements in the multilingual model.
 
