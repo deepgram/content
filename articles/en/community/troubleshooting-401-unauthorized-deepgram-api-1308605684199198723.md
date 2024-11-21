@@ -33,4 +33,4 @@ Dealing with remote content errors often requires a keen eye for server details 
 
 ### References
 
-- [Deepgram API Errors documentation](https://developers.deepgram.com/reference/errors#text-to-speech-errors)
+- [Deepgram API Errors documentation](https://developers.deepgram.com/reference/errors#400-failure-to-fetch-remote-text-from-url)
