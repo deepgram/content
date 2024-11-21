@@ -26,7 +26,7 @@ This error indicates that Deepgram has closed the connection because it didn't r
 
 ### Update Deepgram SDK
 
-- Using the latest version of the SDK can sometimes resolve unforeseen bugs or issues. Ensure your SDK version is up-to-date (`deepgram-sdk`).
+- Using the latest version of the SDK can sometimes resolve unforeseen bugs or issues. Ensure your SDK version is up-to-date.
 
 ## Seek Further Assistance
 If the issue persists despite these troubleshooting steps, reach out to the community for support. You can join the conversation or start a discussion on our [Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/orgs/deepgram/discussions).
