@@ -18,7 +18,7 @@ Experiencing high latency when using the Deepgram Pre-Recorded Audio API can imp
 
 - **Monitor Deepgram Status:** Regularly check the status page for updates on any known issues that could affect your service performance.
 - **Optimize Your Usage:** Streamline your requests to the essential data needed for transcription and minimize the payload size when possible.
-- **Contact Support:** If you consistently experience high latency or encounter issues not covered by the above causes, consider reaching out through our [Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/orgs/deepgram/discussions) for assistance.
+- **Community Help:** If you consistently experience high latency or encounter issues not covered by the above causes, consider reaching out through our [Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/orgs/deepgram/discussions) for assistance.
 
 
 By understanding these potential factors, you can work towards minimizing API latency and maintaining efficient transcription processes. 
