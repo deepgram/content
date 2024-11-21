@@ -6,7 +6,7 @@ Experiencing high latency when using the Deepgram Pre-Recorded Audio API can imp
 
 1. **Network Issues:** Slow or unstable internet connections can affect the speed at which audio data is transmitted to Deepgram's servers. Ensure your internet connection is robust and stable.
 
-2. **Server-Side Issues:** Sometimes, server-side issues can lead to increased latency. Deepgram provides a status page (<https://status.deepgram.com/#>) where you can check for any ongoing server issues or maintenance that might be impacting latency.
+2. **Server-Side Issues:** Sometimes, server-side issues can lead to increased latency. Deepgram provides a [Status Page] (https://status.deepgram.com/#) where you can check for any ongoing server issues or maintenance that might be impacting latency.
 
 3. **Large Audio Files:** If the audio files being processed are unusually large, it can take longer to process them. Consider breaking large files into smaller chunks if possible.
 
