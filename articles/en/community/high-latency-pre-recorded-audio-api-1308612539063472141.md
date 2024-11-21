@@ -27,7 +27,6 @@ By understanding these potential factors, you can work towards minimizing API la
 
 Effective handling of latency issues involves a combination of proactive monitoring, proper configuration, and utilizing available resources for support. By following best practices and staying informed about server statuses, the impact of latency can be significantly reduced.
 
-For continued support or to address ongoing latency concerns, please visit our [Discord](https://discord.gg/deepgram) and [GitHub Discussions](https://github.com/orgs/deepgram/discussions).
 
 ### References:
 - [Deepgram Status Page](https://status.deepgram.com/#)
