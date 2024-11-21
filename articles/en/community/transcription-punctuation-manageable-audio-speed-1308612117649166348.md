@@ -42,3 +42,6 @@ By enabling features such as `dictation` and `punctuate`, and ensuring a managea
 For more insights and continuous support, visit our community platforms:
 - [Discord Community](https://discord.gg/deepgram)
 - [GitHub Discussions](https://github.com/orgs/deepgram/discussions)
+- [Dictation](https://developers.deepgram.com/docs/dictation)
+- [Punctuation](https://developers.deepgram.com/docs/punctuation)
+- [Media Inputs](https://developers.deepgram.com/docs/media-input-settings)
