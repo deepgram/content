@@ -12,7 +12,7 @@ This usage-based pricing applies to all transcription features, including:
 - Speaker Diarization
 - Smart Formatting
 - Automatic Language Detection
-- Deep Search
+- Search
 - Keyword Boosting
 - Multichannel Support
 
