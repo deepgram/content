@@ -36,4 +36,11 @@ The `ConnectionClosed` error is typically a sign that something is preventing yo
 
 ---
 
-For detailed configuration examples and community support, please refer to [Discord](https://discord.gg/deepgram) and [GitHub Discussions](https://github.com/orgs/deepgram/discussions).
+For documentation examples refer to:
+- [Interim Results](https://developers.deepgram.com/docs/interim-results)
+- [Keep Alive](https://developers.deepgram.com/docs/audio-keep-alive)
+- [Utterance_End](https://developers.deepgram.com/docs/utterance-end)
+
+For community support, please refer to:
+- [Discord](https://discord.gg/deepgram) 
+- [GitHub Discussions](https://github.com/orgs/deepgram/discussions).
