@@ -28,3 +28,4 @@ The "ENOTFOUND" error in Make.com automations can usually be traced to network i
 
 - [Deepgram GitHub Discussions](https://github.com/orgs/deepgram/discussions)
 - [Deepgram Discord](https://discord.gg/deepgram)
+- [ENOTFOUND Error](https://community.make.com/t/api-enotfound-service-is-temporarily-unavailable/8087)
