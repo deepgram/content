@@ -1,4 +1,4 @@
-# Text-to-Speech Pricing for 1 Million Characters with Deepgram
+# Text-to-Speech Pricing Tips for High Characters Usage with Deepgram
 
 Deepgram offers a flexible pricing model depending on your usage needs. Understanding these options can help you choose the best plan for your text-to-speech (TTS) activities, especially if you're dealing with large volumes of text.
 
@@ -27,7 +27,3 @@ This comparison is crucial given scenarios where extensive text is processed in 
 For more detailed information on Deepgram's pricing, you can visit the [official pricing page](https://deepgram.com/pricing).
 
 If you have more extensive needs or require customized support, reaching out to Deepgram's sales team or joining discussions on our [Discord](https://discord.gg/deepgram) and [GitHub Discussions](https://github.com/orgs/deepgram/discussions) can also provide additional insights to help optimize your usage and plan selection.
-
----
-
-This article is based on internal calculations and discussions within our community. For further inquiries or clarification, our community platforms and official documentation are always open for consultation.
