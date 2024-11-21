@@ -29,6 +29,9 @@ A WebSocket connection error usually indicates issues with the request sent from
 
 ## Additional Support
 
+- [Deepgram Python SDK](https://github.com/deepgram/deepgram-python-sdk)
+- [WebSocket DATA & NET Errors](https://developers.deepgram.com/docs/troubleshooting-websocket-data-and-net-errors-when-live-streaming-audio)
+
 For further assistance, our community is available on Discord and GitHub Discussions. [Join our Discord](https://discord.gg/deepgram) and [GitHub Discussions](https://github.com/orgs/deepgram/discussions) to connect with other users and our support team.
 
 ## Conclusion
