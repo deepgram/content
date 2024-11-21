@@ -38,6 +38,6 @@ Handling speech-to-text transcription effectively requires a clear understanding
 
 ### References
 
-- [Deepgram Transcription Documentation](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
+- [Deepgram Live Streaming](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
 - [Deepgram GitHub Discussions](https://github.com/orgs/deepgram/discussions)
 - [Deepgram Discord Community](https://discord.gg/deepgram)
