@@ -7,7 +7,7 @@ To deliver the best transcription services, it's essential to address two common
 Deepgram's Dictation feature can transform spoken dictation commands into punctuation marks, enhancing the readability of transcriptions. To leverage this feature:
 
 - Enable the `dictation` parameter by setting it to `true` in your API request.
-- Ensure the `punctuate` parameter is enabled for dictation to operate correctly.
+- Ensure the `punctuate` parameter is also enabled for dictation to operate correctly.
 
 For example, to use these parameters in an API request, you could:
 
