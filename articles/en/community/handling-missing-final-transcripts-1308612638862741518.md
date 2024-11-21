@@ -27,3 +27,4 @@ For further assistance or if you experience other issues, you are encouraged to 
 ### References
 - [Deepgram Discord Community](https://discord.gg/deepgram)
 - [GitHub Discussions](https://github.com/orgs/deepgram/discussions)
+- [SDK Client Options](https://developers.deepgram.com/docs/using-client-options-with-sdks)
