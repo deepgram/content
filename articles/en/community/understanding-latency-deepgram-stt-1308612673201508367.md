@@ -31,6 +31,6 @@ When leveraging Deepgram's Speech-to-Text API, users may occasionally experience
 Understanding and addressing these factors can help you optimize your use of Deepgram's Speech-to-Text API, reducing latency and improving overall performance. For ongoing support, don't hesitate to reach out to our community platforms.
 
 **References:**
-- [Deepgram API Documentation for Transcription](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)  
+- [Getting Started with Pre-Recorded Audio](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)  
 - [Deepgram Discord Community](https://discord.gg/deepgram)  
 - [Deepgram GitHub Discussions](https://github.com/orgs/deepgram/discussions)
