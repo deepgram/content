@@ -31,9 +31,11 @@ When integrating Deepgram's live streaming transcription service with Zoom, you 
 By thoroughly checking each component of your setup, you can significantly reduce latency and enhance live streaming performance.
 
 #### References
+- [Using Zoom & Deepgram](https://developers.deepgram.com/docs/integrate-deepgram-with-zoom)
 - [Deepgram Streaming Documentation](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
 - [Ngrok Documentation](https://ngrok.com/docs)
 - [Node Media Server GitHub](https://github.com/illuspas/Node-Media-Server)
 - [Python Code Optimization Tips](https://realpython.com/python-performance/)
 
+#### Conclusion
 These optimizations and checks should move you towards a more seamless integration of Deepgram's transcription capabilities with your Zoom streams.
