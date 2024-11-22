@@ -6,7 +6,7 @@ When working with Deepgram's API in a collaborative environment, it's crucial to
 
 API keys in Deepgram are tied to the specific user account that created them. They are created within the context of a specific project and are thus bound by the permissions and existence of that user within that project.
 
-- **Key Creator Responsibilities**: The user who creates an API key is considered the owner of that key. The key can only be used by the creator within the specific project it was created.
+- **Key Creator Responsibilities**: The user who creates an API key is considered the owner of that key. The key can only be used within the specific project it was created, and only while the creator has access to the project.
 
 - **Revocation on User Removal**: If a user is removed from a project, any API keys they created for that project are automatically revoked. This ensures security and compliance, preventing orphan keys from remaining active when they’re no longer monitored by the creating account.
 
@@ -32,7 +32,4 @@ Understanding the relationship between user accounts and API keys is crucial to 
 
 ### References
 
-- [Deepgram API Documentation](https://developers.deepgram.com/docs)
-- [GitHub Discussions on Deepgram](https://github.com/orgs/deepgram/discussions)
-- [Deepgram Community Platform](https://community.deepgram.com)
-- [Asana Task for Documentation Update](https://app.asana.com/0/1203960061328510/1207598434458847)
+- [Deepgram API Documentation](https://developers.deepgram.com/docs/managing-projects#manage-api-keys)
