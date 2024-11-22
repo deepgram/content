@@ -22,7 +22,7 @@ The "no close frame received or sent" message typically indicates that a WebSock
 
 4. **SDK and Libraries:**
    - If using an SDK, make sure it’s up to date. Older SDKs might not handle certain connection scenarios optimally.
-   - For Deepgram’s Python SDK, you can check for the latest version [here](https://github.com/deepgram/deepgram-python-sdk).
+   - Review [Deepgram SDKs Documentation](https://developers.deepgram.com/docs/deepgram-sdks) for more details 
 
 ### Alternative Solution: REST API
 
@@ -36,5 +36,5 @@ If issues persist or the system behavior seems inconsistent, reach out to your D
 
 ### References
 - [WebSocket Communications Handling](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
-- [Deepgram Python SDK GitHub](https://github.com/deepgram/deepgram-python-sdk)
-- [Deepgram Documentation](https://developers.deepgram.com/docs/swagger)
+- [WebSocket DATA & NET Errors When Live Streaming](https://developers.deepgram.com/docs/troubleshooting-websocket-data-and-net-errors-when-live-streaming-audio)
+- [Deepgram SDKs Documentation](https://developers.deepgram.com/docs/deepgram-sdks) 
