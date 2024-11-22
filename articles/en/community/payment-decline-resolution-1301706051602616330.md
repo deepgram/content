@@ -30,8 +30,5 @@ By managing payment expectations and fixes methodically, Deepgram users can ensu
 ---
 
 For related content, refer to:
-- [Developers Guide to Handling Payment Issues](https://community.deepgram.com/payment-guide)
 - [Deepgram Support Page](https://community.deepgram.com/support)
-- [Stripe Official](https://stripe.com/docs)
-
-Each link directs users to further resources related to payment processing and troubleshooting on various platforms.
+- [Stripe Documentation](https://stripe.com/docs)
