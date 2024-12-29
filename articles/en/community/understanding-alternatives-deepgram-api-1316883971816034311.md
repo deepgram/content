@@ -32,7 +32,6 @@ If issues persist or the system behavior seems inconsistent, reach out to your D
 
 ## References
 - [Deepgram API Documentation](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)
-- [Deepgram JavaScript SDK](https://github.com/deepgram/deepgram-js-sdk)
 
 Deepgram Discord Community: https://discord.gg/deepgram
 
