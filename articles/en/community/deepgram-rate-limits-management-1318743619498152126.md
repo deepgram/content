@@ -41,9 +41,6 @@ If issues persist or the system behavior seems inconsistent, reach out to your D
 
 **References**
 
-Deepgram GitHub Discussions
-Deepgram Discord Community
-Deepgram Developer Documentation:
 - [Concurrency and Rate Limits](https://developers.deepgram.com/docs/working-with-concurrency-rate-limits)
 
 By understanding and managing your API concurrency usage, you can optimize your application's performance and reduce the likelihood of encountering rate limit issues.
