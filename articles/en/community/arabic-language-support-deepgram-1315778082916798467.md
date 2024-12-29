@@ -8,10 +8,6 @@ Whisper Cloud is a Deepgram solution that accommodates multiple languages beyond
 
 If you're new to using Whisper Cloud or have specific questions, you can explore our [GitHub Discussions](https://github.com/orgs/deepgram/discussions) or join our [Discord community](https://discord.gg/deepgram) for additional support.
 
-## Future Outlook
-
-While Deepgram does not currently support Arabic in its leading models, we aim to expand our language offerings. We encourage users to keep an eye on our updates for potential additions to our language support.
-
 ## Conclusion
 
 For those needing Arabic transcription capabilities today, Whisper Cloud is a suitable interim solution. If you require any assistance with getting started or using the service, we advise reaching out to our support team or joining our community platforms.
