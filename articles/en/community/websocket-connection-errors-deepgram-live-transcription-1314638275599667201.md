@@ -4,21 +4,9 @@ When attempting to implement live transcription using Deepgram's WebSocket API, 
 
 ## Initial Setup for Live Transcription
 
-To initiate a live transcription using Deepgram's WebSocket API, ensure you've configured your client correctly with the appropriate API endpoint and parameters:
+To initiate a live transcription using Deepgram's WebSocket API, ensure you've configured your client correctly with the appropriate API endpoint and parameters.
 
-```javascript
-const dgClient = createClient('<YOUR_API_KEY>');
-socket = dgClient?.listen.live({
-  model: 'nova-2',
-  interim_results: true,
-  smart_format: true,
-  filler_words: true,
-  utterance_end_ms: 3000,
-  language: 'en'
-}) ?? null;
-```
-
-This setup should create a WebSocket connection to Deepgram's API; however, if an error arises, follow the steps below to troubleshoot:
+If an error arises, follow the steps below to troubleshoot:
 
 ## Troubleshooting WebSocket Connection Errors
 
