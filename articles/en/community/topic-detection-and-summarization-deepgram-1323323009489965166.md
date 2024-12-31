@@ -45,7 +45,6 @@ By integrating topic detection with summarization, you can enhance the processin
 ### References
 
 - [Deepgram Transcription API Documentation](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)
-- [Deepgram SDKs](https://github.com/deepgram)
   - [JavaScript/TypeScript SDK](https://github.com/deepgram/deepgram-js-sdk)
   - Additional SDK options are available for Python, Go, .NET, and Rust
 
