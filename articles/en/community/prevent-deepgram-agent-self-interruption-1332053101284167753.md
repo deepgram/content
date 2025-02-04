@@ -20,16 +20,6 @@ To resolve this issue, consider employing one of the following strategies:
 
 Integrate a local VAD within your application to efficiently manage audio input. The VAD can dynamically enable/disable the transmission of audio data based on user speech, reducing feedback loops where the agent hears its responses.
 
-**MermaidJS Diagram**
-```mermaid
-flowchart TD
-  A[Start] --> B{Is user speaking?}
-  B -- Yes --> C[Transmit audio to agent]
-  B -- No --> D[Do not transmit]
-  C --> A
-  D --> A
-```
-
 ### Conclusion
 
 By using a physical headset or programmable input controls like muting or VAD, you can optimize the interaction with the Deepgram agent and prevent it from self-interrupting. Testing different configurations based on your environment can determine the best solution for your application setup.
