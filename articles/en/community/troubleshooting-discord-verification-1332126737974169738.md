@@ -21,7 +21,6 @@ Navigating the verification process for the Deepgram Discord channel is crucial 
 
 ## Additional Support
 
-If after trying these suggestions, the issue still persists, it may be related to a known issue that had occurred with Deepgram's authentication process. While this should have been resolved, it's always a good idea to ensure that the latest updates and fixes are in place. If issues persist, contact Deepgram support or visit our community for help.
 
 ### Contact Support
 - [Join our Discord community](https://discord.gg/deepgram) if you need more assistance or wish to report continuous problems.
