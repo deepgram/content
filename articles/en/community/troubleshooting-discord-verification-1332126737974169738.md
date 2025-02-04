@@ -19,7 +19,6 @@ Navigating the verification process for the Deepgram Discord channel is crucial 
 5. **Try Incognito Mode**
    - Incognito or private browsing modes do not use existing cookies and cache, which could help rule out issues related to stored data.
 
-## Additional Support
 
 
 ### Contact Support
