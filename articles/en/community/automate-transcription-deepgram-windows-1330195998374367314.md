@@ -11,27 +11,29 @@ Before proceeding, ensure you have the following prerequisites:
 
 ## Creating the Batch File
 
-You can create a batch file that automates the process of uploading audio files to Deepgram and saving the transcriptions. Here's a step-by-step guide:
+You can create a batch file that automates the process of uploading audio files to Deepgram and saving the transcriptions. 
+
+Here's an example:
 
 1. **Open Notepad** and paste the following script:
 
-   ```batch
+```batch
    @echo off
-   setlocal enableextensions
-   set "api_key=YOUR_DEEPGRAM_API_KEY"
-   set "model=nova"
-   for %%f in ("*.m4a" "*.aac" "*.opus") do (
-       echo Processing "%%~nf"
-       curl -X POST \
-       --data-binary @"%%f" \
-       -H "Content-Type: audio/m4a" \  
-       -H "Authorization: Token %api_key%" \
-       "https://api.deepgram.com/v1/listen?model=%model%" > "%%~nf.txt"
-   )
-   endlocal
-   echo Transcription complete.
-   pause
-   ```
+setlocal enableextensions
+set "api_key=YOUR_DEEPGRAM_API_KEY"
+set "model=nova"
+for %%f in ("*.m4a" "*.aac" "*.opus") do (
+    echo Processing "%%~nf"
+    curl -X POST \
+    --data-binary @"%%f" \
+    -H "Content-Type: audio/m4a" \  
+    -H "Authorization: Token %api_key%" \
+    "https://api.deepgram.com/v1/listen?model=%model%" > "%%~nf.txt"
+)
+endlocal
+echo Transcription complete.
+pause
+```
 
 2. **Replace `YOUR_DEEPGRAM_API_KEY`** with your actual Deepgram API key.
 
