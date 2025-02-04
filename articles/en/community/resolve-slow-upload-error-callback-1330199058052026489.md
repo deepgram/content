@@ -17,7 +17,6 @@ The "SLOW_UPLOAD" error, associated with the code `"err_code": "SLOW_UPLOAD"`, u
 4. **Consider Async Processing:** If possible, handle larger payloads asynchronously which allows the server to manage incoming data more efficiently.
 
 ### Additional Resources and Support
-- [Deepgram Transcription API Documentation](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)
 - [Community Support - Deepgram Discord](https://discord.gg/deepgram)
 
 If issues persist or system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: https://discord.gg/deepgram
