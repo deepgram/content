@@ -15,6 +15,8 @@ Asynchronous programming allows you to perform tasks concurrently, making it ide
 
 If your application stops receiving responses suddenly, it may be due to an expired WebSocket connection. Use Deepgram's [Keep Alive mechanism](https://developers.deepgram.com/docs/audio-keep-alive) to maintain this connection:
 
+Example of a websocket closing:
+
 ```plaintext
 [2025-01-08 11:48:01.800961+00:00] No Websocket messages from client in 12 seconds. Killing connection. Check client connectivity.
 [2025-01-08 11:48:01.800978+00:00] Closing the stream to the client.
