@@ -18,7 +18,7 @@ Here's an example:
 1. **Open Notepad** and paste the following script:
 
 ```batch
-   @echo off
+@echo off
 setlocal enableextensions
 set "api_key=YOUR_DEEPGRAM_API_KEY"
 set "model=nova"
