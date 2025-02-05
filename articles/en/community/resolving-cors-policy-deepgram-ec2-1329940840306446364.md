@@ -18,13 +18,11 @@ Here's a practical suggestion for setting up a proxy server:
 
 - **Node.js Proxy Example:** Deepgram provides a basic [Node.js proxy](https://github.com/deepgram-devs/deepgram-node-proxy) you can adapt for this purpose. This proxy is designed to handle requests through a lightweight setup, ideally suitable for development and production use cases.
 
-Setting up a proxy server can be done by deploying this Node.js application on your server and configuring it to forward requests from the client to the Deepgram API.
-
 ### Additional Considerations
 
 - **Payload Size:** Ensure that your server and proxy can handle the request and response sizes expected in your application. For instance, with Nginx acting as a reverse proxy, you might need to adjust the `client_max_body_size` directive to accommodate large payloads.
 
-- **Security:** Caution should be taken to secure your proxy setup to prevent unauthorized access and data leakage.
+- **Security:** Caution should be taken to secure your proxy setup to prevent unauthorized access and data leakage. It is your responsibility to secure the proxy application behind your own authentication, or risk others using your Deepgram credit for their own purpose.
 
 ### Conclusion
 
