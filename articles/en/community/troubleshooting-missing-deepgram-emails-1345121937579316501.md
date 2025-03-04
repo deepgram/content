@@ -15,15 +15,9 @@ If you are experiencing issues with not receiving emails from Deepgram, includin
 
 ### Credit and Usage Notifications
 - **API Key Ownership:** Low credit usage notifications are sent to the owner of the API key that triggers these alerts. Ensure you are using API keys associated with your account if you wish to receive these alerts.
-
-### Technical Insights
-- If you have not received any emails from Deepgram, despite ensuring proper email settings and permissions, it might be worth investigating if there are technical issues on the email dispatch side.
-- You can cross-reference your email activity logs with services like SendGrid to verify whether emails were sent and delivered successfully.
-
-### Resolution
-If you have checked these settings and still face issues, it might help to log into your Deepgram account and analyze any transactional activity linked to notifications.
-
-Additionally, our support team can assist with issues specifically regarding credits or email notifications not being dispatched as expected. In such cases, we can inspect internal system logs for abnormalities related to your account. 
+  
+## Getting Additional Help
+Our support team can assist with issues specifically regarding credits or email notifications not being dispatched as expected. In such cases, we can inspect internal system logs for abnormalities related to your account. 
 
 If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Community Discord](https://discord.gg/deepgram)
 
@@ -31,5 +25,4 @@ If issues persist or the system behavior seems inconsistent, reach out to your D
 By following the steps outlined, you should be able to diagnose and resolve most issues related to missing emails and notifications from Deepgram. This includes ensuring email addresses and accounts configurations within the Deepgram platform are correct. Being proactive with settings and understanding the email system ensures you don’t miss critical updates and notifications from us.
 
 ### References
-- [SendGrid Documentation](https://sendgrid.com/docs/)
 - [Deepgram Community Discord](https://discord.gg/deepgram)
