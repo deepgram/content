@@ -1,6 +1,6 @@
-# Using Deepgram's Nova 2 Model in Europe with GDPR Compliance
+# Using Deepgram's Models in Europe with GDPR Compliance
 
-To use Deepgram's Nova 2 model for live transcription in a European call center while ensuring GDPR compliance, consider the following guidelines:
+To use Deepgram's models in a European call center while ensuring GDPR compliance, consider the following guidelines:
 
 ### Understanding GDPR Compliance
 Deepgram is designed to be fully compliant with GDPR regulations. This compliance ensures that all data processing adheres to stringent data protection laws applicable in Europe. However, depending on your specific business needs, additional considerations may be necessary, particularly if you have strict data localization requirements.
@@ -19,7 +19,7 @@ Ensuring GDPR compliance when using Deepgram's services involves understanding b
 For further information or assistance, reach out to your Deepgram support representative, or join our community for more support: https://discord.gg/deepgram
 
 ### References
-- [Deepgram GDPR Compliance Documentation](https://developers.deepgram.com/docs/gdpr-compliance)
+- [Deepgram GDPR Compliance Documentation](https://deepgram.com/privacy)
 - [Deepgram Deployment Options](https://developers.deepgram.com/docs/deployment-options)
 
 If you continue to have questions or face any issues, visit our community on Discord to connect with other users and Deepgram support: <https://discord.gg/deepgram>. This engagement can provide more insights and direct assistance where needed.
