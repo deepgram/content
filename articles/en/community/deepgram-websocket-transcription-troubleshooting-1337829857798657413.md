@@ -3,7 +3,7 @@
 
 When setting up the Deepgram real-time transcription with a WebSocket, ensuring proper handling of audio chunks and WebSocket responses is crucial.
 
-### Lede
+### Using Websockets
 Establishing a WebSocket connection for transcribing audio in real-time with Deepgram involves sending audio data in appropriate chunks and handling server responses accurately. Missteps during this process can result in failed transcription retrieval.
 
 ### Common Challenges and Solutions
