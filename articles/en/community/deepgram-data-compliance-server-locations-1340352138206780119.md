@@ -18,6 +18,8 @@ For users concerned about data residency, it's crucial to evaluate how data is p
 
 While currently all servers are based in the United States, Deepgram's commitment to GDPR and SOC Type 2 compliance offers strong data protection measures. If data residency within the EEA is a critical requirement, evaluating the potential impact and considering compliance mitigation strategies is advised.
 
+At some point in the future Deepgram may provider servers located outside of the United States.
+
 If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [https://discord.gg/deepgram](https://discord.gg/deepgram)
 
 ---
