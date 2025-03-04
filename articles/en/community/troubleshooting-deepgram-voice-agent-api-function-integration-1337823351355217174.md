@@ -37,4 +37,3 @@ When integrating Deepgram's Voice Agent API, especially using custom function de
 
 ### References
 - [Deepgram Voice Agent API Documentation](https://developers.deepgram.com/docs/voice-agent)
-- [OpenAI GPT-4o API Documentation](https://beta.openai.com/)
