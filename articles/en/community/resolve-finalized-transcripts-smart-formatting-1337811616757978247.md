@@ -21,28 +21,6 @@ Review and adjust the parameters used in your API request configurations:
 
 2. **Request Adjustments:** Ensure the parameters you use are appropriate for your needed outcome and compatible with one another.
 
-Here is a parameter configuration example:
-
-```plaintext
-List(
-  (model, 2-general),
-  (tier, nova),
-  (language, en),
-  (smart_format, true),
-  (measurements, false),
-  (dictation, false),
-  (profanity_filter, true),
-  (filter_words, true),
-  (endpointing, 1700),
-  (interim_results, true),
-  (no_delay, false),
-  (alternatives, 1),
-  (encoding, mulaw),
-  (sample_rate, 8000),
-  (tag, sample-tag)
-)
-```
-
 ## Additional Support
 
 If issues persist or the system behaves inconsistently even after adjusting parameters, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Community](https://discord.gg/deepgram).
