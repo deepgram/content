@@ -38,5 +38,5 @@ Always ensure your implementation uses the most current SDK versions and follows
 ---
 
 ### References
-- [Deepgram API Documentation](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)
+- [Deepgram Documentation](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)
 - [Deepgram SDKs on GitHub](https://github.com/deepgram)
