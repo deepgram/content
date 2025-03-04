@@ -6,7 +6,7 @@ When using Deepgram's API, occasionally you might encounter requests leading to 
 
 In Deepgram's usage logs, requests that end up in an 'Unknown' status indicate that the system could not successfully process them. It's important to note that sometimes these logs might eventually turn into a 'Success' once the system processes them further. However, continuous occurrences of this status might require further investigation.
 
-For details about different log states and their meanings, you can consult [Deepgram's documentation on console usage log states](https://developers.deepgram.com/docs/using-logs-usage#understanding--console-usage-log-states).
+For details about different log states and their meanings, you can consult [Deepgram's documentation on console usage log states](https://developers.deepgram.com/docs/using-logs-usage#understanding-console-usage-log-states).
 
 ## Common Causes of Unknown Status
 
@@ -31,5 +31,5 @@ If issues persist or the system behavior seems inconsistent, reach out to your D
 ---
 
 ### References
-- [Using Logs & Usage](https://developers.deepgram.com/docs/using-logs-usage#understanding--console-usage-log-states)
+- [Using Logs & Usage](https://developers.deepgram.com/docs/using-logs-usage#understanding-console-usage-log-states)
 - [Smart Format](https://developers.deepgram.com/docs/smart-format)
