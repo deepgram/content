@@ -8,13 +8,6 @@ To address this, you can manage the logging behavior by looking into the source 
 
 The logging functionality within the Deepgram .NET SDK can usually be configured or disabled through modifications in the SDK's source code. As with many SDKs, the log output is prominently managed in a central logger class file.
 
-Here's an example of where the logging configuration might be specified:
-
-```csharp
-// Example of a logging setup location
-Deepgram.Logger.Log.cs
-```
-
 In the source code repository, locate the relevant file and line that handles the log configuration. Here is an example path you can check where such configurations could typically reside:
 
 ```
