@@ -27,5 +27,5 @@ By considering these factors and options, users can optimize their use of the tr
 
 ### References
 
-- [Deepgram Transcription API Documentation](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)
-- [Deepgram GitHub Discussions](https://github.com/orgs/deepgram/discussions)
+- [Deepgram Diarization](https://developers.deepgram.com/docs/diarization)
+- [Using Multi-Channel with Diarization](https://developers.deepgram.com/docs/multichannel-vs-diarization)
