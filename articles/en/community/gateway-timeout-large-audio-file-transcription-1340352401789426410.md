@@ -16,7 +16,7 @@ When attempting to transcribe a large audio file using the Deepgram API, you may
    - Tools like [FFmpeg](https://ffmpeg.org/documentation.html) can be useful for compressing audio files.
 2. **Chunking**: Break down the audio file into smaller segments and transcribe these chunks separately. This can reduce load and decrease the likelihood of timeouts.
 3. **Incremental Processing**: For larger files, consider using incremental transcription, where smaller audio segments are processed incrementally.
-4. **API Configuration Adjustments**: Consult the API documentation or support for configuration options that may allow longer processing times or adjust timeout settings.
+4. **API Configuration Adjustments**: Consult the Deepgram API documentation for configuration options that may allow longer processing times or adjust timeout settings.
 
 ### Troubleshooting and Support
 
@@ -35,3 +35,5 @@ Encountering a Gateway Timeout when transcribing large audio files is often rela
 ### References
 - [FFmpeg Documentation](https://ffmpeg.org/documentation.html)
 - [Deepgram Community on Discord](https://discord.gg/deepgram)
+- [Live Audio API Docs](https://developers.deepgram.com/reference/speech-to-text-api/listen-streaming)
+- [Pre-recorded Audio API Docs](https://developers.deepgram.com/reference/speech-to-text-api/listen)
