@@ -14,7 +14,7 @@ Pending requests should eventually progress to another state. However, if they r
 ### Common Causes for Pending Requests
 
 1. **Improper Use of Query Parameters:**
-   - Ensure query parameters are used correctly. For instance, the `keep_alive` parameter should be correctly configured, as stated in the [Deepgram Keep Alive documentation](https://developers.deepgram.com/docs/audio-keep-alive).
+   - Ensure query parameters are used correctly.  Certain combinations of API parameters can sometimes cause processing issues.
 
 2. **Invalid Audio Data:**
    - The audio data format must be correct. Ensure the audio file formats and encodings match the API requirements outlined in [Deepgram's Audio Formats documentation](https://developers.deepgram.com/docs/audio-formats).
@@ -34,6 +34,5 @@ Pending requests are generally temporary states, but persistent issues may requi
 If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Community](https://discord.gg/deepgram)
 
 ### References
-- Deepgram API Documentation: [Deepgram API](https://developers.deepgram.com)
-- Audio Keep Alive Documentation: [Keep Alive](https://developers.deepgram.com/docs/audio-keep-alive)
+- Deepgram API Documentation: [Deepgram API](https://developers.deepgram.com/reference/deepgram-api-overview)
 - Audio Formats Documentation: [Audio Formats](https://developers.deepgram.com/docs/audio-formats)
