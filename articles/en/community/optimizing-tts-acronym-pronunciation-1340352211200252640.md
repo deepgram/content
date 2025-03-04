@@ -14,9 +14,7 @@ To enhance the accuracy of acronym pronunciation, consider the following strateg
 
 2. **Customized Pronunciation:** Utilize TTS prompting techniques to adjust pronunciation settings. For detailed methods, explore Deepgram's [TTS Prompting Guide](https://developers.deepgram.com/docs/text-to-speech-prompting).
 
-3. **API Features:** Leverage API parameters to fine-tune pronunciation settings. Check available parameters in the [Deepgram TTS REST API documentation](https://developers.deepgram.com/docs/tts-rest).
-
-4. **Testing and Iteration:** Regularly test how acronyms are pronounced in your specific application context and iterate over the inputs or settings to reach the desired output.
+3. **Testing and Iteration:** Regularly test how acronyms are pronounced in your specific application context and iterate over the inputs or settings to reach the desired output.
 
 ## Conclusion
 
