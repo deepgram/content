@@ -23,10 +23,10 @@ Upon querying these endpoints, you might receive a response structured as follow
 ```json
 "balances": [
     {
-        "balance_id": "11111111-2222-3333-4444-555555555555",
+        "balance_id": "12345678910",
         "amount": 104.56822227,
         "units": "usd",
-        "purchase_order_id": "22222222-3333-4444-5555-666666666666"
+        "purchase_order_id": "12345678910"
     }
 ]
 ```
