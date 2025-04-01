@@ -20,12 +20,9 @@ Below are some errors that users might see in their logs, along with suggestions
 
 ### Recommendations
 
-If you are constructing your own WebSocket client and encountering issues, you might consider using Deepgram's JavaScript SDK. This SDK simplifies the WebSocket integration process and helps avoid common pitfalls associated with directly handling binary audio data using WebSockets.
-
-Explore this [example application](https://github.com/deepgram/deepgram-js-sdk/tree/main/examples/node-live) to see how the SDK works.
+If you are constructing your own WebSocket client and encountering issues, you might consider using one [Deepgram's official SDKs](https://developers.deepgram.com/docs/deepgram-sdks). These SDKs simplifies the WebSocket integration process and helps avoid common pitfalls associated with directly handling binary audio data using WebSockets.
 
 If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our [community for assistance](https://discord.gg/deepgram).
 
 ### References
-- [Deepgram JS SDK on GitHub](https://github.com/deepgram/deepgram-js-sdk)
-- [Node.js WebSocket Example](https://github.com/deepgram/deepgram-js-sdk/tree/main/examples/node-live)
+- [Deepgram SDKs](https://developers.deepgram.com/docs/deepgram-sdks)
