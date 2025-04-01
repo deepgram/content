@@ -22,17 +22,6 @@ The `speech_final` parameter is an essential part of understanding transcription
 - **Defining End of Utterance:** This parameter indicates the completion of a segment, marking the transcription's finality for the current utterance.
 - **Optimizing Processing:** Relying on `speech_final` ensures that processing, such as sending data to a language model, occurs only when a full and final transcription has been generated, avoiding partial or incomplete interpretation.
 
-### Flowchart
-
-```mermaid
-graph LR
-A[Start Transcription] --> B[Receive Transcription Result]
-B --> C{Is `speech_final` True?}
-C -- Yes --> D[Aggregate Results]
-C -- No --> B
-D --> E[Process Final Transcription]
-```
-
 ### Conclusion
 
 Understanding and managing the behavior of Deepgram's live transcription results enables users to effectively integrate the transcription service into broader systems, such as those using language models. While some custom handling may be necessary, particularly around buffering results, awareness of parameters like `speech_final` ensures a clearer and more accurate transcription flow.
@@ -40,6 +29,7 @@ Understanding and managing the behavior of Deepgram's live transcription results
 For further assistance or up-to-date information, always refer to [Deepgram's official documentation](https://developers.deepgram.com/docs/streaming). If system behaviors vary or problems persist, consider reaching out via [Deepgram's community](https://discord.gg/deepgram) for support.
 
 #### References
-- [Deepgram API Documentation](https://developers.deepgram.com/docs/streaming)
+- [Using Interim Results: is_final](https://developers.deepgram.com/docs/understand-endpointing-interim-results#using-interim-results-is_final
+- [Using Endpointing: speech_final](https://developers.deepgram.com/docs/understand-endpointing-interim-results#using-endpointing-speech_final)
 - [Community Discussions](https://github.com/orgs/deepgram/discussions/1156)
 - [Discord Community](https://discord.gg/deepgram)
