@@ -12,11 +12,8 @@ When using Deepgram's async live Speech-to-Text (STT) service, users might encou
 
 ## Solutions
 
-1. **Increase Timeout Settings**: If you are working with a specific SDK, like .NET, you can adjust the timeout settings. For instance:
-   ```csharp
-   deepgram.SetHttpClientTimeout(TimeSpan.FromMinutes(30));
-   ```
-   Adjust the timeout as necessary based on the expected duration of audio playback.
+1. **Increase Timeout Settings**: If you are working with a specific Deepgram SDK you can adjust the timeout settings. 
+   Please see our SDK documentation to adjust the timeout as necessary based on the expected duration of audio playback.
 
 2. **Use the Finalize Message**: Ensure all messages are processed by sending a finalize message over the WebSocket:
    ```json
@@ -29,7 +26,7 @@ When using Deepgram's async live Speech-to-Text (STT) service, users might encou
 4. **Adjust Endpointing and Utterance Settings**: Configure specific settings to prevent issues with transcription cutting off too soon. Parameters that can be adjusted include:
    ```python
    options = {
-       "endpointing": 10,  // Adjust to suitable value
+       "endpointing": 500,  // Adjust to suitable value
        "utterance_end_ms": 1000,
        "vad_events": True
    }
@@ -44,4 +41,4 @@ Addressing the "tasks cancelled error" might involve tuning your connection sett
 
 - [Deepgram Documentation](https://developers.deepgram.com)
 - [FFmpeg Documentation](https://ffmpeg.org)
-- [Deepgram GitHub SDKs](https://github.com/deepgram)
+- [Deepgram SDKs](https://developers.deepgram.com/docs/deepgram-sdks)
