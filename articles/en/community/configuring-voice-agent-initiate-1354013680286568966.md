@@ -29,7 +29,7 @@ const config = {
       ],
     },
   },
-  // important bit
+  // important!
   context: {
     messages: [
       {
