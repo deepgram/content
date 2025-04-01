@@ -20,14 +20,13 @@ The specific error message returned by the Deepgram API typically indicates that
 3. **Test with Sample Files**
    - As part of troubleshooting, try using a sample audio file with known good parameters and verify if the API processes it successfully. This action can help identify if the issue is file-specific.
 
-4. **Configuration in n8n**
-   - Double-check your n8n workflow setup to ensure the Directories or nodes handling the audio file are correctly passing the file data to the Deepgram endpoint.
 
 ## Conclusion
 
-Addressing encoding mismatches or improperly set parameters are common solutions to resolve the Deepgram "400 - Bad Request" error in n8n workflows. If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit the [Deepgram community](https://discord.gg/deepgram) for assistance.
+Addressing encoding mismatches or improperly set parameters are common solutions to resolve the Deepgram "400 - Bad Request" errors. If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit the [Deepgram community](https://discord.gg/deepgram) for assistance.
+
+By following the recommendations above, the integration between n8n and the Deepgram API can be configured to effectively handle various audio file formats without encountering errors.
 
 ## References
 - [Deepgram API: Audio Encoding](https://developers.deepgram.com/docs/encoding)
 
-By following the recommendations above, the integration between n8n and the Deepgram API can be configured to effectively handle various audio file formats without encountering errors.
