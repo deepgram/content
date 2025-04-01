@@ -12,32 +12,16 @@ When facing disconnection issues (error: 1011 indicating no audio data received 
 
 2. **WebSocket Connection Setup**:
    - Verify that your WebSocket connection setup properly authenticates with Deepgram by including authorization tokens appropriately.
-   - Configure WebSocket settings to avoid unintended timeouts, such as disabling ping intervals using `ping_interval=None` during testing.
+   - Configure WebSocket settings to avoid unintended timeouts.
 
 3. **Handling Keep-Alive Messages**:
-   - Consider sending keep-alive messages to maintain the WebSocket connection, but more importantly, ensure you're providing regular audio data.
+   - Consider sending `keep-alive` messages to maintain the WebSocket connection, but more importantly, ensure you're providing regular audio data.
 
 4. **Audio Format Compliance**:
-   - Check that the audio format is fully compliant with Deepgram’s requirements, e.g., `linear16`, `48000 Hz`, `16-bit`, `mono`.
+   - Check that the audio format is fully compliant with Deepgram’s requirements.
 
 5. **Example of Validating Non-Empty Audio**:
    - Implement a check for non-empty audio packets before they are sent to the WebSocket:
-     ```python
-     while True:
-         try:
-             raw_data = stream.read(CHUNK, exception_on_overflow=False)
-             
-             if len(raw_data) > 0 and websocket.open:  # Ensure data is not empty and connection is open
-                 await websocket.send(raw_data)
-                 response = await websocket.recv()
-                 print("📝 Transcription:", json.loads(response))
-             else:
-                 print("Skipping empty audio frame or closed connection.")
-         except Exception as e:
-             print(f"Error: {e}")
-             break
-     ```
-   - This snippet ensures that only valid audio packets are sent to Deepgram, reducing the likelihood of abrupt disconnections.
 
 ## Conclusion
 
@@ -45,5 +29,4 @@ Addressing connection issues with Deepgram's WebSocket API involves ensuring the
 
 ## Additional Resources
 
-- [Deepgram WebSocket API Documentation](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
-- [PyAudio Documentation](https://people.csail.mit.edu/hubert/pyaudio/)
+- [Recovering From Connection Errors & Timeouts When Live Streaming](https://developers.deepgram.com/docs/recovering-from-connection-errors-and-timeouts-when-live-streaming-audio)
