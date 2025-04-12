@@ -1,0 +1,76 @@
+name: Daily Translation
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Run at midnight UTC every day
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create new branch
+        run: |
+          git checkout -b "translation/$(date +%Y-%m-%d)"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Run translation script
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node tools/translate.js
+
+      - name: Commit changes
+        id: commit
+        run: |
+          git add articles/es/
+          git status
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "feat: translate article to Spanish [skip ci]"
+          git add articles/en/
+          git status
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "feat: update original article with links to Spanish translation [skip ci]"
+          echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Push changes
+        if: steps.commit.outputs.changes == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref }}
+
+      - name: Create Pull Request
+        if: steps.commit.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: "Translation Updates - $(date +%Y-%m-%d)"
+          body: |
+            This PR contains automated translations of articles to Spanish and updates to the source English files with links to the new translations.
+
+            Changes were made using the translation script.
+          branch: ${{ github.head_ref }}
+          base: main
+          draft: false
+          delete-branch: true
