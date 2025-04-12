@@ -100,8 +100,7 @@ if (!fs.existsSync(enPath)) {
 
 // Check if the file is already translated
 if (fs.existsSync(esPath)) {
-    logError(`File already exists in Spanish: ${esPath}`);
-    process.exit(1);
+    logWarning(`File already exists in Spanish: ${esPath}. Overwriting...`);
 }
 
 // Read the article content
@@ -114,94 +113,197 @@ if (!process.env.OPENAI_API_KEY) {
     process.exit(1);
 }
 
-async function translateContent() {
-    logInfo('Sending translation request to OpenAI...');
-    const postData = JSON.stringify({
-        model: "gpt-4.5-preview",
-        messages: [
-            {
-                role: "system",
-                content: `You are a professional translator. Translate the following content from English to Spanish while maintaining:
-1. All markdown formatting
-2. All code blocks and their languages
-3. All links and their URLs
-4. All technical terms should be translated to their commonly accepted Spanish equivalents
-5. Maintain the same tone and style as the original
-6. Keep all frontmatter fields but translate their values
-7. Preserve all special characters and formatting`
-            },
-            {
-                role: "user",
-                content: content
+// Function to parse markdown content into sections
+function parseMarkdownSections(content) {
+    const sections = [];
+    let currentSection = '';
+    let currentHeading = '';
+    let inFrontmatter = false;
+    let frontmatter = '';
+
+    // Split content into lines
+    const lines = content.split('\n');
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
+        // Handle frontmatter
+        if (line.trim() === '---') {
+            inFrontmatter = !inFrontmatter;
+            if (inFrontmatter) {
+                frontmatter += line + '\n';
+            } else {
+                frontmatter += line;
+                sections.push({
+                    heading: 'frontmatter',
+                    content: frontmatter
+                });
             }
-        ],
-        response_format: {
-            type: "text"
-        },
-        temperature: 1,
-        max_completion_tokens: 16384,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-        stream: false
-    });
-
-    const options = {
-        hostname: 'api.openai.com',
-        path: '/v1/chat/completions',
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-            'Content-Length': Buffer.byteLength(postData)
+            continue;
         }
-    };
 
-    return new Promise((resolve, reject) => {
-        const req = https.request(options, (res) => {
-            logInfo(`Response status code: ${res.statusCode}`);
-            let body = '';
+        if (inFrontmatter) {
+            frontmatter += line + '\n';
+            continue;
+        }
 
-            res.on('data', (chunk) => {
-                body += chunk;
+        // Check for headings (H1, H2, H3)
+        const headingMatch = line.match(/^(#{1,3})\s+(.+)$/);
+        if (headingMatch) {
+            // If we have a previous section, save it
+            if (currentSection) {
+                sections.push({
+                    heading: currentHeading,
+                    content: currentSection.trim()
+                });
+            }
+
+            // Start new section
+            currentHeading = headingMatch[2];
+            currentSection = line + '\n';
+        } else {
+            currentSection += line + '\n';
+        }
+    }
+
+    // Add the last section
+    if (currentSection) {
+        sections.push({
+            heading: currentHeading,
+            content: currentSection.trim()
+        });
+    }
+
+    return sections;
+}
+
+async function translateContent() {
+    logInfo('Parsing markdown sections...');
+    const sections = parseMarkdownSections(content);
+    logInfo(`Found ${sections.length} sections to translate`);
+
+    let translatedContent = '';
+    let messages = [
+        {
+            role: "system",
+            content: `You are a technical writer fluent in English and Spanish. You will be given an article section by section, and asked to translate it to Spanish.
+            1. ALWAYS translate the content from English to Spanish.
+            2. ALWAYS consider the entire content, and instead of a like-for-like translation, translate it to read naturally.
+            3. ALWAYS translate Markdown titles and content.
+            4. NEVER translate the frontmatter or slug.
+            5. NEVER translate code blocks and their languages.
+            6. NEVER translate links and their URLs.
+            7. ALWAYS translate technical terms to their commonly accepted Spanish equivalents.
+            8. ALWAYS maintain the same tone and style as the original.
+            10. ALWAYS preserve all special characters and formatting.
+            11. ALWAYS preserve custom components.`
+        }
+    ];
+
+    for (let i = 0; i < sections.length; i++) {
+        const section = sections[i];
+        logInfo(`Translating section: ${section.heading || 'frontmatter'}`);
+
+        // Add the current section to messages
+        messages.push({
+            role: "user",
+            content: section.content
+        });
+
+        const postData = JSON.stringify({
+            model: "gpt-4.5-preview",
+            messages: messages,
+            response_format: {
+                type: "text"
+            },
+            temperature: 1,
+            max_completion_tokens: 16384,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
+            stream: false
+        });
+
+        const options = {
+            hostname: 'api.openai.com',
+            path: '/v1/chat/completions',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Length': Buffer.byteLength(postData)
+            }
+        };
+
+        const translatedSection = await new Promise((resolve, reject) => {
+            const req = https.request(options, (res) => {
+                logInfo(`Response status code: ${res.statusCode}`);
+                let body = '';
+
+                res.on('data', (chunk) => {
+                    body += chunk;
+                });
+
+                res.on('end', () => {
+                    if (res.statusCode !== 200) {
+                        logError(`API request failed with status ${res.statusCode}`);
+                        logError(`Response body: ${body}`);
+                        reject(new Error(`API request failed with status ${res.statusCode}`));
+                        return;
+                    }
+
+                    try {
+                        const response = JSON.parse(body);
+                        resolve(response.choices[0].message.content);
+                    } catch (err) {
+                        logError(`Failed to parse response: ${err}`);
+                        logError(`Response body: ${body}`);
+                        reject(err);
+                    }
+                });
             });
 
-            res.on('end', () => {
-                if (res.statusCode !== 200) {
-                    logError(`API request failed with status ${res.statusCode}`);
-                    logError('Response body:', body);
-                    reject(new Error(`API request failed with status ${res.statusCode}`));
-                    return;
-                }
-
-                try {
-                    const response = JSON.parse(body);
-                    resolve(response.choices[0].message.content);
-                } catch (err) {
-                    logError('Failed to parse response:', err);
-                    logError('Response body:', body);
-                    reject(err);
-                }
+            req.on('error', (e) => {
+                logError(`Request failed: ${e.message}`);
+                reject(e);
             });
+
+            req.setTimeout(120000, () => {
+                logError('Request timed out after 120 seconds');
+                req.destroy();
+                reject(new Error('Request timed out after 120 seconds'));
+            });
+
+            req.write(postData);
+            req.end();
         });
 
-        req.on('error', (e) => {
-            logError(`Request failed: ${e.message}`);
-            reject(e);
-        });
+        // Add the translated section to the final content
+        translatedContent += translatedSection + '\n\n';
 
-        // Set a timeout for the request
-        req.setTimeout(120000, () => {
-            logError('Request timed out after 120 seconds');
-            req.destroy();
-            reject(new Error('Request timed out after 120 seconds'));
+        // Replace the user message with the assistant's response
+        messages = messages.slice(0, -1); // Remove the last user message
+        messages.push({
+            role: "assistant",
+            content: translatedSection
         });
+    }
 
-        logInfo('Writing request data...');
-        req.write(postData);
-        logInfo('Ending request...');
-        req.end();
-    });
+    return translatedContent;
+}
+
+function insertLanguageLink(content, language, targetLanguage, targetPath) {
+    const frontmatterEnd = content.indexOf('---', 3); // Find the end of frontmatter
+    const linkText = language === 'en' 
+        ? `> 📣 This article is also available in [**Spanish**](/es/${targetPath}).`
+        : `> 📣 Este artículo también está disponible en [**inglés**](/en/${targetPath}).`;
+
+    if (frontmatterEnd === -1) {
+        logWarning('No frontmatter found, placing language link at the top of the file');
+        return linkText + '\n\n' + content;
+    }
+
+    return content.slice(0, frontmatterEnd + 3) + '\n\n' + linkText + '\n\n' + content.slice(frontmatterEnd + 3);
 }
 
 async function main() {
@@ -215,9 +317,16 @@ async function main() {
             fs.mkdirSync(targetDir, { recursive: true });
         }
 
+        // Add language links to both files
+        const relativePath = path.relative('articles', esPath).replace(/^es\//, '');
+        const contentWithLinks = insertLanguageLink(translatedContent, 'es', 'en', relativePath);
+        const originalContent = fs.readFileSync(enPath, 'utf8');
+        const originalWithLinks = insertLanguageLink(originalContent, 'en', 'es', relativePath);
+
         // Write the translated content
         logInfo('Writing translated content...');
-        fs.writeFileSync(esPath, translatedContent);
+        fs.writeFileSync(esPath, contentWithLinks);
+        fs.writeFileSync(enPath, originalWithLinks);
         logSuccess(`Successfully translated to: ${esPath}`);
 
     } catch (error) {
