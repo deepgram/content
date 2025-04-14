@@ -1,33 +1,85 @@
 # Improving Speaker Diarization in Live Transcription with Deepgram
 
-In this guide, we explore how to enhance the accuracy of speaker diarization when using Deepgram's real-time transcription services, particularly in the context of conference calls such as those conducted over Google Meet. 
+When using Deepgram's live transcription services, accurately identifying different speakers is essential for many applications, particularly in settings like conference calls or meetings. This guide explains how to optimize speaker diarization for live transcription based on Deepgram's official documentation.
 
 ## Understanding Speaker Diarization
 
-Speaker diarization is the process of partitioning an audio stream into homogeneous segments according to the identity of the speaker. This feature allows users to differentiate between speakers during a live transcription session. However, misidentification can occur, where non-existent speakers are detected, leading to suboptimal results.
+Speaker diarization identifies and distinguishes between different speakers in an audio stream. When enabled, Deepgram assigns a speaker identifier to each word in the transcript, helping you track who said what.
 
-## Configuration for Optimal Diarization
+For live streaming audio, each word in the transcript includes a `speaker` value when diarization is enabled. Unlike pre-recorded audio, live streaming diarization does not include a `speaker_confidence` value.
 
-To improve speaker diarization, it is crucial to utilize the correct parameters within your setup. Below are some optimal configurations and explanations for each:
+## Enabling Diarization
 
-- **Model**: Using the `nova-2` model, which is optimized for Spanish language transcription, can enhance performance in these scenarios.
-- **Smart Formatting and Punctuation**: These options help improve the readability of the transcription output, making it easier to follow.
-- **Diarization**: Ensure this option is set to `true` to activate speaker identification.
-- **Utterance Ending**: Setting `utterance_end_ms` to 1100 helps the engine determine appropriate points to consider an utterance complete. Modifying this can refine speech segmentation accuracy.
-- **Endpointing**: Reducing `endpointing` can decrease the delay required to decide if the end of an utterance has been reached. A setting of 500ms might improve responsiveness.
+To enable diarization in your live transcription, set the `diarize` parameter to `true` in your API request:
 
-## Alternatives: Multichannel Transcription
+```javascript
+const options = {
+  model: "nova-3",
+  diarize: true,
+  language: "en-US",
+  smart_format: true,
+  interim_results: true
+};
+```
 
-In certain situations, such as conference calls, employing multichannel transcription can offer enhanced accuracy. This approach involves processing each speaker in individual channels, which clarifies speaker boundaries and reduces misidentification.
+## Optimizing Diarization Accuracy
 
-For more information on this strategy, refer to [Deepgram's Multichannel Documentation](https://developers.deepgram.com/docs/multichannel-vs-diarization).
+To get the best results from speaker diarization in live transcription:
 
-## Conclusion
+1. **Use the Latest Model**: The `nova-3` model offers improved diarization capabilities.
 
-To achieve more accurate speaker diarization, consider experimenting with different settings and utilizing the multichannel transcription feature. Adjusting the `utterance_end_ms` and `endpointing` parameters can play a significant role in improving speech segmentation.
+2. **Enable Smart Formatting**: Set `smart_format: true` to improve transcript readability, which can make speaker changes more apparent.
 
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Community](https://discord.gg/deepgram).
+3. **Consider Audio Quality**: Clear audio with minimal background noise will yield better diarization results.
+
+4. **Speaker Separation**: Ensure speakers are clearly separated in the audio for optimal results.
+
+5. **Tune Endpointing Parameters**: Adjusting `endpointing` (recommended: 300ms) and `utterance_end_ms` (recommended: 1000ms) can help better segment speech by different speakers.
+
+## Example Implementation
+
+Here's a basic implementation using the JavaScript SDK:
+
+```javascript
+import { createClient, LiveTranscriptionEvents } from '@deepgram/sdk';
+
+// Initialize the Deepgram client
+const deepgram = createClient(YOUR_DEEPGRAM_API_KEY);
+
+// Configure the connection with diarization enabled
+const options = {
+  model: 'nova-3',
+  diarize: true,
+  language: 'en-US',
+  smart_format: true,
+  interim_results: true,
+  endpointing: 300,
+  utterance_end_ms: 1000
+};
+
+// Create a connection
+const connection = deepgram.listen.live(options);
+
+// Handle incoming transcripts
+connection.addListener(LiveTranscriptionEvents.TRANSCRIPT_RECEIVED, (data) => {
+  // Process transcript with speaker information
+  if (data.channel && data.channel.alternatives && data.channel.alternatives[0].words) {
+    const words = data.channel.alternatives[0].words;
+    words.forEach(word => {
+      console.log(`Speaker ${word.speaker}: ${word.word}`);
+    });
+  }
+});
+```
+
+## Alternative: Consider Multichannel Audio
+
+For scenarios where audio sources can be separated (e.g., different microphones for different speakers), consider using Deepgram's multichannel feature instead of diarization. This approach can yield clearer speaker separation when each speaker has their own audio channel.
+
+To learn more, refer to Deepgram's documentation on [when to use multichannel vs. diarization](https://developers.deepgram.com/docs/multichannel-vs-diarization).
 
 ## References
-- [Deepgram API Documentation](https://developers.deepgram.com/docs/)
-- [Multichannel vs Diarization](https://developers.deepgram.com/docs/multichannel-vs-diarization)
+
+- [Deepgram Diarization Documentation](https://developers.deepgram.com/docs/diarization)
+- [Multichannel vs. Diarization Guide](https://developers.deepgram.com/docs/multichannel-vs-diarization)
+- [Live Streaming Audio Documentation](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)

@@ -1,25 +1,82 @@
 # Keyterms Support in Deepgram's Nova Models
 
-When working with Deepgram's API, it's important to leverage the API's capabilities to fit your specific needs, especially with tasks involving keyterms and advanced transcription. One commonly asked question pertains to the support for keyterms in different versions of Deepgram's nova models.
+When working with Deepgram's speech-to-text API, it's important to understand how different models support various features. This article provides accurate information about keyterms support in Nova models, based on Deepgram's official documentation.
 
-### Keyterms in Nova Models
+## Understanding Keywords vs. Keyterms
 
-Keyterms are a critical feature for users who need to emphasize or track specific words or phrases during transcription. However, not all versions of Deepgram's models support this feature. As of the latest update, keyterms are supported exclusively in the **Nova-3** model.
+Deepgram offers two different methods for emphasizing specific terms in transcriptions:
 
-This implies:
-- **Nova-2**: Does not support keyterms. Users looking to utilize keyterms should transition to **Nova-3** for full functionality or use [Keywords](https://developers.deepgram.com/docs/keywords).
-- **Nova-3**: Fully supports keyterms, allowing enhanced customization in transcription processes.
+1. **Keywords** (Legacy Feature): Available in Nova and Nova-2 models
+   - Syntax: `keywords=term:intensifier` (where intensifier is a number from 0-10)
+   - Example: `keywords=meeting:5&keywords=agenda:3`
 
-### Considerations
+2. **Keyterms** (Nova-3 Feature): Available in Nova-3 model
+   - Syntax: `keyterm=term` (no intensifier values)
+   - Example: `keyterm=meeting&keyterm=agenda`
 
-- **Documentation**: Always refer to the [Deepgram keyterms documentation](https://developers.deepgram.com/docs/keyterm) for the latest updates and corrections.
-- **Model Comparison**: If you're comparing transcription performance across models, be sure to note whether keyterms are active, as this can influence outputs significantly.
+## Keyterms Support by Model
 
-### Conclusion
+- **Nova**: Supports the legacy `keywords` parameter only
+- **Nova-2**: Supports the legacy `keywords` parameter only
+- **Nova-3**: Supports the new `keyterm` parameter only
 
-Always ensure you're using the correct model version that meets your transcription needs, especially concerning keyterms. For any issues or further clarifications, contacting support is recommended.
+## Migration Considerations
 
-**Reference Sources**:
-- [Keyterms Documentation](https://developers.deepgram.com/docs/keyterm)
-- [Keywords Documentation](https://developers.deepgram.com/docs/keywords)
-- Deepgram Community on [Discord](https://discord.gg/deepgram)
+If you're migrating from Nova-2 to Nova-3, you'll need to update your API requests to replace `keywords` with `keyterm`:
+
+**Nova-2 Request Example:**
+
+```curl
+curl \
+  --request POST \
+  --header 'Authorization: Token YOUR_DEEPGRAM_API_KEY' \
+  --header 'Content-Type: audio/wav' \
+  --data-binary @youraudio.wav \
+  --url 'https://api.deepgram.com/v1/listen?model=nova-2&keywords=meeting:5&keywords=agenda:3'
+```
+
+**Nova-3 Request Example:**
+
+```curl
+curl \
+  --request POST \
+  --header 'Authorization: Token YOUR_DEEPGRAM_API_KEY' \
+  --header 'Content-Type: audio/wav' \
+  --data-binary @youraudio.wav \
+  --url 'https://api.deepgram.com/v1/listen?model=nova-3&keyterm=meeting&keyterm=agenda'
+```
+
+## Using the JavaScript SDK
+
+When using the Deepgram JavaScript SDK with different models:
+
+```javascript
+// For Nova-2
+const nova2Options = {
+  model: 'nova-2',
+  keywords: [
+    { word: "meeting", boost: 5 },
+    { word: "agenda", boost: 3 }
+  ]
+};
+
+// For Nova-3
+const nova3Options = {
+  model: 'nova-3',
+  keyterm: ["meeting", "agenda"]
+};
+```
+
+## How Keyterms and Keywords Work
+
+Both features serve to emphasize specific terms in your transcription, which can improve recognition accuracy for those terms. The main differences are:
+
+1. **Syntax**: Keyterms uses a simpler syntax without intensifiers
+2. **Implementation**: Internal processing differences may lead to slightly different results
+3. **Future Support**: Keyterms is the newer feature and will receive ongoing improvements
+
+## References
+
+- [Deepgram Keyterm Documentation](https://developers.deepgram.com/docs/keyterm)
+- [Deepgram Keywords Documentation (Legacy)](https://developers.deepgram.com/docs/keywords)
+- [Deepgram Models Overview](https://developers.deepgram.com/docs/models-languages-overview)
