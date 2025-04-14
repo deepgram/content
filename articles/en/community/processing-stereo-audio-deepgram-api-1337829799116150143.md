@@ -44,6 +44,11 @@ var error: NSError?
 let status = converter.convert(to: targetBuffer, error: &error) { 
     // Conversion logic here
 }
+
+if status != .haveData || error != nil {
+    print("Audio conversion failed with status: \(status) and error: \(String(describing: error))")
+    return nil
+}
 ```
 
 ## Sending Data to Deepgram API
