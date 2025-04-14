@@ -1,26 +1,23 @@
 # Troubleshooting Empty Transcriptions with Deepgram's Nova Models
 
-When using Deepgram's API with the nova-2 model, users might occasionally encounter an issue where correct transcriptions are initially received, but after approximately 8 minutes of streaming, the transcriptions return empty results with confidence dropping to zero. This typically occurs when dealing with sparse or intermittent audio input.
+When using Deepgram's speech-to-text API, you might occasionally encounter situations where transcriptions return empty results or the confidence drops to zero. This article provides guidance on troubleshooting these issues, particularly when using Nova models.
 
-## Understanding the Issue
+## Common Scenarios That Can Cause Empty Transcriptions
 
-If you're sending small, sporadic audio chunks (such as 2-10 frames per minute), Deepgram may expect a more continuous audio input. Intermittent input might cause some models, including nova-2, to behave unexpectedly in returning results.
+1. **Sparse or Intermittent Audio Input**: When sending small, sporadic audio chunks with long pauses, models may struggle to maintain context
+2. **Low Audio Quality**: Very quiet or noisy audio can lead to poor transcription results
+3. **Connection Issues**: Network problems or WebSocket disconnections
+4. **Extended Silence**: Long periods of silence can cause the model to reset its context
+5. **Inappropriate Model Configuration**: Using incorrect parameters for your audio type
 
-### Model Selection
+## Specific Solutions Based on Use Case
 
-For sparse or intermittent audio input, consider using the `nova` model instead of `nova-2`. The `nova` model is generally more robust for handling varying audio input patterns.
+### For Live Streaming with Intermittent Audio
 
-### API Logging and Analysis
+If you're experiencing empty transcriptions after a period of successful transcription (often around 8 minutes):
 
-To address this issue, it is recommended to:
-
-- **Check API Logs**: Examine API usage logs in the Deepgram dashboard for warnings or errors.
-- **Network Stability**: Ensure the network connection is stable to prevent intermittent request failures.
-- **Audio Quality**: Verify the audio quality and format being used. Issues may arise with non-standard or low-quality audio inputs.
-
-## Recommendations for Solutions
-
-1. **Model Selection**: Use the `nova` model for sparse or intermittent audio input:
+1. **Use Nova Instead of Nova-2 for Sparse Audio**:
+   - The base Nova model can be more robust with varying audio input patterns:
    ```json
    {
      "model": "nova",
@@ -28,29 +25,107 @@ To address this issue, it is recommended to:
    }
    ```
 
-2. **Audio Chunking**: If possible, send larger, more continuous chunks of audio data rather than sparse frames.
+2. **Send KeepAlive Messages During Silences**:
+   - Maintain the WebSocket connection during long silent periods:
+   ```json
+   { "type": "KeepAlive" }
+   ```
 
-3. **Utilize Callbacks**: Implementing a callback mechanism may offer a better solution for managing intermittent input and ensuring timely and accurate results.
+3. **Configure Appropriate Endpointing**:
+   - For sporadic speech, adjust the endpointing parameter to accommodate longer pauses:
+   ```
+   endpointing=1000
+   ```
 
-4. **Update and Use SDKs**: Ensure that any SDKs or libraries implemented are up-to-date to mitigate bugs or limitations in earlier versions. You can find Deepgram's SDKs on:
-   - [JavaScript/TypeScript SDK](https://github.com/deepgram/deepgram-js-sdk)
-   - [Python SDK](https://github.com/deepgram/deepgram-python-sdk)
-   - [Go SDK](https://github.com/deepgram/deepgram-go-sdk)
-   - [Dotnet SDK](https://github.com/deepgram/deepgram-dotnet-sdk)
-   - [Rust SDK](https://github.com/deepgram/deepgram-rust-sdk)
+### For Pre-recorded Audio with Quality Issues
 
-### Further Assistance
+If you're getting empty transcriptions with pre-recorded files:
 
-If issues persist, or behavior continues to be inconsistent, reaching out to Deepgram support is recommended. Visit our community for more help: [Deepgram Discord Community](https://discord.gg/deepgram).
+1. **Check Audio Volume and Quality**:
+   - Ensure the audio isn't extremely quiet
+   - Normalize audio levels if necessary
+   - Remove excessive background noise if possible
 
-## Conclusion
+2. **Verify Audio Format Compatibility**:
+   - Ensure your audio format is supported by Deepgram
+   - Specify correct encoding and sample rate parameters
 
-For optimal use of Deepgram's API, especially with sparse or intermittent audio input, consider using the `nova` model and ensure your audio streams are properly chunked. Adapt APIs to make use of callback mechanisms for handling intermittent input scenarios.
+3. **Try Different Nova Model Variants**:
+   - For specific domains (e.g., meetings, phone calls), use the appropriate model variant:
+   ```
+   model=nova-2-meeting
+   ```
+   or
+   ```
+   model=nova-2-phonecall
+   ```
 
-Always ensure your implementation uses the most current SDK versions and follows best practices for network stability and audio quality.
+## Code Implementation for Live Streaming Sparse Audio
 
----
+Here's a JavaScript example that handles intermittent audio input:
 
-### References
-- [Deepgram Documentation](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)
-- [Deepgram SDKs on GitHub](https://github.com/deepgram)
+```javascript
+// Configure the WebSocket connection with Nova (not Nova-2) for sparse audio
+const ws = new WebSocket('wss://api.deepgram.com/v1/listen?model=nova&smart_format=true&encoding=linear16&sample_rate=16000');
+
+// Set up auth and event handlers
+ws.onopen = () => {
+  ws.send(JSON.stringify({
+    type: 'Authorization',
+    token: 'YOUR_DEEPGRAM_API_KEY'
+  }));
+};
+
+// Keep track of silence for keepalive
+let lastAudioSentTime = Date.now();
+let keepAliveInterval;
+
+// Start sending audio and set up keepalive for silences
+function startStreaming() {
+  // Start audio capture logic...
+  
+  // Set up keepalive during silence periods
+  keepAliveInterval = setInterval(() => {
+    const silenceDuration = Date.now() - lastAudioSentTime;
+    if (silenceDuration > 5000) {  // 5 seconds of silence
+      ws.send(JSON.stringify({ type: 'KeepAlive' }));
+    }
+  }, 5000);
+}
+
+// Send audio data with checks
+function sendAudioChunk(audioData) {
+  if (audioData && audioData.length > 0) {
+    ws.send(audioData);
+    lastAudioSentTime = Date.now();
+  }
+}
+
+// Handle transcription results
+ws.onmessage = (event) => {
+  const result = JSON.parse(event.data);
+  if (result.type === 'Results') {
+    // Process transcription result
+  }
+};
+```
+
+## SDK Update Recommendation
+
+Ensure you're using the latest version of Deepgram's SDKs:
+
+- [JavaScript/TypeScript SDK](https://github.com/deepgram/deepgram-js-sdk)
+- [Python SDK](https://github.com/deepgram/deepgram-python-sdk)
+- [Go SDK](https://github.com/deepgram/deepgram-go-sdk)
+- [Dotnet SDK](https://github.com/deepgram/deepgram-dotnet-sdk)
+- [Rust SDK](https://github.com/deepgram/deepgram-rust-sdk)
+
+Updated SDKs often contain fixes for issues related to empty transcriptions and connection handling.
+
+## References
+
+- [Deepgram WebSocket Troubleshooting](https://developers.deepgram.com/docs/troubleshooting-websocket-data-and-net-errors-when-live-streaming-audio)
+- [Models Overview](https://developers.deepgram.com/docs/models-languages-overview)
+- [Live Streaming Audio](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
+
+If you continue to experience issues, join our [Discord community](https://discord.gg/deepgram) for additional assistance.

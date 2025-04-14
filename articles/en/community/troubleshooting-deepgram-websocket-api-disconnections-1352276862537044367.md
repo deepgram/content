@@ -1,32 +1,117 @@
 # Troubleshooting Deepgram WebSocket API Disconnections
 
-Integrating Deepgram’s WebSocket API for live audio streaming and transcription can sometimes lead to connection stability issues. If you find that your connection is established successfully but disconnects shortly after due to not receiving audio data within the expected timeout window, there are a few key aspects to consider when diagnosing and resolving these issues.
+When using Deepgram's WebSocket API for live audio streaming and transcription, you may encounter connection issues. This guide will help you understand, diagnose, and resolve common WebSocket disconnections based on Deepgram's official documentation.
 
-## Connection Issues with Deepgram WebSocket
+## Understanding WebSocket Disconnection Errors
 
-When facing disconnection issues (error: 1011 indicating no audio data received within the timeout window), ensure that the following points are addressed:
+Deepgram's WebSocket API may close connections with specific error codes and messages:
 
-1. **Ensure Proper Audio Transmission**:
-   - Validate that your audio input stream is correctly capturing and transmitting data. You can check this using audio libraries like PyAudio to ensure the microphone is functioning correctly.
-   - Send only non-empty audio packets. An empty audio packet can lead to immediate disconnection. Consider implementing logic to verify the packet size before sending.
+| Code | Payload | Description |
+|------|---------|-------------|
+| `1008` | `DATA-0000` | The payload cannot be decoded as audio. The data is either not audio or uses an unsupported codec. |
+| `1011` | `NET-0000` | Deepgram hasn't sent a Text frame to the client within the timeout window. |
+| `1011` | `NET-0001` | Deepgram hasn't received a Binary or Text frame from the client within the 10-second timeout window. |
 
-2. **WebSocket Connection Setup**:
-   - Verify that your WebSocket connection setup properly authenticates with Deepgram by including authorization tokens appropriately.
-   - Configure WebSocket settings to avoid unintended timeouts.
+## Common Causes and Solutions for WebSocket Disconnections
 
-3. **Handling Keep-Alive Messages**:
-   - Consider sending `keep-alive` messages to maintain the WebSocket connection, but more importantly, ensure you're providing regular audio data.
+### For 1011 NET-0001 (No Audio Data Received)
 
-4. **Audio Format Compliance**:
-   - Check that the audio format is fully compliant with Deepgram’s requirements.
+This is the most common disconnection error, triggered when Deepgram doesn't receive any audio data within approximately 10 seconds.
 
-5. **Example of Validating Non-Empty Audio**:
-   - Implement a check for non-empty audio packets before they are sent to the WebSocket:
+#### Solutions:
 
-## Conclusion
+1. **Send Audio Promptly**: 
+   - Begin sending audio data immediately after establishing the WebSocket connection
+   - Don't wait longer than 10 seconds before sending your first audio packet
 
-Addressing connection issues with Deepgram's WebSocket API involves ensuring the continuous and valid transmission of audio data, proper WebSocket configuration, and handling keep-alive messages correctly. If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Discord](https://discord.gg/deepgram).
+2. **Implement KeepAlive Messages**:
+   - Send KeepAlive messages when there's no audio to transmit:
+   ```json
+   { "type": "KeepAlive" }
+   ```
+   - Note: KeepAlive alone won't prevent disconnection - you must send some audio data first
+
+3. **Avoid Empty Audio Packets**:
+   - Check audio packet size before sending:
+   ```javascript
+   // JavaScript example
+   if (audioData.length > 0) {
+     websocket.send(audioData);
+   }
+   ```
+
+4. **Handle Connection Closing Properly**:
+   - To intentionally close a connection, send:
+   ```json
+   { "type": "CloseStream" }
+   ```
+   - Don't send empty binary data (`Uint8Array(0)` or `b''`) as this is deprecated
+
+### For 1008 DATA-0000 (Invalid Audio Data)
+
+This error occurs when Deepgram can't decode the audio data you're sending.
+
+#### Solutions:
+
+1. **Verify Audio Format**:
+   - Ensure you're sending raw audio data (not containerized files like MP3 or WAV)
+   - Specify the correct encoding and sample rate in your connection parameters:
+   ```
+   wss://api.deepgram.com/v1/listen?encoding=linear16&sample_rate=16000
+   ```
+
+2. **Validate Audio Data**:
+   - Test your audio capture process by saving the same data to a file to verify it's valid
+   - Check that audio buffers aren't corrupted during transmission
+
+## Implementation Example: Maintaining a Robust Connection
+
+```javascript
+// Initialize WebSocket with proper parameters
+const ws = new WebSocket('wss://api.deepgram.com/v1/listen?encoding=linear16&sample_rate=16000');
+ws.binaryType = 'arraybuffer';
+
+// Set up authentication
+ws.onopen = () => {
+  ws.send(JSON.stringify({
+    type: 'Authorization',
+    token: 'YOUR_DEEPGRAM_API_KEY'
+  }));
+  
+  // Start sending audio immediately
+  startAudioCapture();
+  
+  // Set up keepalive interval
+  setInterval(() => {
+    if (noAudioBeingSent) {
+      ws.send(JSON.stringify({ type: 'KeepAlive' }));
+    }
+  }, 5000); // Send every 5 seconds when silent
+};
+
+// Handle audio packets
+function sendAudioChunk(audioData) {
+  // Prevent sending empty packets
+  if (audioData && audioData.length > 0) {
+    ws.send(audioData);
+  }
+}
+
+// Handle disconnection errors
+ws.onclose = (event) => {
+  console.log(`WebSocket closed with code ${event.code}, reason: ${event.reason}`);
+  
+  if (event.code === 1011 && event.reason === 'NET-0001') {
+    console.log('Connection timed out due to no audio data received within timeout window');
+    // Implement reconnection logic here
+  }
+};
+```
 
 ## Additional Resources
 
-- [Recovering From Connection Errors & Timeouts When Live Streaming](https://developers.deepgram.com/docs/recovering-from-connection-errors-and-timeouts-when-live-streaming-audio)
+- [Deepgram WebSocket Errors Documentation](https://developers.deepgram.com/docs/troubleshooting-websocket-data-and-net-errors-when-live-streaming-audio)
+- [Using KeepAlive Messages](https://developers.deepgram.com/docs/keep-alive)
+- [Live Streaming Starter Kit](https://github.com/deepgram/streaming-test-suite)
+
+If issues persist, join our [Discord community](https://discord.gg/deepgram) for additional assistance.
