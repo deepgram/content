@@ -1,22 +1,45 @@
-# Multi-language Support in Medical Models
+# Multi-language Support in Deepgram's Medical Models
 
-In the fast-evolving landscape of speech-to-text technologies, multi-language support is a valuable feature, especially in specialized applications such as medical transcription. Deepgram's Nova-2 model already provides extensive multi-language capabilities for general transcription tasks, making it an attractive choice for diverse global users.
+Speech-to-text technology for healthcare applications requires both specialized medical terminology recognition and support for diverse languages. This article provides accurate information about multi-language support in Deepgram's medical models, based on the official documentation.
 
-However, when it comes to specialized models like Nova-2 Medical, users often query if there are plans to integrate similar multi-language functionalities. While specifics can't be provided at this moment concerning the timeline or development roadmap for additional language support in Nova-2 Medical, it is confirmed that Deepgram is committed to expanding the language capabilities of all its models. This initiative aims to accommodate the growing demand across various industries, including the medical sector.
+## Current Language Support for Medical Models
 
-### The Difference a Multi-language Model Makes
-Multi-language models can drastically ease communication barriers in international medical settings, enhancing both understanding and patient care. By enabling support for multiple languages, medical transcription can be accessible to a broader audience, accommodating practitioners and patients fluent in different tongues.
+According to Deepgram's documentation, the current language support for medical models is as follows:
 
-### Future of Language Support
-Deepgram continuously seeks to enhance its offerings and strives to extend language compatibility where feasible. Users interested in specific languages or searing immediate solutions may consider combining the general model's current multi-language support with medical vocabulary lists tailored to their needs.
+- **Nova-3 Medical**: English only (`en`, `en-US`)
+- **Nova-2 Medical**: English only (`en`, `en-US`)
 
-If enhancements in language support are critical to your requirements, feedback from users plays a significant role in shaping future capabilities. Always feel free to contribute your suggestions through our community forums.
+This means that at present, Deepgram's specialized medical models are optimized for English language medical terminology and transcription.
 
-### Conclusion
-Though precise timelines are unavailable, rest assured that multi-language support remains a key area of focus. Deepgram's dedication to evolving its models to meet user needs reflects its commitment to excellence in the field of automatic speech recognition.
+## Multi-language Support in General Models
 
-For further assistance, if challenges persist or additional guidance is needed, contact your Deepgram support representative or engage with our community at [Deepgram Discord](https://discord.gg/deepgram).
+While the medical-specific models currently support only English, Deepgram's general models offer extensive multi-language capabilities:
 
-### Resources
-- [Deepgram Community Forums](https://github.com/orgs/deepgram/discussions)
+- **Nova-3**: Supports multilingual transcription with 10 languages (English, Spanish, French, German, Hindi, Russian, Portuguese, Japanese, Italian, and Dutch) and includes multilingual codeswitching capability
+- **Nova-2**: Supports over 40 languages and dialects, with multilingual codeswitching between Spanish and English
+
+## Options for Non-English Medical Transcription
+
+For organizations requiring medical transcription in languages other than English, there are several approaches to consider:
+
+1. **Use Nova-3 General Model**: For languages supported by Nova-3, this model offers excellent general transcription that may be sufficient for many medical contexts.
+
+2. **Custom Vocabulary**: Utilize Deepgram's custom vocabulary and keyterm features to enhance recognition of medical terminology in non-English languages.
+
+3. **Feature Requests**: If your organization has specific language needs for medical transcription, Deepgram welcomes feedback and feature requests to inform future development.
+
+## Future Developments
+
+Deepgram continues to expand language support across its model lineup. While specific timelines for additional language support in medical models aren't publicly announced, Deepgram's roadmap includes ongoing improvements to both language coverage and domain-specific capabilities.
+
+## Conclusion
+
+For English medical transcription, Deepgram's specialized medical models offer optimized performance. For other languages, the general Nova-3 or Nova-2 models provide robust multi-language support that can be enhanced with custom vocabulary for medical terminology. 
+
+For specific requirements or questions about language support in medical contexts, consider reaching out directly to Deepgram support or joining the community on [Discord](https://discord.gg/deepgram).
+
+## References
+
+- [Deepgram Models & Languages Overview](https://developers.deepgram.com/docs/models-languages-overview)
 - [Deepgram API Documentation](https://developers.deepgram.com/docs/)
+- [Deepgram Community Forums](https://github.com/orgs/deepgram/discussions)

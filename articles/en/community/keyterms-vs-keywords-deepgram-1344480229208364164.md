@@ -1,38 +1,80 @@
 # Understanding Keyterms vs Keywords in Deepgram
 
-In the Deepgram ecosystem, **Keyterms** and **Keywords** help enhance the accuracy of transcriptions by focusing on terms audio models may struggle with. However, they are distinct features supported by different models and cater to differing use-cases.
+When using Deepgram's speech-to-text API, you may need to improve recognition of specific terms or phrases. Deepgram offers two approaches for this: Keyterms and Keywords. This article explains the differences between these features based on Deepgram's official documentation.
 
-### Differences Between Keyterms and Keywords
+## Keyterms vs Keywords: Key Differences
 
-**Keyterms:**
-- **Model Support:** Exclusively available in the Nova-3 model. 
-- **Multi-word Support:** Capable of recognizing and accurately transcribing both individual words and multi-word phrases.
-- **Vocabulary Inclusion:** Works with both in-vocabulary and out-of-vocabulary terms.
-- **Accuracy:** Delivers a higher keyword recognition rate compared to Keywords.
+| Feature | Keyterms | Keywords |
+|---------|----------|----------|
+| **Model Support** | Nova-3 only | Nova-2, Nova, and legacy models |
+| **Language Support** | English only | All supported languages |
+| **Phrase Support** | Supports multi-word phrases | Limited to single words |
+| **Syntax** | Simple: `keyterm=word` | Complex: `keywords=word:boost` |
+| **Maximum Tokens** | 500 tokens per request | No specific token limit |
 
-**Keywords:**
-- **Model Support:** Used with Nova-2 and older models.
-- **Single-word Focus:** Primarily boosts individual uncommon words that aren't recognized correctly by the model.
-- **Out-of-vocabulary Emphasis:** Keywords focuses on improving transcription accuracy for words not previously or successfully transcribed by the model.
+## Keyterm Prompting (Nova-3)
 
-### Best Practices
+Keyterm Prompting allows you to instantly increase accuracy and recognition of important terminology, including:
+- Product and company names
+- Industry jargon
+- Multi-word phrases
+- Uncommon terms
 
-When working with **Keywords**, adhere to the following guidelines:
-- **Target Uncommon Words:** Boost words that the model struggles with. Avoid boosting common words or alphanumeric sequences.
-- **Limit Submission:** Submit each word once to avoid redundancy in processing.
-- **Focus on Principal Words**: Submit key parts of phrases rather than full phrases for more accurate emphasis.
+### Implementation
 
-For **Keyterms**, given their multi-word and broader vocabulary support, users can focus more on complete terminology that needs improved recognition, both familiar and unfamiliar to the model.
+```bash
+curl \
+  --request POST \
+  --header 'Authorization: Token YOUR_DEEPGRAM_API_KEY' \
+  --header 'Content-Type: audio/wav' \
+  --data-binary @youraudio.wav \
+  --url 'https://api.deepgram.com/v1/listen?model=nova-3&keyterm=nacho&keyterm=taco+bell'
+```
 
-### Conclusion
-Understanding the nuances between these features allows developers to leverage Deepgram's transcription capabilities more effectively. With improved recognition rates and broader support, adopting Keyterms with Nova-3 equips users with advanced transcription accuracy.
+For multi-word keyterms, you can either:
+- Use `+` or `%20` to separate words in a single keyterm
+- Submit each word as a separate keyterm
 
-For detailed guidance on utilizing these features, refer to the [Deepgram Developers Documentation for Keyterms](https://developers.deepgram.com/docs/keyterm) and [Keywords](https://developers.deepgram.com/docs/keywords).
+## Keywords (Nova-2 and older models)
 
----
+The Keywords feature helps improve recognition of out-of-vocabulary words or terms that the model might struggle with. Each keyword can have an "intensifier" value from 0 to 10 to adjust how strongly the model should emphasize recognition.
 
-**References:**
-- [Keyterm Documentation](https://developers.deepgram.com/docs/keyterm)
-- [Keyword Documentation](https://developers.deepgram.com/docs/keywords)
+### Implementation
 
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: https://discord.gg/deepgram
+```bash
+curl \
+  --request POST \
+  --header 'Authorization: Token YOUR_DEEPGRAM_API_KEY' \
+  --header 'Content-Type: audio/wav' \
+  --data-binary @youraudio.wav \
+  --url 'https://api.deepgram.com/v1/listen?model=nova-2&keywords=nacho:5&keywords=taco:3'
+```
+
+## Best Practices
+
+### For Keyterms (Nova-3)
+- Include the entire phrase for multi-word terms
+- Limit to 500 tokens per request
+- Use for both common and uncommon terms that need improved recognition
+
+### For Keywords (Nova-2)
+- Focus on uncommon words the model struggles with
+- Avoid boosting common words or alphanumeric sequences
+- Submit each word once to avoid redundancy
+- Use the intensifier value judiciously (higher isn't always better)
+
+## Migration from Keywords to Keyterms
+
+If you're using Nova-2 with Keywords and plan to migrate to Nova-3:
+
+1. Remove the intensifier values (numbers after colons)
+2. Replace `keywords` with `keyterm` in your requests
+3. Consider using multi-word phrases where appropriate
+
+## References
+
+- [Deepgram Keyterm Documentation](https://developers.deepgram.com/docs/keyterm)
+- [Deepgram Keywords Documentation](https://developers.deepgram.com/docs/keywords)
+- [Deepgram Models Overview](https://developers.deepgram.com/docs/models-languages-overview)
+
+For specific questions or assistance with implementation, join the Deepgram community on [Discord](https://discord.gg/deepgram).

@@ -1,26 +1,59 @@
-# Real-time vs Post-processed Transcription Accuracy
+# Real-time vs Pre-recorded Transcription Accuracy
 
-When deciding between real-time transcription and post-processing a full audio file, understanding the differences in accuracy can help you choose the best solution for your needs.
+When deciding between real-time transcription and pre-recorded audio processing, understanding the differences in accuracy and use cases can help you choose the right approach for your needs.
 
-## Accuracy Comparison
+## Understanding the Difference
 
-Deepgram's transcription services offer different levels of accuracy depending on the method used. 
+Deepgram offers two main approaches to speech-to-text transcription:
 
-1. **Pre-recorded Transcription**: This method typically offers higher accuracy because it leverages the entire audio context. Deepgram's benchmarks show a word error rate (WER) of 8.4% for pre-recorded English transcription. 
+1. **Pre-recorded Transcription**: Processes complete audio files after they've been fully recorded
+2. **Real-time Transcription**: Processes audio streams as they arrive, providing immediate results
 
-2. **Real-time Transcription**: In contrast, real-time transcription provides slightly less accuracy compared to pre-recorded because it processes audio as it comes in, without the advantage of overall context. The WER for real-time streaming is approximately 10.7%.
+## Accuracy Comparison with Nova-3
+
+According to Deepgram's documentation, Nova-3 represents a significant improvement in accuracy for both methods:
+
+- **Pre-recorded (Batch) Processing**: Nova-3 delivers a 47.4% reduction in word error rate (WER) compared to competitors
+- **Real-time (Streaming) Processing**: Nova-3 achieves a 54.2% reduction in WER compared to competitors
+
+While streaming transcription still typically has a slightly higher word error rate than pre-recorded transcription, the gap has narrowed significantly with Nova-3.
 
 ## When to Use Each Method
 
-- **Use Pre-recorded Transcription** if accuracy is your paramount concern and you do not need the results to be instantaneous. Submitting the whole audio for post-process transcription will result in slightly more accurate results due to the availability of the full audio context.
+### Pre-recorded Transcription
 
-- **Use Real-time Transcription** when you need immediate results, such as in scenarios where live feedback is vital. Although it trades off a bit of accuracy, the ability to get results in real-time can be critical for interactive applications.
+Best for:
+- Maximum accuracy
+- Processing archives of audio/video content
+- Applications where real-time results aren't required
+- Post-production transcription of meetings, interviews, etc.
+
+Pre-recorded transcription can leverage the entire audio context, allowing the model to make more informed decisions about ambiguous speech.
+
+### Real-time Transcription
+
+Best for:
+- Live captioning
+- Interactive voice applications
+- Voice assistants and chatbots
+- Real-time meeting transcription
+- Customer service applications
+
+Real-time transcription delivers immediate results while maintaining excellent accuracy, making it suitable for interactive applications.
+
+## Implementation Considerations
+
+When implementing either approach, consider:
+
+1. **Model Selection**: The Nova-3 model generally provides the best accuracy for both streaming and pre-recorded transcription
+2. **Language Support**: Ensure your chosen model supports all required languages
+3. **Features**: Some features like diarization behave differently between pre-recorded and real-time transcription
 
 ## Conclusion
 
-If precision is crucial and time is flexible, opting for post-processed transcription will yield the best accuracy. However, real-time transcription is invaluable for immediate transcription needs, despite a slight trade-off in accuracy.
+Both pre-recorded and real-time transcription approaches with Deepgram's Nova-3 model offer excellent accuracy. Choose pre-recorded transcription when maximum accuracy is paramount and time isn't a constraint. Opt for real-time transcription when immediate results are necessary, with only a minor trade-off in accuracy.
 
 ## References
 - [Deepgram Pre-recorded Transcription](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)
 - [Deepgram Live Transcription](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
-- [Deepgram Benchmark Study](https://deepgram.com/learn/nova-2-speech-to-text-api)
+- [Deepgram Models Overview](https://developers.deepgram.com/docs/models-languages-overview)
