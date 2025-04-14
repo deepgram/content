@@ -12,6 +12,7 @@ The most significant change is the transition from keywords to keyterms:
 - **Nova-3 uses Keyterms**: The newer model uses the `keyterm` parameter with a simplified syntax
 
 Example of Nova-3 keyterm usage:
+
 ```curl
 curl \
   --request POST \
@@ -34,12 +35,14 @@ Nova-3 generally offers improved transcription accuracy and performance across v
 When migrating from Nova-2 to Nova-3, make the following changes to your API requests:
 
 1. Change the model parameter from `nova-2` to `nova-3`:
-   ```
+
+   ```text
    model=nova-3
    ```
 
 2. Replace any `keywords` parameters with the new `keyterm` format:
-   ```
+
+   ```text
    # Before (Nova-2)
    keywords=example:5&keywords=test:2
    
@@ -66,8 +69,8 @@ const options = {
   interim_results: true,
   endpointing: 300,
   utterance_end_ms: 1000,
-  // Use keyterms instead of keywords
-  keyterms: ['example', 'test']
+  // Use keyterm instead of keywords
+  keyterm: ['example', 'test']
 };
 
 // Create a connection
@@ -88,6 +91,7 @@ connection.addListener(LiveTranscriptionEvents.TRANSCRIPT_RECEIVED, (data) => {
 3. **SDK Version**: Ensure you're using the latest version of the Deepgram SDK that fully supports Nova-3.
 
 ## References
+
 - [Deepgram Models Overview](https://developers.deepgram.com/docs/models-languages-overview)
 - [Keyterm Documentation](https://developers.deepgram.com/docs/keyterm)
 - [Legacy Keywords Documentation](https://developers.deepgram.com/docs/keywords)
