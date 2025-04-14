@@ -25,9 +25,8 @@ guard let stereoBuffer = AVAudioPCMBuffer(pcmFormat: format,
 ```
 
 ### Downsampling Audio
-Once combined, it's necessary to convert the sample rate to 16kHz and prepare the buffer for API submission.
+Once combined, it's necessary to convert the sample rate to 16kHz and prepare the buffer for API submission. Use a high-quality resampler to maintain audio quality:
 
-Example conversion:
 ```swift
 guard let targetFormat = AVAudioFormat(
     commonFormat: .pcmFormatInt16,
@@ -38,8 +37,13 @@ guard let targetFormat = AVAudioFormat(
     print("Failed to create target format")
     return nil
 }
-// Your conversion logic...
-return Data(bytes: channelData[0], count: dataLength)
+
+// Use AVAudioConverter for high-quality resampling
+let converter = AVAudioConverter(from: format, to: targetFormat)!
+var error: NSError?
+let status = converter.convert(to: targetBuffer, error: &error) { 
+    // Conversion logic here
+}
 ```
 
 ## Sending Data to Deepgram API
@@ -47,25 +51,61 @@ Ensure that the audio data is formatted correctly before sending it to the API. 
 
 ```json
 {
-  "channels": "2",
-  "multichannel": "true"
+  "model": "nova",
+  "encoding": "linear16",
+  "sample_rate": 16000,
+  "channels": 2,
+  "multichannel": true
 }
 ```
-- **Channels**: Set to 2 to denote stereo input.
-- **Multichannel**: Set to `true` to ensure the API treats each channel independently.
+
+- **model**: Use "nova" for best results with stereo audio
+- **encoding**: Set to "linear16" for 16-bit PCM
+- **sample_rate**: Set to 16000 for optimal performance
+- **channels**: Set to 2 for stereo input
+- **multichannel**: Set to true to process each channel independently
+
+## Handling Channel-Specific Results
+
+When using multichannel processing, the API response will include separate transcriptions for each channel:
+
+```json
+{
+  "results": {
+    "channels": [
+      {
+        "alternatives": [
+          {
+            "transcript": "System audio transcription...",
+            "confidence": 0.95
+          }
+        ]
+      },
+      {
+        "alternatives": [
+          {
+            "transcript": "Microphone transcription...",
+            "confidence": 0.92
+          }
+        ]
+      }
+    ]
+  }
+}
+```
 
 ## Troubleshooting Transcription
 
 If the transcription results merge the input from both channels, check the following aspects:
-- **Ensure Interleaved is Set Correctly**: When converting the audio, whether `interleaved` is set might affect the input format Deepgram expects.
-- **Validate Buffer Data**: Make sure the buffer accurately represents stereo (separate left/right channels) before sending to Deepgram.
-
-Often, setting `interleaved` to false initially for buffer creation and true for conversion resolves confusion in channel separation, as Deepgram expects a specific format.
+- **Audio Format**: Ensure the audio is properly formatted as stereo with correct channel separation
+- **API Parameters**: Verify that both `channels` and `multichannel` parameters are set correctly
+- **Sample Rate**: Confirm the audio is properly resampled to 16kHz
 
 ## Reach Out for Support
 
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Community](https://discord.gg/deepgram)
+If issues persist or the system behavior seems inconsistent, reach out to our community for assistance: [Deepgram Community](https://discord.gg/deepgram)
 
 ## References
 - [AVAudioPCMBuffer Documentation](https://developer.apple.com/documentation/avfaudio/avaudiopcmbuffer)
 - [Deepgram API Documentation](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
+- [Deepgram Multichannel Audio Guide](https://developers.deepgram.com/docs/multichannel-audio)

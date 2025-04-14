@@ -8,29 +8,64 @@ The HTTP 401 Unauthorized status code means that the request to the remote serve
 
 1. The URL you've provided to Deepgram requires authentication, but correct authorization credentials were not included in the request.
 2. The credentials provided (if any) were incorrect or have expired.
-3. The remote server is configured to deny access to the media file for some reason.
+3. The remote server is configured to deny access to the media file.
 
 ## Steps to Resolve the 401 Error
 
 ### 1. Ensure Public Accessibility
-Ensure that the URL you're providing to Deepgram is publicly accessible and doesn’t require authentication to be accessed. If the media file requires authentication, you may need to consider either downloading the file first and then submitting it directly to Deepgram or adjusting your server settings to allow temporary public access.
+
+Ensure that the URL you're providing to Deepgram is publicly accessible and doesn't require authentication to be accessed. If the media file requires authentication, you have two options:
+
+- Download the file first and submit it directly to Deepgram
+- Use a pre-signed URL with temporary access
 
 ### 2. Verify URL and Permissions
-Double-check that the URL is correct and you have the necessary permissions to access the media. Make sure that no typos exist in the URL and that the file is accessible through a regular web browser with no login required.
 
-### 3. Authentication Mechanism
-If the media requires authentication and cannot be made public, ensure that you're using the appropriate mechanism to authenticate your requests. You may have to adjust your server configuration to allow Deepgram’s IP addresses to access the server directly.
+Double-check that:
 
-### 4. Review Remote Server Settings
-Consider checking the settings of the remote server hosting the media. Ensure it is configured to serve the expected HTTP headers and response codes.
+- The URL is correct and accessible
+- The file exists at the specified location
+- The server is not blocking access based on IP or user agent
+
+### 3. Authentication Headers
+
+If the remote server requires authentication, you can include the necessary headers in your request to Deepgram:
+
+```json
+{
+  "url": "https://example.com/audio.mp3",
+  "headers": {
+    "Authorization": "Bearer your-token-here"
+  }
+}
+```
+
+### 4. Pre-signed URLs
+
+For cloud storage services like S3, generate a pre-signed URL with appropriate permissions:
+
+```python
+# Example for AWS S3
+import boto3
+from datetime import datetime, timedelta
+
+s3_client = boto3.client('s3')
+url = s3_client.generate_presigned_url(
+    'get_object',
+    Params={'Bucket': 'your-bucket', 'Key': 'audio.mp3'},
+    ExpiresIn=3600  # URL expires in 1 hour
+)
+```
 
 For further assistance, you can reach out to our [GitHub Discussions](https://github.com/orgs/deepgram/discussions) or join our [Discord community](https://discord.gg/deepgram), where our community and support team can provide additional help.
 
 ## Conclusion
-Dealing with remote content errors often requires a keen eye for server details and proper authentication handling. By following the steps above, you can work towards resolving the 401 Unauthorized error effectively.
+
+Dealing with remote content errors requires proper authentication handling and URL management. By following the steps above, you can work towards resolving the 401 Unauthorized error effectively.
 
 ---
 
 ### References
 
-- [Deepgram API Errors documentation](https://developers.deepgram.com/reference/errors#400-failure-to-fetch-remote-text-from-url)
+- [Deepgram API Documentation](https://developers.deepgram.com)
+- [Handling Remote URLs](https://developers.deepgram.com/docs/remote-urls)
