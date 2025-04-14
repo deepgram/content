@@ -1,30 +1,102 @@
 # Prevent Deepgram Agent from Self-Interruption
 
-### Understanding and Mitigating Deepgram Agent Self-Interruption
+## Understanding and Mitigating Deepgram Agent Self-Interruption
 
-In certain scenarios, the Deepgram demo agent may seem to "talk to itself," where the system mistakenly interprets the agent's speech as user input. This behavior may be encountered when using the Deepgram agent without isolating audio sources effectively.
+When using Deepgram's Voice Agent API, you might encounter situations where the agent responds to its own voice output, creating an unintended feedback loop. This happens when the agent's speech is captured by the microphone and sent back to the API as user input.
 
-**Potential Causes and Solutions:**
+## Solutions to Prevent Self-Interruption
 
-To resolve this issue, consider employing one of the following strategies:
+Based on the official Deepgram documentation, here are the recommended approaches to prevent the agent from triggering itself:
 
-1. **Use a Headset:**
-   - **Rationale:** Using a headset can help isolate the audio input from the microphone, preventing the system from capturing its own output as input.
-   - **Implementation:** Ensure your computer settings are correctly configured to use the headset as both input and output devices.
+1. **Enable Echo Cancellation**:
+   - Most browsers provide built-in echo cancellation that can help prevent the microphone from picking up the agent's speech.
+   - Implement echo cancellation in your `getUserMedia` audio constraints:
 
-2. **Programmatic Solutions:**
-   - **Mute Microphone Input:** Implement logic in your application to temporarily mute the microphone while the agent is speaking. This ensures no input is captured during this period.
-   - **Engage a Voice Activity Detector (VAD):** Utilize a VAD to control when the microphone sends audio data. By detecting user speech, you can manage when input should be transmitted to the agent, disengaging during the agent's speech.
+   ```javascript
+   navigator.mediaDevices
+       .getUserMedia({
+         audio: {
+           sampleRate: 16000,
+           channelCount: 1,
+           echoCancellation: true,  // Helps suppress the agent's voice being re-captured
+           noiseSuppression: false, // Optional, depends on use case
+         },
+       })
+       .then(stream => {
+         // Use the audio stream
+       })
+       .catch(error => {
+         console.error("Error accessing microphone:", error);
+       });
+   ```
 
-#### Example: Using VAD to Control Audio Input
+2. **Programmatically Mute the Microphone**:
+   - Temporarily disable microphone input while the agent is speaking.
+   - Re-enable the microphone when the agent has finished speaking.
+   - This can be implemented by tracking the agent's speech state through the WebSocket events.
 
-Integrate a local VAD within your application to efficiently manage audio input. The VAD can dynamically enable/disable the transmission of audio data based on user speech, reducing feedback loops where the agent hears its responses.
+3. **Use a Voice Activity Detector (VAD)**:
+   - Implement a local VAD to determine when to send audio through the WebSocket.
+   - Only send audio when the VAD detects human speech, preventing the agent's voice from being processed.
+   - Disengage/engage sending audio based on the VAD's detection.
 
-### Conclusion
+4. **Use a Headset**:
+   - A physical solution is to use a headset, which naturally separates the input (microphone) from the output (speakers/headphones).
+   - This reduces the chance of audio feedback loops.
 
-By using a physical headset or programmable input controls like muting or VAD, you can optimize the interaction with the Deepgram agent and prevent it from self-interrupting. Testing different configurations based on your environment can determine the best solution for your application setup.
+## Implementation Example
 
-For more advanced implementations or troubleshooting, reach out to your Deepgram support representative if you have one, or visit our community for assistance: [https://discord.gg/deepgram](https://discord.gg/deepgram)
+Here's a simple example of implementing microphone muting during agent speech:
+
+```javascript
+// Track when agent is speaking
+let isAgentSpeaking = false;
+let micStream = null;
+
+// When connecting to Voice Agent API
+webSocket.addEventListener('message', (event) => {
+  const message = JSON.parse(event.data);
+  
+  // When agent starts speaking
+  if (message.type === 'AgentStartedSpeaking') {
+    isAgentSpeaking = true;
+    // Mute microphone
+    if (micStream) {
+      micStream.getAudioTracks().forEach(track => track.enabled = false);
+    }
+  }
+  
+  // When agent stops speaking
+  if (message.type === 'AgentAudioDone') {
+    isAgentSpeaking = false;
+    // Unmute microphone
+    if (micStream) {
+      micStream.getAudioTracks().forEach(track => track.enabled = true);
+    }
+  }
+});
+
+// Get microphone stream
+navigator.mediaDevices.getUserMedia({
+  audio: {
+    echoCancellation: true,
+    sampleRate: 16000,
+    channelCount: 1
+  }
+}).then(stream => {
+  micStream = stream;
+  // Process the stream...
+});
+```
+
+## Further Resources
+
+For more details on implementing these solutions, refer to the official Deepgram documentation:
+
+- [Voice Agent Adaptive Echo Cancellation](https://developers.deepgram.com/docs/voice-agent-echo-cancellation)
+- [Voice Agent Audio & Playback](https://developers.deepgram.com/docs/voice-agent-audio-playback)
+
+If you continue to experience issues, reach out to the Deepgram community for assistance: [Deepgram Discord](https://discord.gg/deepgram)
 
 ### References
 - Learn more about Deepgram Agent API: [Deepgram Documentation](https://developers.deepgram.com/docs/voice-agent)
