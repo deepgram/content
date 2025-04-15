@@ -1,0 +1,77 @@
+---
+title: "Troubleshooting 401 Unauthorized Error in Deepgram API"
+description: "Troubleshoot the 401 Unauthorized error when using Deepgram's speech-to-text API to transcribe audio."
+summary: "This article explains the root causes of the 401 Unauthorized error when using Deepgram's API and provides steps to resolve it, ensuring that the media URL is publicly accessible and authentication credentials are correct."
+---
+
+<CommunityQuestion>I'm getting a 401 Unauthorized error when trying to transcribe audio using the Deepgram API. How can I resolve this issue?</CommunityQuestion>
+
+When using the Deepgram API to transcribe prerecorded audio, you may encounter a `REMOTE_CONTENT_ERROR` with an `err_msg` of "The remote server hosting the media returned a client error: 401 Unauthorized." This error indicates that Deepgram encountered an authentication issue when trying to access media from a remote server.
+
+## Understanding the 401 Unauthorized Error
+
+The HTTP 401 Unauthorized status code means that the request to the remote server was not properly authenticated. This could be due to several reasons:
+
+1. The URL you've provided to Deepgram requires authentication, but correct authorization credentials were not included in the request.
+2. The credentials provided (if any) were incorrect or have expired.
+3. The remote server is configured to deny access to the media file.
+
+## Steps to Resolve the 401 Error
+
+### 1. Ensure Public Accessibility
+
+Ensure that the URL you're providing to Deepgram is publicly accessible and doesn't require authentication to be accessed. If the media file requires authentication, you have two options:
+
+- Download the file first and submit it directly to Deepgram
+- Use a pre-signed URL with temporary access
+
+### 2. Verify URL and Permissions
+
+Double-check that:
+
+- The URL is correct and accessible
+- The file exists at the specified location
+- The server is not blocking access based on IP or user agent
+
+### 3. Authentication Headers
+
+If the remote server requires authentication, you can include the necessary headers in your request to Deepgram:
+
+```json
+{
+  "url": "https://example.com/audio.mp3",
+  "headers": {
+    "Authorization": "Bearer your-token-here"
+  }
+}
+```
+
+### 4. Pre-signed URLs
+
+For cloud storage services like S3, generate a pre-signed URL with appropriate permissions:
+
+```python
+# Example for AWS S3
+import boto3
+from datetime import datetime, timedelta
+
+s3_client = boto3.client('s3')
+url = s3_client.generate_presigned_url(
+    'get_object',
+    Params={'Bucket': 'your-bucket', 'Key': 'audio.mp3'},
+    ExpiresIn=3600  # URL expires in 1 hour
+)
+```
+
+For further assistance, you can reach out to our [GitHub Discussions](https://github.com/orgs/deepgram/discussions) or join our [Discord community](https://discord.gg/deepgram), where our community and support team can provide additional help.
+
+## Conclusion
+
+Dealing with remote content errors requires proper authentication handling and URL management. By following the steps above, you can work towards resolving the 401 Unauthorized error effectively.
+
+---
+
+### References
+
+- [Deepgram API Documentation](https://developers.deepgram.com)
+- [Handling Remote URLs](https://developers.deepgram.com/docs/remote-urls)

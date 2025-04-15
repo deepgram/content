@@ -1,0 +1,88 @@
+---
+title: "Keyterms Support in Deepgram's Nova Models"
+description: "Learn how to use keyterms for emphasising important words in Deepgram's speech-to-text transcriptions."
+summary: "This article explains the difference between keywords and keyterms in Deepgram's speech recognition models. It covers how to configure keyterms for accurate transcription of important terms, and which Nova models support this feature."
+---
+
+<CommunityQuestion>Hi there, I'm working on a project that requires accurate transcription of certain key terms. I've heard that Deepgram's Nova models have some support for this, but I'm not sure how to properly configure it. Could someone provide guidance on using keyterms with the different Nova models?</CommunityQuestion>
+
+When working with Deepgram's speech-to-text API, it's important to understand how different models support various features. This article provides accurate information about keyterms support in Nova models, based on Deepgram's official documentation.
+
+## Understanding Keywords vs. Keyterms
+
+Deepgram offers two different methods for emphasizing specific terms in transcriptions:
+
+1. **Keywords** (Legacy Feature): Available in Nova and Nova-2 models
+   - Syntax: `keywords=term:intensifier` (where intensifier is a number from 0-10)
+   - Example: `keywords=meeting:5&keywords=agenda:3`
+
+2. **Keyterms** (Nova-3 Feature): Available in Nova-3 model
+   - Syntax: `keyterm=term` (no intensifier values)
+   - Example: `keyterm=meeting&keyterm=agenda`
+
+## Keyterms Support by Model
+
+- **Nova**: Supports the legacy `keywords` parameter only
+- **Nova-2**: Supports the legacy `keywords` parameter only
+- **Nova-3**: Supports the new `keyterm` parameter only
+
+## Migration Considerations
+
+If you're migrating from Nova-2 to Nova-3, you'll need to update your API requests to replace `keywords` with `keyterm`:
+
+**Nova-2 Request Example:**
+
+```curl
+curl \
+  --request POST \
+  --header 'Authorization: Token YOUR_DEEPGRAM_API_KEY' \
+  --header 'Content-Type: audio/wav' \
+  --data-binary @youraudio.wav \
+  --url 'https://api.deepgram.com/v1/listen?model=nova-2&keywords=meeting:5&keywords=agenda:3'
+```
+
+**Nova-3 Request Example:**
+
+```curl
+curl \
+  --request POST \
+  --header 'Authorization: Token YOUR_DEEPGRAM_API_KEY' \
+  --header 'Content-Type: audio/wav' \
+  --data-binary @youraudio.wav \
+  --url 'https://api.deepgram.com/v1/listen?model=nova-3&keyterm=meeting&keyterm=agenda'
+```
+
+## Using the JavaScript SDK
+
+When using the Deepgram JavaScript SDK with different models:
+
+```javascript
+// For Nova-2
+const nova2Options = {
+  model: 'nova-2',
+  keywords: [
+    { word: "meeting", boost: 5 },
+    { word: "agenda", boost: 3 }
+  ]
+};
+
+// For Nova-3
+const nova3Options = {
+  model: 'nova-3',
+  keyterm: ["meeting", "agenda"]
+};
+```
+
+## How Keyterms and Keywords Work
+
+Both features serve to emphasize specific terms in your transcription, which can improve recognition accuracy for those terms. The main differences are:
+
+1. **Syntax**: Keyterms uses a simpler syntax without intensifiers
+2. **Implementation**: Internal processing differences may lead to slightly different results
+3. **Future Support**: Keyterms is the newer feature and will receive ongoing improvements
+
+## References
+
+- [Deepgram Keyterm Documentation](https://developers.deepgram.com/docs/keyterm)
+- [Deepgram Keywords Documentation (Legacy)](https://developers.deepgram.com/docs/keywords)
+- [Deepgram Models Overview](https://developers.deepgram.com/docs/models-languages-overview)
