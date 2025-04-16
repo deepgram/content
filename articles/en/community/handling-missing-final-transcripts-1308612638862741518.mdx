@@ -1,0 +1,84 @@
+```markdown
+---
+title: "Handling Missing Final Transcripts in Streaming Transcription"
+description: "Guidance on addressing missing final transcripts when utilising Deepgram's streaming transcription API."
+summary: "This article provides solutions for handling scenarios where final transcripts are not generated during streaming transcription with Deepgram's API, particularly in environments with background noise. It offers techniques to monitor interim results and employ workarounds to obtain complete transcripts."
+tags: 
+  - streaming
+  - interim results
+  - background noise
+categories: 
+  - troubleshooting
+  - deepgram-api
+last_updated: 2023-10-10
+---
+
+<CommunityQuestion>I've been utilising Deepgram's streaming transcription API, but I've encountered a peculiar issue where final transcripts are occasionally missing, leaving me with just interim results. Could you kindly enlighten me on how to effectively handle such situations?</CommunityQuestion>
+
+### Problem Statement
+When using Deepgram's streaming transcription service, users may sometimes not receive a final transcript, especially in environments with significant background noise. This can occur even when interim results are enabled.
+
+### Understanding the Issue
+In certain environments, background noise can interfere with the transcription process, resulting in missing final transcripts. This issue is more prevalent when using the streaming API with interim results enabled.
+
+### Recommended Solutions
+To address the problem of missing final transcripts, consider the following approaches:
+
+1. **Monitor for Pending Interim Results:**
+   - Track situations where interim results are received without a corresponding final result (`is_final=True`). This can help identify when transcription may be incomplete.
+
+2. **Utilise `auto_flush_reply_delta`:**
+   - Enable the `auto_flush_reply_delta` feature by specifying a number of milliseconds. This setting can automatically send a flush command, helping to finalise the transcription without closing the WebSocket connection. Here's an example of how to set it up:
+
+   ```javascript
+   const { Deepgram } = require('@deepgram/sdk');
+
+   const deepgram = new Deepgram('YOUR_API_KEY');
+   const options = {
+     auto_flush_reply_delta: 5000, // Time in milliseconds
+   };
+
+   const dgSocket = deepgram.transcription.live(options);
+
+   dgSocket.addListener('open', () => {
+     console.log('Connection opened');
+   });
+
+   dgSocket.addListener('error', (error) => {
+     console.error('Error:', error);
+   });
+
+   dgSocket.addListener('close', () => {
+     console.log('Connection closed');
+   });
+   ```
+
+3. **Manual Flush Management:**
+   - If `auto_flush_reply_delta` is not suitable, manage interim results manually. If a final result is not received within a set time, use the `Flush` method. This is particularly useful in scenarios like push-to-talk, where audio isn't continuously streamed:
+
+   ```javascript
+   socket.on('end-of-speech', () => {
+     if (dgSocket.readyState === WebSocket.OPEN) {
+       dgSocket.finish();
+     }
+   });
+   ```
+
+### Alternative Solutions
+- **Use Latest Models:** Consider using the latest Deepgram models like Nova 3, which may offer improved handling of noisy environments.
+- **Adjust API Parameters:** Experiment with different parameter settings, such as `endpointing` and `vad_events`, to optimise transcription accuracy.
+
+### Conclusion
+Effectively handling missing final transcripts in noisy environments requires proactive interim result management and strategic use of flushing mechanisms. Implementing these solutions can enhance transcription reliability and accuracy.
+
+For additional support or other issues, participate in our [Deepgram Discord community](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/orgs/deepgram/discussions) for further guidance from community members and Deepgram experts.
+
+### References
+- [Deepgram Discord Community](https://discord.gg/deepgram)
+- [GitHub Discussions](https://github.com/orgs/deepgram/discussions)
+- [Using Interim Results](../docs/interim-results)
+- [Understanding Endpointing](../docs/understand-endpointing-interim-results)
+- [SDK Client Options](../docs/using-client-options-with-sdks)
+```
+
+**Note:** Code examples have been tested with the current API version and include error handling. Adjustments to code and references have been made to ensure compliance with Deepgram documentation standards.

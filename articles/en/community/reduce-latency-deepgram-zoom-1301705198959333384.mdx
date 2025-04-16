@@ -1,0 +1,105 @@
+---
+title: "Reducing Latency in Deepgram Live Streaming from Zoom"
+description: "Techniques to mitigate latency when using Deepgram's live speech-to-text streaming with Zoom."
+summary: "This article provides guidance on addressing latency issues that may arise when integrating Deepgram's live streaming transcription service with Zoom meetings. It covers optimising network bandwidth, configuring tools like Ngrok and Node Media Server, and enhancing the data pipeline."
+tags: 
+  - Deepgram
+  - Zoom
+  - Live Streaming
+  - Latency
+  - Real-time Transcription
+categories:
+  - Troubleshooting
+  - Integration
+last_updated: 2023-10-25
+---
+
+<CommunityQuestion>I'm integrating Deepgram's live transcription with Zoom, but experiencing frustrating latency issues. Are there any techniques to reduce delays and improve real-time streaming performance?</CommunityQuestion>
+
+### Problem Statement
+
+Integrating Deepgram's live streaming transcription service with Zoom can sometimes lead to latency issues, impacting real-time performance. This article provides detailed strategies and technical guidance to optimise your setup and reduce delays.
+
+### Optimising Network and Bandwidth
+
+- **Check Bandwidth**: Ensure both upload and download speeds meet the requirements for uninterrupted streaming. Use tools like `speedtest-cli` to measure your network performance.
+  
+  ```shell
+  speedtest-cli
+  ```
+
+- **Prefer Wired Connections**: Opt for a wired connection to minimise packet loss and latency.
+
+### Configuring Ngrok and Node Media Server
+
+- **Upgrade Ngrok**: Consider using the paid version of Ngrok for better performance. Alternatively, use a more performant service like LocalTunnel or Serveo.
+  
+- **Configure Node Media Server**: Ensure Node Media Server is correctly configured with adequate resources. Here's an example configuration:
+
+  ```json
+  {
+    "rtmp": {
+      "port": 1935,
+      "chunk_size": 60000,
+      "gop_cache": true,
+      "ping": 30,
+      "ping_timeout": 60
+    }
+  }
+  ```
+
+### Enhancing Python Processing Efficiency
+
+- **Code Optimisation**: Profile your Python code using tools like `cProfile` to identify bottlenecks.
+
+  ```python
+  import cProfile
+  cProfile.run('your_function()')
+  ```
+
+- **Modular Testing**: Test components independently to pinpoint latency sources.
+
+### Adjusting Zoom Settings
+
+- **Optimise Video**: Lower the video resolution in Zoom settings or disable enhancements to conserve bandwidth and reduce latency.
+
+### Monitoring and Debugging
+
+- **Utilise Logs**: Continuously monitor logs with timestamps from Ngrok, Node Media Server, and Python scripts to identify latency sources.
+
+### Server and Resource Management
+
+- **Cluster Resources**: Ensure your server is not overcommitting resources and is optimised for streaming. Use tools like `htop` to monitor CPU and memory usage.
+
+### Alternative Solutions
+
+- **Direct Connections**: Try removing Ngrok temporarily or switch to a more performant tunnelling service for testing purposes.
+- **Contact Support**: If issues persist, consult Deepgram support or join the [Deepgram Community on Discord](https://discord.gg/deepgram) for dedicated assistance.
+
+### Error Handling
+
+- **Common Errors**: Handle connection errors with retries and log them for analysis. Here's a basic retry mechanism:
+
+  ```python
+  import time
+
+  max_retries = 5
+  for i in range(max_retries):
+      try:
+          # Your connection code
+          break
+      except ConnectionError as e:
+          print(f"Connection failed: {e}, retrying {i+1}/{max_retries}...")
+          time.sleep(2)
+  ```
+
+### References
+
+- [Integrate Deepgram with Zoom](/docs/integrate-deepgram-with-zoom)
+- [Deepgram Streaming Documentation](/docs/getting-started-with-live-streaming-audio)
+- [Ngrok Documentation](https://ngrok.com/docs)
+- [Node Media Server GitHub](https://github.com/illuspas/Node-Media-Server)
+
+### Conclusion
+
+By following these optimisations and conducting thorough checks, you can reduce latency and improve the performance of Deepgram's transcription service with Zoom. For further assistance, explore the [Deepgram GitHub Discussions](https://github.com/deepgram) or join the [community on Discord](https://discord.gg/deepgram).

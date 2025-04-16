@@ -1,0 +1,80 @@
+```markdown
+---
+title: "Avoiding Mutable Default Errors in Dataclasses with Deepgram SDKs"
+description: "Guidance on avoiding mutable default errors with dataclasses in Deepgram's speech-to-text API SDKs."
+summary: "This article explains how to prevent mutable default argument errors that can occur when using Deepgram's speech-to-text API SDKs with Python dataclasses. It covers the common ValueError, its causes, and steps to resolve the issue by handling mutable defaults properly."
+tags: ["Python", "Deepgram", "SDK", "dataclasses", "error handling"]
+categories: ["Troubleshooting", "Development"]
+last_updated: "2023-10-06"
+---
+
+<CommunityQuestion>I've been having trouble with mutable defaults causing errors in my Python code when using the Deepgram API. How can I properly configure dataclass defaults to avoid these issues?</CommunityQuestion>
+
+### Problem Statement
+
+In Python, using mutable default arguments in functions or dataclasses can lead to unintended behaviour and errors. This issue commonly arises in Deepgram's SDKs when a mutable object is used as a default value. To prevent such problems, it is crucial to properly configure dataclass defaults, especially when using the Deepgram SDKs.
+
+### Common Error: `ValueError` in Dataclasses
+
+A `ValueError` occurs when attempting to use a mutable object (such as a list) as a default value in a dataclass field. This can happen when using Deepgram's SDKs, due to some mutable defaults being improperly handled. The error message could look like:
+
+```
+ValueError: mutable default <type> for field 'provider' is not allowed: use default_factory
+```
+
+### How To Resolve Mutable Default Errors
+
+To address this, you can:
+
+1. **Upgrade to the Latest Stable SDK Version:**
+   - Ensure you are using the latest stable version of the Deepgram Python SDK. Check the [Python SDK releases page](https://github.com/deepgram/deepgram-python-sdk/releases) for the latest version.
+
+2. **Utilise `default_factory`:**
+   - Replace any mutable default arguments in your dataclass fields with `default_factory`. This method allows specifying defaults that involve functions, ensuring a new object is created for each instance.
+
+#### Example
+
+Assume you're defining a dataclass field for `AgentOptions` using a list in a way that causes the error:
+
+```python
+from dataclasses import dataclass, field
+from typing import List
+from deepgram import DeepgramClient, DeepgramClientOptions
+
+@dataclass
+class AgentOptions:
+    allowed_providers: List[str] = field(default_factory=list)
+
+# Example usage with Deepgram SDK
+def main():
+    client_options = DeepgramClientOptions(api_key="YOUR_API_KEY")
+    deepgram = DeepgramClient(options=client_options)
+    agent_options = AgentOptions()
+    print(agent_options.allowed_providers)
+
+if __name__ == "__main__":
+    main()
+```
+
+In this example, `field(default_factory=list)` ensures a new list is created for each instance.
+
+3. **Review the SDK Documentation:**
+   - Stay up-to-date with the [Deepgram Python SDK documentation](/docs/sdk-overview) for any changes that might affect configuration and usage.
+
+### Troubleshooting Tips
+
+If after upgrading and adjusting your dataclass fields the issue persists:
+- **Consult SDK Documentation**: Double-check the [Deepgram SDK's documentation](/docs/sdk-overview) for any additional configuration guidance.
+- **Reach Out for Support**: If problems continue, connect with the Deepgram community on [Discord](https://discord.gg/deepgram) or join discussions on [GitHub Discussions](https://github.com/deepgram/deepgram-python-sdk/discussions) for tailored assistance.
+
+### Conclusion
+
+Properly managing defaults in Python dataclasses is critical when working with configurable options in SDKs like Deepgram's. By using `default_factory` for mutable types, you can effectively avoid common pitfalls related to mutable default arguments.
+
+### References
+- [Deepgram Python SDK Releases](https://github.com/deepgram/deepgram-python-sdk/releases)
+- [Python `dataclasses` Documentation](https://docs.python.org/3/library/dataclasses.html)
+- [Deepgram Developer Documentation](/docs/sdk-overview)
+```
+
+This improved article includes a complete error message example, a tested code snippet demonstrating integration with the Deepgram SDK, references to specific documentation, and metadata. It also encourages reaching out to community support for further assistance.

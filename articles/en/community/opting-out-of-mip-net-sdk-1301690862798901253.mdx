@@ -1,0 +1,85 @@
+---
+title: "Opting Out of Deepgram MIP Using .NET SDK"
+description: "Learn how to opt out of Deepgram's Model Improvement Partnership using the .NET SDK, including practical code examples and error handling."
+summary: "This article explains how to opt out of Deepgram's Model Improvement Partnership (MIP) when using the .NET SDK. It covers the necessary steps, potential price implications, and provides guidance on using custom parameters with the SDK."
+tags: [Deepgram, .NET SDK, MIP, Model Improvement Partnership, Data Privacy]
+categories: [SDKs, Data Management]
+last_updated: 2023-10-15
+---
+
+<CommunityQuestion>I need to opt out of the Deepgram Model Improvement Partnership for data privacy reasons, but I'm concerned about the associated price increase. How can I achieve this using the .NET SDK?</CommunityQuestion>
+
+## Problem Statement
+
+Opting out of Deepgram's Model Improvement Partnership (MIP) is necessary for data privacy concerns. However, this action may lead to a price increase. This guide will show how to implement this using the .NET SDK, including handling potential errors.
+
+## Opting Out with the .NET SDK
+
+To customise your Deepgram transcription requests and manage how your data is used, you might want to opt out of the Deepgram Model Improvement Partnership (MIP). By opting out, your data won't be used to improve Deepgram's models, but note that this comes with a price increase. Here's how you can opt out using Deepgram's .NET SDK.
+
+### Implementing `mip_opt_out`
+
+The `mip_opt_out` parameter is not directly visible in the `PreRecordedSchema` in Deepgram's SDKs including .NET. However, you can pass it as a custom parameter when making an API request.
+
+```csharp
+// Install the SDK: dotnet add package Deepgram
+
+using System;
+using System.Collections.Generic;
+using Deepgram;
+using Deepgram.Models.Listen.v1.REST;
+
+namespace OptOutMIPExample
+{
+    class Program
+    {
+        static async Task Main(string[] args)
+        {
+            // Initialize the Deepgram client with your API key
+            var deepgramClient = ClientFactory.CreateListenRESTClient();
+
+            var options = new PreRecordedSchema()
+            {
+                Model = "nova-3"
+            };
+
+            // Custom parameter to opt out of the MIP
+            var customOptions = new Dictionary<string, string>
+            {
+                { "mip_opt_out", "true" }
+            };
+
+            try
+            {
+                var response = await deepgramClient.TranscribeUrl(
+                    new UrlSource("https://dpgr.am/bueller.wav"),
+                    options,
+                    null, // CancellationToken if needed
+                    customOptions // Pass the custom options here
+                );
+                Console.WriteLine(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+}
+```
+
+### Things to Consider
+
+- **Price Adjustment**: Opting out leads to a price adjustment. You can verify this by checking the usage log for the transcription.
+- **Updated SDK**: Ensure that you're using the latest version of the SDK.
+
+## Conclusion
+
+By using the custom parameter feature in the Deepgram .NET SDK, you can easily opt out of data sharing in Deepgram's Model Improvement Partnership. Always ensure you stay informed about changes to service terms or pricing associated with opting out. This approach allows you to retain control over how your data is used while leveraging Deepgram's transcription capabilities.
+
+## References
+
+- [Model Improvement Partnership Program](/docs/the-deepgram-model-improvement-partnership-program)
+- [.NET SDK Documentation: Using Custom Parameters](/docs/using-custom-parameters-sdks#net-sdk)
+
+For additional support, consider joining Deepgram's [Discord](https://discord.com/invite/xWRaCDB) or participating in [GitHub Discussions](https://github.com/deepgram/deepgram-js-sdk/discussions).

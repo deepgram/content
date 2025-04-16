@@ -1,0 +1,108 @@
+---
+title: "Real-time vs Pre-recorded Transcription Accuracy"
+description: "Comparison of accuracy for real-time vs pre-recorded transcription with Deepgram's speech-to-text API."
+summary: "This article examines the accuracy differences between real-time streaming transcription and pre-recorded batch processing when using Deepgram's speech-to-text API. It provides insights into the advantages of each approach and highlights improvements with Deepgram's Nova-3 model."
+tags: ["transcription", "speech-to-text", "Deepgram", "Nova-3"]
+categories: ["API", "Transcription"]
+last_updated: 2023-10-05
+---
+
+<CommunityQuestion>I've been exploring speech-to-text services for a project, and I'm wondering what the key differences are between real-time transcription and processing pre-recorded audio with Deepgram. Which approach is likely to yield more accurate results?</CommunityQuestion>
+
+When deciding between real-time transcription and pre-recorded audio processing, understanding the differences in accuracy and use cases can help you choose the right approach for your needs.
+
+## Understanding the Difference
+
+Deepgram offers two main approaches to speech-to-text transcription:
+
+1. **Pre-recorded Transcription**: Processes complete audio files after they've been fully recorded.
+2. **Real-time Transcription**: Processes audio streams as they arrive, providing immediate results.
+
+## Accuracy Comparison with Nova-3
+
+According to Deepgram's documentation, Nova-3 represents a significant improvement in accuracy for both methods:
+
+- **Pre-recorded (Batch) Processing**: Nova-3 delivers a 47.4% reduction in word error rate (WER) compared to competitors.
+- **Real-time (Streaming) Processing**: Nova-3 achieves a 54.2% reduction in WER compared to competitors.
+
+While streaming transcription still typically has a slightly higher word error rate than pre-recorded transcription, the gap has narrowed significantly with Nova-3.
+
+## When to Use Each Method
+
+### Pre-recorded Transcription
+
+Best for:
+- Maximum accuracy
+- Processing archives of audio/video content
+- Applications where real-time results aren't required
+- Post-production transcription of meetings, interviews, etc.
+
+Pre-recorded transcription can leverage the entire audio context, allowing the model to make more informed decisions about ambiguous speech.
+
+### Real-time Transcription
+
+Best for:
+- Live captioning
+- Interactive voice applications
+- Voice assistants and chatbots
+- Real-time meeting transcription
+- Customer service applications
+
+Real-time transcription delivers immediate results while maintaining excellent accuracy, making it suitable for interactive applications.
+
+## Implementation Considerations
+
+### Example Code: Pre-recorded Transcription
+
+```shell
+curl -X POST \
+  -H "Authorization: Token YOUR_API_KEY" \
+  -F "file=@/path/to/audio.wav" \
+  "https://api.deepgram.com/v1/listen"
+```
+
+### Example Code: Real-time Transcription
+
+```javascript
+const WebSocket = require('ws');
+
+const deepgramSocket = new WebSocket('wss://api.deepgram.com/v1/listen', {
+  headers: {
+    Authorization: 'Token YOUR_API_KEY',
+  },
+});
+
+deepgramSocket.on('open', () => {
+  console.log('WebSocket connection established.');
+});
+
+deepgramSocket.on('message', (data) => {
+  console.log('Transcription received:', data);
+});
+
+deepgramSocket.on('error', (error) => {
+  console.error('Error:', error);
+});
+
+deepgramSocket.on('close', () => {
+  console.log('WebSocket connection closed.');
+});
+```
+
+### Error Handling
+
+- **Pre-recorded**: Ensure the file path is correct and the file size does not exceed 2 GB to avoid errors.
+- **Real-time**: Handle WebSocket connection errors gracefully and monitor for potential rate limit errors (e.g., 429: Too Many Requests).
+
+## Conclusion
+
+Both pre-recorded and real-time transcription approaches with Deepgram's Nova-3 model offer excellent accuracy. Choose pre-recorded transcription when maximum accuracy is paramount and time isn't a constraint. Opt for real-time transcription when immediate results are necessary, with only a minor trade-off in accuracy.
+
+## References
+- [Deepgram Pre-recorded Transcription](/docs/getting-started-with-pre-recorded-audio)
+- [Deepgram Live Transcription](/docs/getting-started-with-live-streaming-audio)
+- [Deepgram Models Overview](/docs/models-languages-overview)
+
+## Community Support
+
+For further assistance, join our [Discord community](https://discord.com/invite/deepgram) or participate in [GitHub Discussions](https://github.com/deepgram/deepgram-js-sdk/discussions).

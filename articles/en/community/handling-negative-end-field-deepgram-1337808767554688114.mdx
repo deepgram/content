@@ -1,0 +1,75 @@
+---
+title: "Handling -1 End Field in Deepgram Transcriptions"
+description: "Guide on addressing the '-1' end field issue in Deepgram transcriptions with best practices for API request configurations."
+summary: "Learn how to resolve the issue of '-1' end fields in Deepgram transcriptions by checking API request parameters and configurations. This guide offers troubleshooting steps and best practices for accurate transcription outputs."
+tags: ["Deepgram", "transcription", "API troubleshooting"]
+categories: ["API", "Troubleshooting"]
+last_updated: 2023-10-01
+---
+
+<CommunityQuestion>I'm using Deepgram's speech-to-text API, but I've noticed that some of the words in the transcription output have their 'end' field set to -1. What could be causing this issue, and how can I resolve it?</CommunityQuestion>
+
+### Understanding the Problem
+
+When using Deepgram's transcription service, you might encounter an issue where certain words in the transcription output have their `end` field set to -1. This indicates a potential data processing error, complicating the task of deriving accurate timing data from transcripts.
+
+**Example Data**
+```json
+[
+  {
+    "word": "Hello",
+    "start": 10.809999,
+    "end": -1,
+    "confidence": 0.99121094,
+    "speaker": 0,
+    "punctuated_word": "Hello"
+  }
+]
+```
+
+### Possible Causes
+
+- **API Misconfiguration**: Incorrect formatting or configuration of API request parameters, such as keywords, can indirectly contribute to the issue.
+- **Data Processing Error**: Internal processing errors within the Deepgram system might also result in `end` fields being set to -1.
+
+### Best Practices for Resolution
+
+#### Correct Formatting and Parameters
+
+1. **Keywords Configuration**: Ensure keywords are correctly URL-encoded. For example:
+   - Single keyword: `?keywords=Santa%20Ana:0.25`
+   - Multiple keywords: `?keywords=Santa%20Ana:0.25&keywords=Shokes:0.25`
+
+   For more details, refer to the [Deepgram keywords documentation](/docs/keywords).
+
+2. **Model Selection**: Use the latest model, such as "nova-3", to ensure optimal feature usage.
+
+3. **Audio Configuration**: Ensure the correct audio encoding (e.g., `linear16`) and sample rate (e.g., `48000`) are specified.
+
+#### Suggested Solutions
+
+- **Review API Request**: Check for anomalies in your request parameters. Ensure all are correctly formatted and encoded.
+- **Error Logging**: Implement logging to capture instances where the `end` field is -1 for further analysis.
+- **Contact Support**: If the issue persists after troubleshooting, reach out to Deepgram support or join the community forums for assistance.
+
+### Error Handling Example
+
+To better handle this scenario, consider logging when an `end` field is set to -1:
+
+```javascript
+if (word.end === -1) {
+  console.error(`Error: End timestamp is -1 for word ${word.word}`);
+  // Implement additional error handling as necessary
+}
+```
+
+### Conclusion
+
+Misconfigurations and internal processing errors can lead to `end` fields being set to -1. By ensuring correct API request formatting and using the latest features and models, you can mitigate these issues. For persistent problems, contact Deepgram support or engage with the [Deepgram Community on Discord](https://discord.gg/deepgram).
+
+### References
+
+- [Deepgram Keywords Documentation](/docs/keywords)
+- [Deepgram JavaScript SDK GitHub Repository](https://github.com/deepgram/deepgram-js-sdk)
+
+For further community support, you can visit our [GitHub Discussions](https://github.com/deepgram/deepgram-js-sdk/discussions).

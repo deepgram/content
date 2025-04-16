@@ -1,0 +1,54 @@
+---
+title: "Resolving Zero Duration in Live Transcriptions"
+description: "Guidance on addressing zero duration issues in Deepgram live transcriptions due to multichannel settings."
+summary: "Learn how to fix zero duration issues in live transcriptions by properly configuring multichannel settings in Deepgram API requests."
+tags: ["Deepgram", "Live Transcription", "Multichannel", "Troubleshooting"]
+categories: ["Troubleshooting", "Deepgram API"]
+last_updated: "2023-10-15"
+---
+
+<CommunityQuestion>I've been attempting to use Deepgram's Live Transcription API, but the transcribed audio segments are showing up with a duration of zero. Does anyone know what could be causing this and how to resolve it?</CommunityQuestion>
+
+## Problem Statement
+
+When using Deepgram's Live Transcription API, users have reported transcriptions showing a duration of zero. This issue often arises from incorrect multichannel parameter settings in the API request.
+
+## Common Misconfiguration
+
+A frequent error occurs when `multichannel` is set to `false`, but a `channels` value greater than 1 is specified. This setting results in channels not being processed independently, leading to transcriptions with zero duration.
+
+### Troubleshooting Steps
+
+1. **Verify Multichannel Setting**: Ensure that you have correctly set the `multichannel` parameter to `true` if you are dealing with multiple audio channels. This enables the API to process each channel independently.
+
+   ```shell
+   curl -X POST "https://api.deepgram.com/v1/listen" \
+   -H "Authorization: Token YOUR_API_KEY" \
+   -H "Content-Type: application/json" \
+   -d '{
+         "url": "YOUR_AUDIO_URL",
+         "multichannel": true
+       }'
+   ```
+
+2. **Check API Response**: If transcriptions still show zero duration, inspect the API response for any error messages. Common errors include:
+
+   - `INVALID_CHANNELS`: Ensure the number of channels specified matches the audio source.
+   - `MULTICHANNEL_DISABLED`: If you receive this error, confirm that your API request or account settings allow multichannel processing.
+
+3. **Network and Audio Source Checks**: Ensure the audio source is correctly formatted and transmitted. Use tools like `Wireshark` to diagnose network issues that may affect audio data transmission.
+
+### Alternative Solutions
+
+- **Single Channel Processing**: If multichannel processing is not required, set `channels` to 1 and `multichannel` to false.
+- **Contact Support**: If issues persist, reach out to Deepgram Support or join the Deepgram [Discord](https://discord.com/invite/deepgram) or [GitHub Discussions](https://github.com/deepgram) for community assistance.
+
+## Conclusion
+
+Correct API configuration, especially regarding multichannel settings, is crucial for accurate live transcriptions. Ensure `multichannel` is set to `true` when processing multiple audio channels to avoid zero duration issues.
+
+## References
+- [Deepgram Multichannel Documentation](/docs/multichannel)
+- [Deepgram API Reference](/reference/streaming)
+
+For further assistance, visit our [Discord](https://discord.com/invite/deepgram) or [GitHub Discussions](https://github.com/deepgram).

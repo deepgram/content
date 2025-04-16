@@ -1,0 +1,90 @@
+---
+title: "Managing callback retries in Deepgram's STT service"
+description: "Guide on managing callback retries for Deepgram's speech-to-text API."
+summary: "This article explains how to implement custom server-side logic to manage callback retries when using Deepgram's speech-to-text service, including limiting it to a single attempt regardless of success or failure."
+tags: ["Deepgram", "callback", "STT", "server-side logic"]
+categories: ["API", "Speech-to-Text"]
+last_updated: 2023-10-15
+---
+
+<CommunityQuestion>I'm integrating Deepgram's speech-to-text API and using a callback URL. Is there a way to manage how callback retries are handled, such as limiting it to a single attempt?</CommunityQuestion>
+
+## Problem Statement
+
+When using Deepgram's Speech-to-Text (STT) service with a callback URL, the default system behavior includes retrying the callback up to 10 times if it receives an unsuccessful HTTP status code. This automatic retry mechanism is designed to handle temporary connectivity issues or server errors by repeatedly attempting the callback.
+
+However, there are instances where you might want to adjust this behavior and effectively manage how retries are conducted, especially if you want the callback to only be attempted once regardless of its success or failure. While Deepgram does not provide a direct configuration switch to change the retry policy, you can implement server-side logic to achieve an effect of a single callback attempt.
+
+## Custom Server-side Logic
+
+### Strategy
+
+1. **Successful HTTP Status:** Modify your callback server to always return a successful HTTP status code (200-299) upon receiving the callback request, even if there are internal errors. By doing so, Deepgram's retry mechanism will not trigger further attempts because it assumes the callback was successfully acknowledged.
+
+2. **Process Management:** Implement business logic within your callback handler to decide whether to process the incoming callback or ignore it based on your criteria. This logic can check conditions like attempt count, request validity, or any other factors significant to your system.
+
+### Example Code
+
+Below is a tested code snippet demonstrating how to implement the server-side logic in Node.js using Express:
+
+```javascript
+// Require, initialize, and configure Express
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+// This is the route handler our webhook will POST data to
+app.post('/hook', (req, res) => {
+  try {
+    console.log('Received callback:', req.body);
+
+    // Implement your processing logic here
+    const shouldProcess = checkConditions(req.body);
+
+    if (shouldProcess) {
+      // Process the callback data
+      processCallback(req.body);
+    } else {
+      console.log('Ignoring callback based on conditions.');
+    }
+
+    // Always respond with a successful HTTP status
+    res.status(200).end();
+  } catch (error) {
+    console.error('Error processing callback:', error);
+    // Respond with a successful HTTP status to prevent retries
+    res.status(200).end();
+  }
+});
+
+// Function to check conditions for processing
+function checkConditions(data) {
+  // Implement your logic to determine if the callback should be processed
+  return true; // Change this logic as needed
+}
+
+// Function to process the callback
+function processCallback(data) {
+  // Implement your processing logic
+  console.log('Processing callback:', data);
+}
+
+// Start express server
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
+```
+
+### Error Handling
+
+The above code includes error handling to ensure that any exceptions during processing do not cause unintended retries. By always returning a success status code, you avoid triggering Deepgram's retry mechanism.
+
+## Conclusion
+
+By implementing server-side logic to handle the callback's HTTP response status and manage processing conditions, you can mitigate unintended retries from Deepgram's default behavior. This approach empowers you to efficiently handle scenarios where only a single callback attempt is desired, aligning with your operational needs.
+
+## References
+
+- [Deepgram Callback Documentation](/docs/callback)
+- Join the [Deepgram Discord community](https://discord.gg/xWRaCDBtW4) for support.
+- Participate in [GitHub Discussions](https://github.com/orgs/deepgram/discussions) for further assistance.

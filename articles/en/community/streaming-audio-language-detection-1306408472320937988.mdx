@@ -1,0 +1,77 @@
+---
+title: "Streaming Audio Language Detection with Deepgram"
+description: "Learn how to utilise Deepgram's streaming audio language detection for multilingual transcription using the latest Nova models."
+summary: "Discover how Deepgram's advanced Nova models enable real-time detection and transcription of multiple languages from live audio streams, enhancing user experience in diverse linguistic settings. The article covers key features and language support."
+tags: 
+  - Deepgram
+  - Streaming Audio
+  - Language Detection
+  - Multilingual
+categories: 
+  - API
+  - Transcription
+last_updated: 2023-10-15
+---
+
+<CommunityQuestion>I have an audio stream with multiple languages, and I need to transcribe them in real-time. Is there a way to detect and transcribe different languages within the same audio source using Deepgram's API?</CommunityQuestion>
+
+Detecting and transcribing multiple languages within live audio streams is a key capability that significantly enhances the user experience, particularly in diverse linguistic settings. Deepgram offers language detection and transcription for streaming audio, enabling seamless and automated recognition of different languages within the same audio source.
+
+## Language Support and Multilingual Models
+
+Deepgram's advanced Nova models are designed to transcribe multiple languages from the same audio source. For multilingual code-switching, you need to use the `language=multi` parameter. Currently, the Nova models support a wide array of languages, including but not limited to English, Spanish, German, and French. For the most accurate and up-to-date list of supported languages, refer to the [Model & Language Overview](docs/models-languages-overview).
+
+### Key Features:
+- **Streaming Language Detection**: Automatically identifies and transcribes multiple languages from live audio inputs without requiring separate language-specific models.
+- **Multilingual Support**: Includes a broad range of languages, optimised for real-time transcription using Nova-3 models.
+
+## Using the Multilingual Model
+
+To utilise Deepgram's model capable of detecting and transcribing multiple languages, configure your WebSocket connection with the `language=multi` parameter.
+
+### Implementation Example
+
+Here is an example of how to set up a WebSocket connection for streaming audio with multilingual detection:
+
+```javascript
+const WebSocket = require('ws');
+const ws = new WebSocket('wss://api.deepgram.com/v1/listen?language=multi&model=nova-3', {
+  headers: {
+    'Authorization': 'Token YOUR_API_KEY'
+  }
+});
+
+ws.on('open', () => {
+  console.log('Connection opened.');
+  // Send audio data here
+});
+
+ws.on('message', (data) => {
+  const response = JSON.parse(data);
+  console.log('Transcription:', response);
+});
+
+ws.on('error', (error) => {
+  console.error('WebSocket error:', error);
+});
+
+ws.on('close', () => {
+  console.log('Connection closed.');
+});
+```
+
+Ensure you replace `YOUR_API_KEY` with your actual Deepgram API key. This example demonstrates how to handle WebSocket events, including error handling.
+
+## Error Handling and Testing
+
+When implementing multilingual streaming, be aware of potential errors, such as network issues or incorrect parameters. Ensure your client can gracefully handle such errors by implementing retry logic or fallbacks.
+
+## Conclusion
+
+Multilingual transcription and language detection for streaming audio enhance accessibility and understanding across different linguistic backgrounds. Keep an eye on Deepgram developments for expanded language support and further improvements in the multilingual model.
+
+## References
+
+- [Multilingual Code Switching](/docs/multilingual-code-switching)
+- [Model & Language Overview](/docs/models-languages-overview)
+- Join our [GitHub Discussions](https://github.com/orgs/deepgram/discussions) or our [Discord community](https://discord.gg/deepgram) for support and updates.

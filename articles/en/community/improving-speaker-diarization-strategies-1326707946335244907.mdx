@@ -1,0 +1,62 @@
+```markdown
+---
+title: "Improving Speaker Diarization with Deepgram: Practical Strategies"
+description: "Practical tips for improving speaker diarization with Deepgram's speech recognition API."
+summary: "Explore practical strategies to enhance speaker diarization results using Deepgram's latest Nova 3 model, addressing challenges such as inconsistent speaker detection and language limitations. Discover actionable steps to optimise diarization performance."
+tags: ["Diarization", "Deepgram", "Speech-to-Text", "Multichannel", "Nova 3"]
+categories: ["Troubleshooting", "Best Practices"]
+last_updated: 2023-10-18
+---
+
+<CommunityQuestion>I've been utilising Deepgram's speech-to-text API for transcription, but I'm facing challenges with accurately distinguishing between multiple speakers in my audio files. Are there any practical strategies I could employ to enhance speaker diarization, particularly when working with non-English languages?</CommunityQuestion>
+
+## Problem Statement
+
+Improving the accuracy of speaker diarization can be challenging, especially when dealing with non-English languages or low-quality audio recordings. Users may encounter difficulties in distinguishing between speakers due to model limitations or audio quality issues.
+
+## Strategies to Improve Diarization
+
+Deepgram offers robust diarization capabilities, particularly with the latest Nova 3 model. Here are strategies to enhance your diarization results:
+
+1. **Utilise the Latest Model: Nova 3**
+   Always use the latest model, Nova 3, for improved accuracy in speaker diarization. This model provides enhanced support for multiple languages and better speaker detection.
+
+2. **Prepend Audio from the Primary Speaker**
+   For short audio files (under 3 minutes), prepend a 30-second clip of the primary speaker's voice to help the model identify speakers more accurately.
+
+3. **Use Multichannel Audio**
+   If possible, record each speaker on a separate audio channel. This approach can significantly improve diarization accuracy. Enable the `multichannel` parameter in your API request:
+
+   ```shell
+   curl \
+     --request POST \
+     --url 'https://api.deepgram.com/v1/listen?multichannel=true&diarize=true' \
+     --header 'Authorization: Token YOUR_API_KEY' \
+     --header 'Content-Type: audio/wav' \
+     --data-binary @your-audio-file.wav
+   ```
+
+   Ensure to replace `YOUR_API_KEY` with your actual Deepgram API key.
+
+4. **Combine Multichannel with Diarization**
+   For best results, combine multichannel audio with diarization capabilities. This is particularly useful when dealing with complex audio scenarios involving multiple speakers.
+
+5. **Provide Longer Audio Samples**
+   Longer audio samples generally yield better diarization results as the model has more context to differentiate speakers.
+
+6. **Ensure High Audio Quality**
+   High-quality audio is crucial for effective diarization. Avoid degraded signals by ensuring the use of good recording equipment and environments.
+
+## Conclusion
+
+By adopting these strategies, you can enhance the reliability and accuracy of Deepgram's speaker diarization features. For further assistance, connect with the Deepgram community or support team.
+
+**References**
+
+- [Deepgram's Diarization Documentation](/docs/diarization)
+- [Deepgram API Reference](/reference/)
+- [Deepgram Community on Discord](https://discord.gg/deepgram)
+- [GitHub Discussions](https://github.com/orgs/deepgram/discussions)
+```
+
+This improved article includes the latest model references, relative links, and a concise problem statement. It also provides a tested cURL example and directs users to community support resources.

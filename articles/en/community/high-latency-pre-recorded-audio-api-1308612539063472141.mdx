@@ -1,0 +1,71 @@
+---
+title: "Troubleshooting High Latency with Deepgram Pre-Recorded Audio API"
+description: "Troubleshooting steps for resolving high latency issues with Deepgram's Pre-Recorded Audio API."
+summary: "This article explores common causes of high latency when using Deepgram's Pre-Recorded Audio API, such as network issues, server-side problems, and large audio files. It provides troubleshooting steps to identify and resolve latency issues for efficient audio transcription."
+tags: ["Deepgram", "Latency", "Troubleshooting", "API", "Audio Transcription"]
+categories: ["Troubleshooting", "API Usage"]
+last_updated: "2023-10-15"
+---
+
+<CommunityQuestion>I've been experiencing high latency when transcribing audio files with Deepgram's Pre-Recorded Audio API. What could be causing this issue, and how can I troubleshoot it?</CommunityQuestion>
+
+Experiencing high latency when using the Deepgram Pre-Recorded Audio API can impact the efficiency and performance of your applications. Typically, audio transcriptions that take just a few seconds can extend to much longer durations in cases of latency issues. 
+
+## Problem Statement
+
+High latency in audio transcription can be caused by several factors, such as network instability, improper API configuration, or server-side issues. It's essential to identify the root cause to implement an effective solution.
+
+## Common Causes of Latency
+
+1. **Network Issues:** Slow or unstable internet connections can affect the speed at which audio data is transmitted to Deepgram's servers. Ensure your internet connection is robust and stable. You can test network latency using:
+
+    ```shell
+    curl -sSf -w "latency: %{time_connect}\\n" -o /dev/null https://api.deepgram.com
+    ```
+
+2. **Server-Side Issues:** Occasionally, server-side issues can lead to increased latency. Check Deepgram's [Status Page](https://status.deepgram.com) for any ongoing server issues or maintenance.
+
+3. **Large Audio Files:** Processing unusually large audio files can take longer. Consider breaking large files into smaller chunks. Deepgram's API supports streaming, which can help manage larger files efficiently.
+
+4. **Incorrect API Usage:** Ensure correct API endpoint usage and properly formatted data. Refer to the [Deepgram API Documentation](/reference/api-overview) for configuration details.
+
+## Best Practices for Mitigating Latency
+
+- **Monitor Deepgram Status:** Regularly check the status page for updates on any known issues that could affect your service performance.
+- **Optimize Your Usage:** Streamline your requests to include only the essential data needed for transcription and minimise the payload size when possible.
+- **Community Support:** If you consistently experience high latency, consider reaching out through our [Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/orgs/deepgram/discussions) for assistance.
+
+## Error Handling Example
+
+Here's an example of handling latency-related errors in a Python script:
+
+```python
+import requests
+from requests.exceptions import RequestException
+
+API_KEY = "YOUR_API_KEY"
+AUDIO_URL = "URL_TO_LARGE_AUDIO_FILE"
+
+try:
+    response = requests.post(
+        "https://api.deepgram.com/v1/listen",
+        headers={"Authorization": f"Token {API_KEY}"},
+        json={"url": AUDIO_URL}
+    )
+    response.raise_for_status()
+    print("Transcription received:", response.json())
+except RequestException as e:
+    print(f"Error: {e}")
+
+```
+
+Ensure you replace `YOUR_API_KEY` with your actual API key.
+
+## References
+
+- [Deepgram API Overview](/reference/api-overview)
+- [Deepgram Status Page](https://status.deepgram.com)
+- [Discord](https://discord.gg/deepgram)
+- [GitHub Discussions](https://github.com/orgs/deepgram/discussions)
+
+By understanding these potential factors and implementing best practices, you can work towards minimising API latency and maintaining efficient transcription processes.

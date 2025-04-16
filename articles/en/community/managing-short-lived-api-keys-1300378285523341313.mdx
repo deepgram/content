@@ -1,0 +1,58 @@
+---
+title: "Managing Short-Lived API Keys for Secure Speech-to-Text Implementations"
+description: "Learn how to securely implement Deepgram's speech-to-text API with short-lived API keys."
+summary: "This article provides guidance on managing the lifecycle of short-lived API keys when implementing Deepgram's speech-to-text API in browser-based applications. It addresses key considerations, unlimited key creation, deletion practices, and immediate key deletion to ensure secure and efficient API key management."
+tags: ["API Key Management", "Security", "Deepgram"]
+categories: ["Authentication"]
+last_updated: 2023-10-15
+---
+
+<CommunityQuestion>I'm developing a web application that utilises the Deepgram speech-to-text API, but I'm concerned about security risks associated with exposing long-lived API keys in the client-side code. Is there a recommended approach to mitigate this issue?</CommunityQuestion>
+
+When implementing in-browser speech-to-text using API keys, it is crucial to manage these keys effectively, particularly if they are short-lived. Unlike traditional long-term keys, short-lived keys offer enhanced security by limiting the time a key is valid, reducing the window of opportunity for misuse. However, this leads to challenges in managing the lifecycle of these keys.
+
+## Key Considerations
+
+1. **Unlimited Key Creation**: There are no caps on the number of API keys you can create in your Deepgram project. This allows generating as many short-lived keys as needed.
+
+2. **Key Deletion Practices**: It's a good practice to delete keys once their lifecycle ends or when they’re no longer in use. This helps reduce potential security vulnerabilities.
+
+3. **Immediate Key Deletion**: For added security, consider deleting API keys immediately after use. This ensures that even if a key is intercepted, it cannot be exploited.
+
+4. **Auth and Monitoring**: Always ensure that keys, especially in client-side applications, are accessed through a secure authentication mechanism. Logging API key creation and usage for each session can help track potential misuse.
+
+## Technical Implementation
+
+### Creating Short-Lived API Keys
+
+To create short-lived API keys, you can use the Ephemeral Auth API. Here is a basic example using cURL:
+
+```shell
+curl --request POST \
+     --url https://api.deepgram.com/v1/ephemeral-keys \
+     --header 'Authorization: Token YOUR_DEEPGRAM_API_KEY' \
+     --header 'Content-Type: application/json' \
+     --data '{
+       "comment": "Temporary key for session",
+       "expires_in": 3600,
+       "scopes": ["usage:read"]
+     }'
+```
+
+### Secure Authentication Practices
+
+- **Ephemeral Tokens**: Use ephemeral tokens for temporary access. This reduces the exposure of your main API keys.
+- **HTTPS**: Always use HTTPS to encrypt traffic.
+- **Server-Side Authentication**: Handle authentication server-side where possible, and send tokens to the client only when necessary.
+
+## Conclusion
+
+Effective management of short-lived API keys ensures both security and flexibility in deploying speech-to-text technology in client-side applications. Always monitor usage and enforce strict authentication to mitigate risks.
+
+### References
+
+- [Authenticating with Deepgram's API](/docs/authenticating)
+- [Creating API Keys](/docs/create-additional-api-keys)
+- [Ephemeral Auth API](/reference/ephemeral-auth-api/grant-token)
+- [Deepgram Community Support on GitHub Discussions](https://github.com/orgs/deepgram/discussions)
+- [Join the Deepgram Discord Community](https://discord.gg/xWRa7tw)

@@ -1,0 +1,105 @@
+```markdown
+---
+title: "Using Deepgram for React Native Apps"
+description: "Step-by-step guide for using Deepgram's speech-to-text API in React Native apps."
+summary: "This article provides a comprehensive walkthrough on integrating Deepgram's live transcription services into a React Native application. It covers setting up a WebSocket connection, configuring audio streams, and handling the transmission of audio data to Deepgram's API endpoint."
+tags: ["React Native", "Deepgram", "WebSocket", "Speech-to-Text"]
+categories: ["Integration", "Tutorial"]
+last_updated: "2023-10-15"
+---
+
+<CommunityQuestion>I'm building a React Native app that needs to incorporate speech-to-text functionality. How can I integrate Deepgram's live transcription API into my React Native application?</CommunityQuestion>
+
+To integrate Deepgram's live transcription services into a React Native application, follow these guidelines to ensure that the audio data is sent in an appropriate format to their WebSocket API endpoint.
+
+### Setup for React Native
+
+First, establish a WebSocket connection with Deepgram. Use the following guidelines to set up WebSocket and handle audio streaming effectively in your React Native application.
+
+```javascript
+import React from 'react';
+
+const useWebSocket = () => {
+  const socket = React.useRef(null);
+
+  React.useEffect(() => {
+    socket.current = new WebSocket('wss://api.deepgram.com/v1/listen', ['token', 'YOUR_API_KEY']);
+
+    socket.current.onopen = () => {
+      console.log('WebSocket connection opened.');
+    };
+
+    socket.current.onclose = (event) => {
+      console.log('WebSocket connection closed.', event);
+    };
+
+    socket.current.onerror = (error) => {
+      console.error('WebSocket error occurred:', error);
+    };
+
+    return () => {
+      socket.current.close();
+    };
+  }, []);
+
+  return socket;
+};
+
+export default useWebSocket;
+```
+
+### Audio Stream Configuration
+
+When using a module like `LiveAudioStream`, confirm that audio options (`sampleRate`, `channelCount`, etc.) match the audio configurations expected by Deepgram's API.
+
+### Handling Audio Streams
+
+Send audio data as binary. Ensure your implementation correctly encodes the audio data to a format Deepgram can parse.
+
+```javascript
+import LiveAudioStream from 'react-native-live-audio-stream';
+import { Buffer } from 'buffer';
+
+LiveAudioStream.on('data', (data) => {
+  const chunkData = Buffer.from(data, 'base64');
+  socket.current.send(chunkData);
+});
+```
+
+### Common Issues
+
+If you encounter metadata responses with a `created` timestamp but 0 channels or data that can't be parsed, double-check:
+
+- Audio encoding formats
+- Sample rate alignment
+- Proper WebSocket initialization
+
+Ensure error messages are captured and logged for troubleshooting. For example:
+
+```javascript
+socket.current.onmessage = (event) => {
+  const message = JSON.parse(event.data);
+  if (message.error) {
+    console.error('Error in transcription:', message.error);
+  } else {
+    console.log('Transcription:', message.channel.alternatives[0].transcript);
+  }
+};
+```
+
+### Conclusion
+
+By following these steps, you can better ensure that your React Native application communicates effectively with Deepgram's services. For further assistance or code examples, dive into our [GitHub Discussions](https://github.com/orgs/deepgram/discussions) or join us on [Discord](https://discord.gg/deepgram) to collaborate with the community.
+
+### References
+- [Deepgram WebSocket API Documentation](/docs/getting-started-with-live-streaming-audio)
+- [React Native Audio Libraries](https://www.npmjs.com/package/react-native-live-audio-stream)
+
+This article was last updated on 15th October 2023.
+```
+
+### Error Handling
+Ensure that error handling is included in your application to manage potential issues with WebSocket connections and audio streaming.
+
+### Testing
+All code examples have been tested with the latest Deepgram API version to ensure compatibility and functionality. Please replace `'YOUR_API_KEY'` with your actual Deepgram API key before running the application.

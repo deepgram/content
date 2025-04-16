@@ -1,0 +1,90 @@
+---
+title: "Leveraging Deepgram's Audio and Text Intelligence for Emotion Analysis"
+description: "Utilise Deepgram's robust Audio and Text Intelligence APIs for emotion analysis."
+summary: "This article explores how Deepgram's Audio and Text Intelligence APIs can be leveraged for emotion analysis in applications, covering features like summarisation, topic detection, and sentiment analysis."
+tags: ["Deepgram", "Audio Intelligence", "Text Intelligence", "Emotion Analysis", "API"]
+categories: ["Integration", "Emotion Analysis"]
+last_updated: 2023-10-18
+---
+
+<CommunityQuestion>I'm building an app that needs to detect emotions from audio recordings. Can Deepgram's APIs be utilised for this purpose, and if so, how would one go about implementing emotion analysis utilising their Audio and Text Intelligence features?</CommunityQuestion>
+
+Deepgram offers robust features through its Audio and Text Intelligence APIs that can effectively be used for emotion analysis in applications. While there is no dedicated "Emotion Analysis" SDK, these APIs provide various functionalities that can be integrated into your apps for analysing emotions derived from speech or text.
+
+## Deepgram's Audio Intelligence API
+
+Deepgram's Audio Intelligence API allows you to send audio sources to Deepgram, which will then analyse the content after transcription using four main features:
+
+- **[Summarisation](/docs/summarization)**: Provides concise summaries of the audio content.
+- **[Topic Detection](/docs/topic-detection)**: Identifies and classifies the main topics of the audio.
+- **[Intent Recognition](/docs/intent-recognition)**: Useful for understanding the speaker's intentions.
+- **[Sentiment Analysis](/docs/sentiment-analysis)**: Particularly relevant for emotion analysis as it determines the emotional tone of transcribed speech.
+
+### Example Implementation
+
+```javascript
+const { createClient } = require('@deepgram/sdk');
+const fs = require('fs');
+
+const transcribeFile = async () => {
+  try {
+    const deepgram = createClient('YOUR_API_KEY');
+    const { result } = await deepgram.transcription.preRecorded({
+      buffer: fs.readFileSync('audio.wav'),
+      mimetype: 'audio/wav'
+    }, {
+      model: 'nova-3',
+      sentiment: true
+    });
+
+    console.log(result);
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+
+transcribeFile();
+```
+
+## Deepgram's Text Intelligence API
+
+For applications focusing on text data, Deepgram's Text Intelligence API offers similar features:
+
+- **[Summarisation](/docs/text-summarization)**: Summarises the text content.
+- **[Topic Detection](/docs/text-topic-detection)**: Identifies the main topics within the text.
+- **[Intent Recognition](/docs/text-intention-recognition)**: Analyses the text to determine intent.
+- **[Sentiment Analysis](/docs/text-sentiment-analysis)**: Evaluates the sentiment expressed in text.
+
+### Implementation Considerations
+
+To integrate these features into your app, utilise one of Deepgram's SDKs that support audio and text intelligence features. Check out our available SDKs for different programming languages:
+
+- [JavaScript/TypeScript SDK](/docs/js-sdk)
+- [Python SDK](/docs/python-sdk)
+- [Go SDK](/docs/go-sdk)
+- [.NET SDK](/docs/dotnet-sdk)
+- [Rust SDK](/docs/rust-sdk)
+
+For those working with Android applications, while there is no dedicated Kotlin SDK at this time, you can still leverage these APIs using HTTP requests or by implementing client-side code.
+
+### Troubleshooting and Error Handling
+
+If you encounter issues or inconsistent system behaviour during integration, the following error message might appear:
+
+```json
+{
+  "error": "TOKEN_LIMIT_EXCEEDED",
+  "message": "Text input currently supports up to 150K tokens. Please revise your text input to fit within the defined token limit."
+}
+```
+
+Consider consulting the [Deepgram API Rate Limits](/docs/api-rate-limits) for further guidance. For community assistance, visit our [Discord Community](https://dpgr.am/discord) or [GitHub Discussions](https://github.com/orgs/deepgram/discussions).
+
+## Conclusion
+
+With Deepgram's intelligence APIs, you can effectively perform emotion analysis by utilising features such as sentiment analysis. Although there isn't a dedicated Emotion Analysis SDK, the existing capabilities are versatile for a wide range of applications.
+
+### References
+
+- [Deepgram Audio Intelligence Features](/docs/audio-intelligence)
+- [Deepgram Text Intelligence Features](/docs/text-intelligence)

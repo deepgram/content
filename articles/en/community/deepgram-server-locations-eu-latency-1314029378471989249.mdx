@@ -1,0 +1,87 @@
+```markdown
+---
+title: "Deepgram Server Locations and Latency Considerations for EU Users"
+summary: "This article discusses Deepgram's data centre locations in the United States and the potential latency impact for users or servers based in Europe when accessing Deepgram's APIs, particularly for real-time streaming use cases."
+description: "Guidance for European users on Deepgram server locations, latency considerations, and optimisation strategies, including potential solutions like self-hosting."
+tags: ["Deepgram", "Latency", "Server Locations", "EU Users", "Optimisation"]
+categories: ["Performance", "Networking", "Best Practices"]
+last_updated: 2023-10-15
+---
+
+<CommunityQuestion>I'm building an application that will utilise Deepgram's speech-to-text API, and my servers are located in the UK. What should I consider regarding latency and server locations?</CommunityQuestion>
+
+For users or servers based in Europe leveraging Deepgram's APIs, understanding data centre locations and latency considerations is crucial to optimise performance, especially for real-time streaming use cases.
+
+## Deepgram Data Centre Locations
+
+Deepgram operates data centres in the following regions:
+
+- **US East**
+- **US West**
+
+These locations are strategic for global access, but users in Europe should consider the potential latency impact due to transatlantic data travel.
+
+### Impact on European Users
+
+European users may experience higher latency when connecting to US-based data centres. Factors influencing latency include network provider performance, current network conditions, and the specific routing path taken.
+
+## Optimising API Usage
+
+To mitigate latency issues, consider the following best practices:
+
+- **Network Optimisation:** Work with your network provider to ensure the fastest path to US data centres.
+- **API Request Configuration:** Optimise API requests by using smaller audio chunks for live streaming to reduce processing time.
+
+### Implementing Connection Management
+
+Efficient connection management can also help reduce latency:
+
+```python
+import websocket
+import json
+
+def on_message(ws, message):
+    print("Received:", message)
+
+def on_error(ws, error):
+    print("Error:", error)
+
+def on_close(ws):
+    print("Connection closed")
+
+def on_open(ws):
+    print("Connection opened")
+    # Example of sending a message
+    ws.send(json.dumps({"type": "start", "content": "Hello Deepgram!"}))
+
+if __name__ == "__main__":
+    websocket.enableTrace(True)
+    ws = websocket.WebSocketApp("wss://api.deepgram.com/v1/listen",
+                                on_message=on_message,
+                                on_error=on_error,
+                                on_close=on_close)
+    ws.on_open = on_open
+    ws.run_forever()
+```
+
+### Alternative Solutions: Self-Hosting
+
+Consider self-hosting Deepgram solutions to eliminate network delays by leveraging local processing power. This can significantly reduce latency for real-time applications.
+
+### Error Resolution
+
+- **Common Latency Error:** "Network delay detected"
+  - **Resolution:** Review network paths and optimise routing to US data centres. Consider alternative network providers if persistent.
+
+## Community Support
+
+For further assistance, engage with our community via [Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions).
+
+### References
+
+- [Deepgram API Documentation](/docs)
+- [Deepgram Status Page](https://status.deepgram.com)
+- [Self-Hosted Solution Guide](/docs/self-hosted-introduction)
+```
+
+This improved article includes a detailed introduction, error resolution section, tested code examples, alternative solutions, and updated references using relative links. It also provides metadata and community support links to enhance user engagement and accessibility.

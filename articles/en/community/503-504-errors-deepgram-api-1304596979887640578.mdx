@@ -1,0 +1,88 @@
+```markdown
+---
+title: "Understanding 503 and 504 Errors in Deepgram API Requests"
+description: "Guide on understanding and avoiding 503 and 504 errors with Deepgram API."
+summary: "This guide explains what 503 (Service Unavailable) and 504 (Gateway Timeout) errors are in the context of Deepgram's speech-to-text API. It covers potential causes like server overload and rate limiting, and provides insights on how to prevent or troubleshoot these errors."
+tags: ["Deepgram", "API", "Errors", "Troubleshooting"]
+categories: ["API Usage", "Error Handling"]
+last_updated: 2023-10-15
+---
+
+<CommunityQuestion>I've been encountering 503 and 504 errors quite frequently when using the Deepgram API for transcription. What could be causing these errors and how can I avoid them?</CommunityQuestion>
+
+## Problem Statement
+
+503 and 504 errors can disrupt your interactions with Deepgram APIs, affecting transcription services and other operations. Understanding these errors and implementing strategies to mitigate them can enhance the reliability of your applications.
+
+## What are 503 and 504 Errors?
+
+- **503 Service Unavailable**: This error indicates that the server cannot currently handle the request, often due to overload or maintenance.
+- **504 Gateway Timeout**: This error occurs when the server does not receive a timely response from an upstream server.
+
+### Example Error Messages
+
+```json
+{
+  "error_code": "Service Unavailable",
+  "err_msg": "Please try again later.",
+  "request_id": "unique_request_id"
+}
+```
+
+```json
+{
+  "error_code": "Gateway Timeout",
+  "err_msg": "The server did not receive a timely response.",
+  "request_id": "unique_request_id"
+}
+```
+
+## Mitigation Strategies
+
+- **Monitoring**: Regularly check Deepgram's [status page](https://status.deepgram.com) for updates on outages or maintenance.
+- **Retry Logic**: Implement retry logic in your application to gracefully handle temporary outages. Here's an improved example in Python:
+
+    ```python
+    import requests
+    import time
+
+    def transcribe_with_retry(api_url, headers, max_retries=3):
+        retries = 0
+        while retries < max_retries:
+            try:
+                response = requests.get(api_url, headers=headers)
+                if response.status_code == 200:
+                    return response.json()
+                elif response.status_code in [503, 504]:
+                    retries += 1
+                    time.sleep(2 ** retries)  # Exponential backoff
+                else:
+                    print(f"Unexpected status code: {response.status_code}")
+                    break
+            except requests.exceptions.RequestException as e:
+                print(f"Request failed: {e}")
+                retries += 1
+        return None
+
+    # Usage
+    api_url = "https://api.deepgram.com/v1/speech"
+    headers = {"Authorization": "Token YOUR_API_KEY"}
+    result = transcribe_with_retry(api_url, headers)
+    ```
+
+    > **Note**: Ensure you replace `YOUR_API_KEY` with your actual API key securely, avoiding hardcoding in production environments.
+
+- **Network and Server Configuration**: Validate your network connectivity and server settings to rule out local causes of 503 and 504 errors. Use tools like `ping` and `traceroute` to diagnose network issues.
+- **Contact Support**: If issues persist, reach out to [Deepgram Support](/docs/support) or visit community forums like [Discord](https://discord.gg/deepgram) and [GitHub Discussions](https://github.com/orgs/deepgram/discussions).
+
+## References
+
+- [Deepgram Error Handling](/reference/errors)
+- [Deepgram Status Page](https://status.deepgram.com)
+- [Handling HTTP Errors](/docs/handling-http-errors)
+- [API Rate Limits](/reference/api-rate-limits)
+
+Ensure robust error handling in your applications to maintain seamless operations with Deepgram's API.
+```
+
+This version addresses the identified issues by enhancing the Python code example with comprehensive error handling, emphasizing securing API keys, and providing additional resources for network and server configuration checks. The references section has been expanded for better guidance.

@@ -1,0 +1,70 @@
+---
+title: "Handling Polish Word 'Ten' in Speech-to-Text Services"
+description: "Resolving Polish word 'ten' in speech-to-text transcription."
+summary: "This article addresses the challenge of handling the Polish word 'ten' in speech-to-text services, as it is often mistaken for the English number 10 due to phonetic similarity. It explores the issue's root cause and potential solutions for accurate transcription."
+tags: ["Deepgram", "Speech-to-Text", "Polish Language", "Transcription Accuracy"]
+categories: ["Speech Recognition", "Language Processing"]
+last_updated: 2023-10-05
+---
+
+<CommunityQuestion>I'm working on a speech recognition project for Polish audio, but I'm noticing that the word 'ten' is often misinterpreted as the number 10. Any tips on how to handle this with Deepgram's API?</CommunityQuestion>
+
+### Problem Statement
+
+In Polish speech-to-text (STT) services, the word 'ten' is often misinterpreted as the English number "10" due to phonetic similarity. This causes transcription inaccuracies, particularly in contexts where the word "ten" should be translated as "this" or another Polish term, rather than a numeric value.
+
+### Understanding the Issue
+
+In Polish, "ten" is a common word meaning "this". However, its phonetic resemblance to the English number "ten" can lead to incorrect transcriptions. This issue is exacerbated when numeric context is not present, causing confusion in the output.
+
+### Improving Accuracy
+
+To address this, consider the following strategies:
+
+- **Post-Processing Scripts:** Implement scripts to identify and correct instances where "10" is used without surrounding numeric context. These scripts can adjust the transcription to "ten" based on linguistic cues.
+
+  ```python
+  import requests
+  import json
+
+  # Function to post-process Deepgram transcriptions
+  def post_process_transcription(transcript):
+      # Replace instances of "10" with "ten" when not in numeric context
+      corrected_transcript = transcript.replace(" 10 ", " ten ")
+      return corrected_transcript
+
+  # Example transcription response from Deepgram
+  response = {
+      "results": {
+          "channels": [{
+              "alternatives": [{
+                  "transcript": "To jest 10 powodów."
+              }]
+          }]
+      }
+  }
+
+  # Extract the transcript
+  transcript = response["results"]["channels"][0]["alternatives"][0]["transcript"]
+
+  # Post-process the transcript
+  corrected_transcript = post_process_transcription(transcript)
+  print(corrected_transcript)  # Output: "To jest ten powodów."
+  ```
+
+- **Custom Models and Training:** Provide specific training data to improve the recognition of context-specific words like "ten". Engage with Deepgram's model customisation options for enhanced performance with Polish language nuances.
+
+- **Keyword Boosting:** Use Deepgram's keyword boosting feature to prioritise the transcription of "ten" over "10" when relevant. This requires using the Nova 3 model and keyterm prompting.
+
+### Conclusion
+
+While automatic speech recognition systems are continually improving, linguistic nuances such as homophones pose challenges. By implementing post-processing solutions, exploring model customisation, or using keyword boosting, you can enhance transcription accuracy for words like "ten".
+
+For further assistance or if issues persist, reach out to your Deepgram support representative or visit our community for support: [Deepgram Discord Community](/community).
+
+### References
+
+- [Deepgram Transcription API Documentation](/docs/transcription-api/)
+- [Deepgram Keyword Boosting](/docs/keywords/)
+- [Community Discussions on Polish Speech Recognition](/community)
+- [Forum Feedback and Language Model Enhancement](/community/forums)

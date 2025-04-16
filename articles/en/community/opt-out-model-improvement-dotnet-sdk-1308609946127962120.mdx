@@ -1,0 +1,91 @@
+---
+title: "Opt out of Deepgram Model Improvement Program (MIP) via Deepgram SDKs"
+summary: "Learn how to opt out of Deepgram's Model Improvement Program (MIP) via their SDKs."
+description: "This article explains how to opt out of Deepgram's Model Improvement Program (MIP) when using their SDKs for speech-to-text transcription. It covers including the 'mip_opt_out' custom parameter in your API requests and provides a link to Deepgram's documentation for more details."
+tags: ["Deepgram SDK", "Model Improvement Program", "Data Privacy"]
+categories: ["SDK Usage", "Privacy"]
+last_updated: 2023-10-10
+---
+
+<CommunityQuestion>I'm working on a project that involves sensitive data, and I want to ensure that none of the audio is used for improving Deepgram's speech recognition models. How can I opt out of the Model Improvement Program when using the Deepgram SDKs?</CommunityQuestion>
+
+## Problem Statement
+
+When working with sensitive data, it is essential to ensure that your audio data is not utilised for model improvements by Deepgram. Opting out of the Model Improvement Program (MIP) is critical for maintaining data privacy, but be aware that this will result in an increase in service rates.
+
+## Using Custom Parameters in any SDK
+
+Deepgram SDKs allow you to pass custom parameters to tailor your API requests, including opting out of optional features such as the MIP. To use this feature, include `mip_opt_out=true` as a custom parameter in your API call configuration.
+
+### Example with JavaScript SDK
+
+```javascript
+// Install the SDK: npm install @deepgram/sdk
+import { createClient } from "@deepgram/sdk";
+require('dotenv').config();
+
+const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
+
+const transcribeAudio = async () => {
+  try {
+    const response = await deepgram.listen.prerecorded.transcribeUrl(
+      { url: "https://dpgr.am/spacewalk.wav" },
+      { model: "nova-3", mip_opt_out: true }
+    );
+    console.log(response);
+  } catch (error) {
+    console.error("Error transcribing audio:", error);
+  }
+};
+
+transcribeAudio();
+```
+
+### Example with Python SDK
+
+```python
+# Install the SDK: pip install deepgram-sdk
+import os
+from deepgram import DeepgramClient
+from dotenv import load_dotenv
+
+load_dotenv()
+
+API_KEY = os.getenv("DEEPGRAM_API_KEY")
+AUDIO_URL = {"url": "https://dpgr.am/spacewalk.wav"}
+
+deepgram = DeepgramClient(API_KEY)
+
+async def transcribe_audio():
+    try:
+        response = await deepgram.listen.prerecorded.transcribe_url(
+            AUDIO_URL,
+            {"model": "nova-3", "mip_opt_out": True}
+        )
+        print(response)
+    except Exception as e:
+        print(f"Error transcribing audio: {e}")
+
+# Ensure the event loop is running
+import asyncio
+asyncio.run(transcribe_audio())
+```
+
+## SDK Documentation
+
+For detailed documentation on how to add custom parameters in Deepgram SDKs, refer to [Using Custom Parameters in SDKs](/docs/using-custom-parameters-sdks).
+
+### Confirming Opt-Out
+
+Once you've opted out, verify this action by checking your usage logs for a price increase, indicating the successful implementation of the `mip_opt_out` parameter.
+
+For full insights into Deepgram's Model Improvement Program and how to manage your preferences, visit [Model Improvement Partnership Program](/docs/the-deepgram-model-improvement-partnership-program).
+
+## For More Support
+
+If you encounter issues or require further assistance, reach out to our community on [Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/orgs/deepgram/discussions) where community experts and Deepgram engineers are available to help.
+
+## References
+
+- [Model Improvement Partnership Program](/docs/the-deepgram-model-improvement-partnership-program)
+- [Using Custom Parameters in SDKs](/docs/using-custom-parameters-sdks)

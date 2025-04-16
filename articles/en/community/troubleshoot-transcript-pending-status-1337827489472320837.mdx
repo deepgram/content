@@ -1,0 +1,82 @@
+```markdown
+---
+title: "Troubleshooting Deepgram Transcript Requests Stuck in Pending"
+description: "Guide for resolving Deepgram transcript requests that remain stuck in the 'Pending' state."
+summary: "This article explains the different request states in Deepgram's Speech-to-Text API and provides troubleshooting steps for resolving transcript requests that remain stuck in the 'Pending' state for an extended period, ensuring smooth operation and accurate transcriptions."
+tags: ["Deepgram", "API", "Troubleshooting", "Transcript", "Pending"]
+categories: ["API", "Troubleshooting"]
+last_updated: "2023-10-01"
+---
+
+<CommunityQuestion>I've submitted an audio file for transcription using the Deepgram API, but it's been stuck in the 'Pending' state for several hours. What could be causing this delay, and how can I resolve it?</CommunityQuestion>
+
+### Problem Statement
+
+When using the Deepgram Speech-to-Text API, you might encounter a situation where your transcript requests are stuck in the "Pending" state for an extended period. This can hinder the workflow by delaying the availability of transcriptions necessary for your application.
+
+### Understanding Request States
+
+Requests to the Deepgram API go through various states before completion. Key states include:
+- **Pending:** The request is received but not yet processed.
+- **OK:** The request is successfully processed, and results are available.
+- **Unknown:** Issues during processing prevent successful transcription.
+
+Pending requests should eventually transition to a different state. If they do not, this may indicate problems with request parameters or audio data.
+
+### Common Causes for Pending Requests
+
+1. **Improper Use of Query Parameters:**
+   - Ensure correct and valid use of query parameters. Improper combinations can lead to processing delays.
+
+2. **Invalid Audio Data:**
+   - Verify that audio file formats and encodings match the API requirements. See [Audio Formats Documentation](/docs/audio-formats).
+
+3. **Check Program Logic:**
+   - Review your implementation to ensure correct request handling, including proper closure of sockets.
+
+### How to Resolve Issues
+
+To troubleshoot pending requests, consider the following steps:
+
+- **Verify API Request Parameters:**
+  - Double-check your API requests for correct parameters and data format. Example:
+  ```python
+  import requests
+
+  DEEPGRAM_API_KEY = 'YOUR_API_KEY'
+  AUDIO_URL = 'https://example.com/audio.wav'
+
+  response = requests.post(
+      'https://api.deepgram.com/v1/listen',
+      headers={
+          'Authorization': f'Token {DEEPGRAM_API_KEY}',
+          'Content-Type': 'application/json'
+      },
+      json={
+          'url': AUDIO_URL,
+          'model': 'nova-3',
+          'punctuate': True
+      }
+  )
+
+  if response.status_code == 200:
+      print("Request successful:", response.json())
+  else:
+      print("Error occurred:", response.text)
+  ```
+
+- **Refer to Documentation:**
+  - Consult Deepgram documentation to ensure requests conform to expected standards. Refer to the [Deepgram API Overview](/reference/deepgram-api-overview).
+
+### Conclusion
+
+Typically, pending requests are temporary. Persistent issues may require a detailed review of request configuration and input data. Correct parameter usage and data validity are crucial.
+
+For further assistance, contact Deepgram support or engage with the community: [Deepgram Community](https://discord.gg/deepgram).
+
+### References
+- [Deepgram API Overview](/reference/deepgram-api-overview)
+- [Audio Formats Documentation](/docs/audio-formats)
+```
+
+This improved article includes a clear problem statement, error handling, relative links, and additional metadata.

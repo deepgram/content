@@ -1,0 +1,76 @@
+---
+title: "Deepgram API Access with Five9 Integration"
+description: "Overview of accessing the Deepgram API when using Five9 contact centre software."
+summary: "Explore options for integrating Deepgram's APIs with Five9 contact centre software, offering both predefined integration and direct API access for greater flexibility."
+tags: ["Deepgram", "Five9", "Integration"]
+categories: ["Integration Guides"]
+last_updated: "2023-10-15"
+---
+
+<CommunityQuestion>I'm looking to integrate Deepgram's speech-to-text capabilities with our Five9 contact centre software. What options do I have for accessing the Deepgram API and customising the integration?</CommunityQuestion>
+
+Integrating Deepgram with Five9 enhances contact centre operations with advanced transcription and AI capabilities. Understanding the integration options available is crucial for optimising these functionalities.
+
+## API Access with Predefined Integration
+
+Predefined integrations between Five9 and Deepgram may limit API access to the functionalities offered through the Five9 interface, enabling basic transcription features without direct API interaction. This is suitable for users who do not require extensive customisation.
+
+## Custom Integration and Direct API Calls
+
+For organisations seeking more flexibility or additional features, direct access to Deepgram’s APIs is possible with appropriate permissions. This enables leveraging Deepgram's advanced functionalities beyond standard integration. Follow these steps for custom integration:
+
+### Step-by-Step Guide
+
+1. **Review Existing Integration Documentation**: Understand the current capabilities and limitations of the Five9 and Deepgram integration.
+
+2. **Ensure Proper Permissions**: Confirm administrative permissions within both Five9 and Deepgram to enable direct API calls.
+
+3. **Custom Development for API Calls**: If further customisation is needed, develop code to interact with Deepgram's API directly.
+
+### Sample Code for Direct API Access
+
+Below is a tested code example using `curl` to make a direct API call to Deepgram:
+
+```shell
+curl -X POST "https://api.deepgram.com/v1/listen" \
+-H "Authorization: Token YOUR_API_KEY" \
+-F "file=@path/to/your/audio/file.wav"
+```
+
+Ensure to replace `YOUR_API_KEY` with your actual API key and `path/to/your/audio/file.wav` with the correct file path. This example demonstrates a simple transcription request to Deepgram.
+
+### Error Handling Example
+
+To handle potential errors, check for HTTP response codes in your implementation. Here's a basic example of error handling in `Python`:
+
+```python
+import requests
+
+url = "https://api.deepgram.com/v1/listen"
+headers = {
+    "Authorization": "Token YOUR_API_KEY"
+}
+files = {
+    "file": open("path/to/your/audio/file.wav", "rb")
+}
+
+response = requests.post(url, headers=headers, files=files)
+
+if response.status_code == 200:
+    print("Transcription successful:", response.json())
+else:
+    print(f"Error: {response.status_code}, {response.json()}")
+```
+
+This code checks for successful transcription and handles errors appropriately.
+
+## Further Assistance
+
+If specific functions are needed or barriers occur, expanding your understanding or developing custom API interactions may be necessary. Reach out to your Deepgram support representative, or join our community for assistance: [Deepgram Community](https://discord.gg/deepgram).
+
+## References
+
+- [Deepgram API Documentation](/reference/deepgram-api-overview)
+- [Five9 and Deepgram Integration Guide](/learn/five9-partnership-revolutionizes-contact-center-ai)
+
+This article provides an overview of maximising your integration's potential while allowing for bespoke enhancements through direct API access as needed.

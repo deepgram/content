@@ -1,0 +1,81 @@
+---
+title: "Handling AWS WAF Rejections in Deepgram Requests"
+description: "Learn strategies to handle AWS WAF rejections when using Deepgram's transcription API."
+summary: "This guide explains how to address issues with AWS WAF blocking requests to Deepgram's transcription API due to missing User-Agent headers, ensuring your audio files are accessible for transcription."
+tags: ["AWS WAF", "Deepgram API", "Error Handling", "User-Agent Header"]
+categories: ["Troubleshooting", "API Configuration"]
+last_updated: "2023-10-05"
+---
+
+<CommunityQuestion>I've been having trouble with Deepgram's speech-to-text API as some of my requests are getting rejected by AWS WAF. How can I resolve this issue and ensure my requests go through smoothly?</CommunityQuestion>
+
+## Problem Statement
+
+When using Deepgram's transcription services, requests may be blocked by AWS Web Application Firewall (WAF) due to missing User-Agent headers. This issue can prevent Deepgram from accessing audio files required for transcription.
+
+## Potential Impact
+
+AWS WAF may reject HTTP requests lacking a User-Agent header as a security measure against bot traffic. This can impede Deepgram's ability to fetch audio resources from URLs, impacting the transcription process.
+
+## Addressing the Issue
+
+Here are recommended strategies to resolve this problem:
+
+1. **Update AWS WAF Rules:**
+   Adjust your AWS WAF settings to allow requests from Deepgram. Consider adding rules that permit requests based on identifiers like the `dg-token` header.
+
+   ```shell
+   # Example AWS CLI command to update WAF rules
+   aws wafv2 update-web-acl --name "YourWAFName" --scope REGIONAL \
+   --default-action Allow --rules file://rules.json
+   ```
+
+   Ensure your `rules.json` includes logic to allow requests from Deepgram based on specific headers or IP addresses.
+
+2. **Validate Requests:**
+   Authenticate incoming requests using Deepgram's `dg-token` header. This approach helps verify that requests are legitimate and should be allowed by your firewall.
+
+   ```json
+   {
+     "headers": {
+       "dg-token": "your_valid_token"
+     }
+   }
+   ```
+
+## Error Handling
+
+If a request is blocked, you might encounter an error message indicating the rejection. Ensure your application logs these errors for troubleshooting. Here's a basic example of handling such errors in a Node.js environment:
+
+```javascript
+const axios = require('axios');
+
+axios.get('https://your-audio-url.com', {
+  headers: {
+    'User-Agent': 'YourAppName',
+    'dg-token': 'your_valid_token'
+  }
+}).catch(error => {
+  if (error.response) {
+    console.error('Error:', error.response.status, error.response.data);
+  } else {
+    console.error('Error:', error.message);
+  }
+});
+```
+
+## Recommendations for Developers
+
+Although Deepgram's API doesn't currently allow sending arbitrary headers, adjusting WAF rules or using provided headers can help ensure requests are not blocked. If problems persist, consider more context-aware firewall rules, specifically targeting Deepgram's domain or expected headers.
+
+## Conclusion
+
+Integrating Deepgram's services with AWS WAF requires careful configuration to align security protocols with operational needs. Adjusting firewall settings to accommodate necessary headers can help maintain seamless API interactions.
+
+## References
+
+- [AWS WAF Documentation](https://docs.aws.amazon.com/waf/)
+- [Deepgram's Callback Authentication Documentation](/docs/callback#authenticating-callback-requests)
+- [Deepgram API Specifications](/reference/api-specifications)
+
+For further assistance, reach out through Deepgram's community support channels: [Discord](https://discord.gg/deepgram) and [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions).

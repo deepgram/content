@@ -1,0 +1,65 @@
+---
+title: "Managing Result Intervals in Deepgram Live Transcription"
+description: "How to manage transcription result intervals in Deepgram's live speech-to-text API."
+summary: "This article explains how Deepgram's live transcription API sends finalised transcription results every 3-5 seconds, and provides guidance on managing the output frequency when integrating with other services like language models."
+tags: ["Deepgram", "Live Transcription", "API", "Language Models"]
+categories: ["Transcription", "Integration"]
+last_updated: "2023-10-08"
+---
+
+<CommunityQuestion>How can I control the frequency at which Deepgram's live transcription service sends final transcription results? I'm integrating it with a language model and need to optimise the output intervals.</CommunityQuestion>
+
+### Problem Statement
+
+Integrating Deepgram's live transcription service with other technologies, such as language models, requires managing the frequency of transcription results. Users often need to customise result intervals and interpret specific markers to efficiently manage transcription output.
+
+### Frequency of Final Results in Live Transcription
+
+Deepgram's live transcription service processes audio and returns results approximately every 3-5 seconds as `is_final: true` during live processing. Understanding how to manage these results is crucial for optimising integration, especially alongside other processing stages, like language models.
+
+#### How It Works
+
+- **Result Frequency:** By default, transcription results are processed and returned every 3-5 seconds. This interval is determined by Deepgram's internal processing mechanisms.
+- **Configuration Options:** Deepgram currently does not support direct configuration of the result interval. However, users can implement custom client-side buffering solutions to adjust how frequently results are aggregated and processed.
+
+#### Aggregating Results
+
+To gather results over a longer period before sending them to a language model, users can implement a client-side buffering system. This method accumulates interim results into larger batches for processing.
+
+### Understanding `is_final` and `speech_final`
+
+Both `is_final` and `speech_final` are important parameters in managing transcription results:
+
+- **`is_final`:** Indicates that Deepgram has finalised the transcript for a segment of audio. It does not imply the end of an utterance.
+- **`speech_final`:** Marks the end of an utterance or a significant pause in speech, signalling that the transcription for that segment is complete.
+
+### Error Handling in Client-Side Buffering
+
+When implementing client-side solutions, it is important to handle potential errors to ensure robust performance. Here is a basic example in JavaScript:
+
+```javascript
+try {
+  const buffer = [];
+  socket.on("transcript-result", (result) => {
+    buffer.push(result);
+    if (buffer.length >= MAX_BUFFER_SIZE) {
+      processBuffer(buffer);
+      buffer.length = 0; // Clear the buffer
+    }
+  });
+} catch (error) {
+  console.error("Error processing transcription results:", error);
+}
+```
+
+### Conclusion
+
+Effectively managing the behaviour of Deepgram's live transcription results enables seamless integration with broader systems. While some custom handling may be necessary, particularly around buffering results, understanding parameters like `is_final` and `speech_final` ensures a clearer and more accurate transcription flow.
+
+For further assistance or up-to-date information, refer to the [Deepgram Live API documentation](/reference/listen-live). For community support, visit [Deepgram's Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/orgs/deepgram/discussions).
+
+#### References
+- [Using Interim Results (`is_final`)](/docs/understand-endpointing-interim-results#using-interim-results-is_final)
+- [Using Endpointing (`speech_final`)](/docs/understand-endpointing-interim-results#using-endpointing-speech_final)
+- [Deepgram Community Discussions](https://github.com/orgs/deepgram/discussions)
+- [Discord Community](https://discord.gg/deepgram)

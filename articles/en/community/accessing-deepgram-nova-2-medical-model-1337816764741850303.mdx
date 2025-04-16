@@ -1,0 +1,72 @@
+---
+title: "Accessing the Deepgram Nova-3 Medical Model"
+description: "Learn how to access and utilise Deepgram's Nova-3 Medical model for transcription."
+summary: "This guide explains how to access and use Deepgram's Nova-3 Medical model, designed for accurate transcription of medical audio content containing complex terminology and jargon. It covers an overview of the model and provides an example request."
+tags:
+  - Deepgram
+  - API
+  - Medical Transcription
+  - Nova-3
+categories:
+  - Transcription
+  - Speech Recognition
+last_updated: "2023-10-13"
+---
+
+<CommunityQuestion>I'm working on a medical transcription project and require high accuracy for complex terminology. How can I access Deepgram's specialised medical model for this purpose?</CommunityQuestion>
+
+## Problem Statement
+
+When dealing with medical transcription, achieving high accuracy is crucial due to the complex and technical nature of medical terminology. Deepgram's Nova-3 Medical model is specifically optimised for this purpose, providing enhanced transcription accuracy for medical audio content.
+
+## Overview of the Nova-3 Medical Model
+
+Deepgram's Nova-3 Medical model is designed to accurately transcribe medical audio content. It leverages advanced speech-to-text algorithms optimised for medical terminology, enabling precise transcription of complex medical language and jargon.
+
+## Using the Nova-3 Medical Model in Your Request
+
+To utilise the Nova-3 Medical model, include the model option `nova-3-medical` in your transcription request. This ensures that Deepgram processes the audio using the model specifically trained for medical audio content, enhancing transcription quality for medical recordings.
+
+### Example Request
+
+When making a request to the Deepgram API, specify the model in your request parameters. Here is an example using Python with error handling:
+
+```python
+import requests
+
+url = "https://api.deepgram.com/v1/listen"
+headers = {
+    "Authorization": "Token YOUR_API_KEY",
+    "Content-Type": "audio/wav"
+}
+
+try:
+    with open('youraudio.wav', 'rb') as audio:
+        response = requests.post(url, headers=headers, params={"model": "nova-3-medical"}, data=audio)
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+```
+
+Ensure that your requests to the Deepgram API endpoint use the correct API key and adhere to the required formatting for parameters. Replace `YOUR_API_KEY` with your actual Deepgram API key.
+
+## Alternative Solutions
+
+If you encounter issues accessing the Nova-3 Medical model, consider using other Deepgram models that may suit your needs, or contact [Deepgram support](https://deepgram.com/contact/) for assistance.
+
+## Resources and Documentation
+
+For more information on available models and languages, including details on the Nova-3 Medical model, refer to the [Deepgram Model Documentation](../docs/models-languages-overview#nova-3).
+
+For further assistance, you can visit our [community support](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions).
+
+## Conclusion
+
+Integrating the `nova-3-medical` model into your Deepgram API requests can significantly improve transcription accuracy for medical audio content. By using the correct model option, you ensure that your application benefits from Deepgram’s specialised language processing capabilities.
+
+## References
+
+- [Deepgram Models and Languages Overview](../docs/models-languages-overview#nova-3)
+- [Deepgram API Reference](../reference/deepgram-api-overview)
+- [Deepgram Community](https://discord.gg/deepgram)

@@ -1,0 +1,67 @@
+---
+title: "Handling Phone Numbers in Streaming Transcription with Deepgram"
+description: "Tips for improving phone number transcription accuracy with repeated digits using Deepgram's streaming API."
+summary: "This article explores strategies for enhancing the transcription accuracy of phone numbers, particularly those with repeated digits, when using Deepgram's streaming speech-to-text API. It covers model selection, smart formatting, and other feature considerations to optimise transcription performance."
+tags: ["Deepgram", "Streaming", "Transcription", "Phone Numbers", "API"]
+categories: ["Speech Recognition", "Troubleshooting"]
+last_updated: "2023-10-13"
+---
+
+<CommunityQuestion>I'm having trouble accurately transcribing phone numbers with repeated digits using Deepgram's streaming API. How can I improve the transcription accuracy for such cases?</CommunityQuestion>
+
+### Problem Statement
+
+Transcribing phone numbers, especially those ending with repeated digits, can sometimes result in extra digits appearing in the transcription output. This article provides strategies to improve transcription accuracy using Deepgram's API.
+
+### Model Selection
+
+Deepgram's latest model, `nova-3`, should be your first choice for transcription tasks as it offers improved accuracy and efficiency. If encountering issues with repeated digits, experiment with different `nova-3` models to see which yields the best results for your specific context.
+
+### Feature Considerations
+
+1. **Smart Formatting**: Activate the `smart_format` feature by adding `smart_format=true` to your API call to automatically improve formatting. However, test thoroughly as it may not always perfectly handle phone numbers.
+
+   ```shell
+   curl --request POST \
+     --header 'Authorization: Token YOUR_API_KEY' \
+     --header 'Content-Type: audio/wav' \
+     --data-binary @youraudio.wav \
+     --url '/v1/listen?smart_format=true'
+   ```
+
+   **References**: [Smart Formatting](/docs/smart-format)
+
+2. **Numerals Feature**: Enable the `numerals` feature by setting `numerals=true` to convert spoken numbers into numeric form, aiding in clarity for numeric transcription.
+
+   ```shell
+   curl --request POST \
+     --header 'Authorization: Token YOUR_API_KEY' \
+     --header 'Content-Type: audio/wav' \
+     --data-binary @youraudio.wav \
+     --url '/v1/listen?numerals=true'
+   ```
+
+   **References**: [Numerals Feature](/docs/numerals)
+
+3. **Disabling Smart Formatting**: If `smart_format` introduces errors, consider disabling it and relying on the Numerals feature alone.
+
+4. **Custom Post-processing**: Develop custom logic to refine transcription outputs programmatically, particularly if built-in features don't resolve all number-related errors. Implement error handling to manage unexpected results.
+
+   ```python
+   try:
+       # Process transcription results
+       pass
+   except Exception as e:
+       print(f"Error processing transcription: {e}")
+   ```
+
+### Conclusion
+
+Experimenting with different configurations and features can significantly enhance transcription accuracy for phone numbers with repeated digits. Custom solutions may also provide the required precision for applications like conversational AI.
+
+For further insight and community support, join discussions on [Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/orgs/deepgram/discussions).
+
+### References
+- [Deepgram Model Overview](/docs/models-languages-overview#nova-3)
+- [Smart Formatting](/docs/smart-format)
+- [Numerals Feature](/docs/numerals)

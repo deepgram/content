@@ -1,0 +1,48 @@
+---
+description: Guideance for reviewing any markdown content in the `articles/en/community` directory
+globs: 
+alwaysApply: false
+---
+## Reviewing Community Articles
+
+
+## ONLY Instructions
+- ONLY apply these rules to markdown files inside `articles/en/commumity`
+- ONLY include very small code examples exactly as they are in the docs
+- ONLY use frontmatter for the article's title
+- ONLY reference official Deepgram documentation
+- ONLY use absolute URLs for documentation references
+- ONLY include API keys in example code as placeholders (e.g., `YOUR_API_KEY`)
+
+## ALWAYS Instructions
+- ALWAYS add frontmatter when missing, based on the content - including a `title`, `summary` and `description`.
+- ALWAYS add frontmatter tags in this format: `tags: ["Errors", "Troubleshooting"]`
+- ALWAYS add frontmatter categories in this format: `categories: ["API"]`
+- ALWAYS add frontmatter dates in ISO format.
+- ALWAYS compare articles for accuracy against known Deepgram API Specs (openapi.yml and asyncapi.yml)
+- ALWAYS check articles for accuracy against similar content on https://developers.deepgram.com
+- ALWAYS include a clear problem statement at the beginning of troubleshooting articles
+- ALWAYS provide complete error messages when discussing error resolution
+- ALWAYS use proper syntax highlighting for code blocks (e.g., \```python, \```javascript, \```shell)
+- ALWAYS include a "References" section with relevant documentation links
+- ALWAYS add appropriate metadata (tags, categories, last updated date)
+- ALWAYS test all code examples before publication
+- ALWAYS include error handling in code examples
+- ALWAYS use British English spelling and terminology
+- ALWAYS provide alternative solutions where applicable
+- ALWAYS include community support links (Discord, GitHub Discussions)
+- ALWAYS prefer latest models (Nova 3 > Nova 2 > Nova)
+- ALWAYS prefer latest features (keyterm prompting > keywords - but it requires Nova 3)
+
+## NEVER Instructions
+- NEVER use Deepgram or a product name as an article tag.
+- NEVER include actual API keys or sensitive credentials
+- NEVER use deprecated API endpoints or methods
+- NEVER publish untested code examples
+- NEVER use absolute URLs for internal documentation
+- NEVER publish content without proper error handling examples
+- NEVER use American English spelling
+- NEVER omit necessary import statements in code examples
+- NEVER publish content without proper heading hierarchy
+- NEVER include broken or outdated links
+- NEVER publish content without proper code formatting

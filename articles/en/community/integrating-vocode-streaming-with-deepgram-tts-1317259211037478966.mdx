@@ -1,0 +1,98 @@
+---
+title: "Integrating Vocode Streaming with Deepgram for TTS"
+summary: "This article provides an overview of integrating Vocode's streaming framework with Deepgram's powerful text-to-speech API, including setup steps, configuration details, and code examples for real-time voice synthesis."
+description: "Learn how to integrate Vocode's streaming capabilities with Deepgram's text-to-speech API for real-time voice synthesis. This guide covers setup, configuration, and provides tested code examples with error handling."
+tags: ["Vocode", "Deepgram", "Text-to-Speech", "Integration", "Real-Time"]
+categories: ["Integration", "Real-Time Applications"]
+last_updated: 2023-10-25
+---
+
+<CommunityQuestion>Could someone explain how to integrate Vocode's streaming capabilities with Deepgram's text-to-speech API? I'm working on a project that requires real-time voice synthesis, and I'm unsure about the proper setup and configuration for this integration.</CommunityQuestion>
+
+## Problem Statement
+
+Integrating Vocode's streaming capabilities with Deepgram's text-to-speech (TTS) API can enable real-time voice synthesis for dynamic applications. However, setting up and configuring this integration correctly is crucial to leveraging Deepgram's powerful TTS features, such as the Nova 3 model and keyterm prompting, for high-quality audio output.
+
+## Integration Overview
+
+Deepgram provides robust APIs for text-to-speech conversion for both pre-recorded and live streaming audio. Vocode, a framework for building real-time voice interfaces, supports streaming integrations, including with Deepgram.
+
+### Setting Up
+
+Integrating these two services involves creating a connection between Vocode's streaming capabilities and Deepgram's API. The key is to use Deepgram's WebSocket endpoint to facilitate live text-to-speech processing efficiently. Below is a general outline of the process:
+
+1. **Establish WebSocket Connection**: Begin by setting up a WebSocket connection using Deepgram's real-time TTS endpoint, `wss://api.deepgram.com/v1/speak`.
+
+   ```javascript
+   const WebSocket = require('ws');
+
+   const deepgramURL = 'wss://api.deepgram.com/v1/speak';
+   const deepgramApiKey = 'YOUR_API_KEY';
+
+   const ws = new WebSocket(deepgramURL, {
+     headers: {
+       Authorization: `Token ${deepgramApiKey}`
+     }
+   });
+
+   ws.on('open', () => {
+     console.log('WebSocket connection established.');
+     ws.send(JSON.stringify({
+       type: 'Speak',
+       text: 'Hello, this is a test of Deepgram TTS.',
+       model: 'nova-3' // Use the latest model for improved accuracy
+     }));
+   });
+
+   ws.on('message', (data) => {
+     console.log('Received audio data:', data);
+   });
+
+   ws.on('error', (error) => {
+     console.error('WebSocket error:', error);
+   });
+
+   ws.on('close', (code, reason) => {
+     console.log('WebSocket connection closed:', code, reason);
+     // Implement reconnection logic here
+   });
+   ```
+
+   Ensure to include proper error handling as shown above.
+
+2. **Configure Credentials**: Ensure that you have the necessary API key from Deepgram to authenticate your requests when using their services.
+
+3. **Adapt Vocode Configuration**: Adjust the Vocode streaming configuration to utilise Deepgram's WebSocket API for text-to-speech. Pay attention to correct parameter settings that match your use-case specifics, such as language or audio format.
+
+4. **Integrate and Test**: Implement the integration by linking your Vocode streaming instance with Deepgram's TTS services, and conduct tests to ensure the connection is stable and functional.
+
+### Basic Example: Listening for Vocode Events
+
+Here's a simple example of listening for Vocode events and sending them to the Deepgram TTS WebSocket:
+
+```javascript
+vocode.on('textReady', (text) => {
+  if (ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({
+      type: 'Speak',
+      text: text,
+      model: 'nova-3'
+    }));
+  }
+});
+```
+
+### Example and Libraries
+
+Review existing implementations, such as the one found in [Vocode's GitHub repository](https://github.com/vocodedev/vocode-core/blob/e054c33a72787b6a4920f91eb8598ad0bafb4240/vocode/streaming/transcriber/deepgram_transcriber.py), to see practical code references and improve your understanding of how to customise your setup.
+
+## Conclusion
+
+Combining Vocode streaming with Deepgram's TTS services allows for dynamic and real-time voice interaction applications. This integration provides the benefits of Deepgram's high-quality text-to-speech technology with the flexibility and functionality of the Vocode framework. If you encounter any challenges during implementation, consult the services' documentation and support resources.
+
+## References
+
+- [Deepgram TTS API Documentation](/reference/transform-text-to-speech-websocket)
+- [Vocode GitHub Repository](https://github.com/vocodedev/vocode-core)
+
+For further assistance, you are encouraged to reach out via our [Discord community](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/deepgram/deepgram-js-sdk/discussions) for continuous support and guidance.

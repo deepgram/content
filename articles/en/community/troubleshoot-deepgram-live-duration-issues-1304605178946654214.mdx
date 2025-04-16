@@ -1,0 +1,67 @@
+---
+title: "Troubleshooting Deepgram Live Transcription Audio Duration Issues"
+description: "Learn how to fix an issue where Deepgram's live transcription API returns an audio duration of 0."
+summary: "This article explores common causes and solutions for an issue where Deepgram's live transcription API returns an audio duration of 0, indicating no audio was received through the WebSocket connection. It covers potential configuration errors and network issues affecting audio streaming."
+tags: ["Deepgram", "WebSocket", "Live Transcription", "Troubleshooting"]
+categories: ["Troubleshooting", "API"]
+last_updated: "2023-10-15"
+---
+
+<CommunityQuestion>I've been using Deepgram's live transcription API, but I'm running into an issue where the audio duration keeps returning as 0. What could be causing this, and how can I troubleshoot it?</CommunityQuestion>
+
+## Understanding the Issue
+
+When you receive an audio duration of 0, coupled with a WebSocket status code of `1011` and payload `NET-0001`, it indicates that the connection to Deepgram's API was successful, but no audio was received. This usually points to issues with the audio stream configuration or network disruptions.
+
+## Troubleshooting Steps
+
+### 1. Verify Audio Transmission
+
+- **Check for Audio Data:** Ensure that the audio data is actually being sent over the WebSocket. You can log the audio data being sent or write it to a file for verification.
+
+### 2. WebSocket Configuration
+
+- **Correct Setup:** Double-check your WebSocket configuration to ensure it matches Deepgram's requirements. Here is a basic example demonstrating a correct setup:
+
+  ```javascript
+  const WebSocket = require('ws');
+  const ws = new WebSocket('wss://api.deepgram.com/v1/listen', {
+      headers: {
+        Authorization: 'Token YOUR_API_KEY',
+      },
+  });
+
+  ws.on('open', function open() {
+    // Send audio data here
+  });
+
+  ws.on('error', function error(err) {
+    console.error('WebSocket Error: ', err.message);
+  });
+  ```
+
+  Ensure error handling is in place to capture and log connection issues for further analysis.
+
+### 3. Network Stability
+
+- **Check Network Issues:** Use tools like `ping` or `traceroute` to diagnose potential network problems. Ensure your connection is stable and has low latency.
+
+### 4. Monitor Status Transitions
+
+- **Deepgram Console Logs:** Monitor your request status in the Deepgram console. Transitions from "Pending" to "Unknown" to "Lost" indicate WebSocket payload issues.
+
+### Conclusion
+
+Proper configuration and testing of your audio streaming setup are crucial for effective use of Deepgram’s live transcription services. Regular log checks, stream tests in various scenarios, and consistent debugging practices can help maintain a stable connection with Deepgram's API.
+
+### References
+
+- [WebSocket API Guide](/docs/getting-started-with-live-streaming-audio)
+- [Logs and Usage Guide](/docs/using-logs-usage#understanding--console-usage-log-states)
+- [Error Handling in WebSockets](/reference/listen-live#error-handling)
+
+### Community Support
+
+For further assistance, consider reaching out through [Deepgram's Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions).
+
+Always consider using the latest models and features, such as keyterm prompting with Nova 3, for optimal transcription accuracy.

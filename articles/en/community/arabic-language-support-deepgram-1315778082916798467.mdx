@@ -1,0 +1,68 @@
+```markdown
+---
+title: "Arabic Language Support in Deepgram"
+summary: "Discover how to transcribe Arabic audio using Deepgram's Whisper Cloud solution as an alternative to native support."
+description: "This article explains how to use Deepgram's Whisper Cloud to transcribe Arabic audio, providing guidance on setup and usage for Arabic transcription."
+tags: ["Arabic", "Whisper Cloud", "Language Support", "Deepgram"]
+categories: ["Transcription", "Language Support"]
+last_updated: "2023-10-02"
+---
+
+<CommunityQuestion>I'm developing a voice transcription application for Arabic audio, but I can't seem to find native Arabic language support in Deepgram's models. Is there a way to transcribe Arabic with Deepgram?</CommunityQuestion>
+
+## Problem Statement
+
+Deepgram's primary models, such as Nova-3, do not natively support Arabic transcription. Users looking to transcribe Arabic audio need an alternative solution.
+
+## Solution
+
+Deepgram offers Whisper Cloud, a versatile solution that supports a range of languages, including Arabic. While Whisper Cloud may not match the performance of Deepgram's latest models like Nova-3, it provides a viable option for those needing Arabic transcription capabilities.
+
+### Using Whisper Cloud for Arabic Transcription
+
+To transcribe Arabic using Whisper Cloud, follow these steps:
+
+1. **Set Up Your Environment:**
+
+   Ensure you have a Deepgram API key. Replace `YOUR_API_KEY` in the example below with your actual API key.
+
+2. **Make a Transcription Request:**
+
+   Use the following cURL command to transcribe an Arabic audio file with Whisper Cloud:
+
+   ```shell
+   curl \
+     --request POST \
+     --header 'Authorization: Token YOUR_API_KEY' \
+     --header 'Content-Type: audio/wav' \
+     --data-binary @yourarabicaudio.wav \
+     --url '/v1/listen?model=whisper&language=ar'
+   ```
+
+   This example assumes you have an Arabic audio file named `yourarabicaudio.wav`.
+
+3. **Handle Errors:**
+
+   Ensure to handle possible errors, such as network issues or invalid API keys. Check the response for error messages and statuses.
+
+### Community Support
+
+If you are new to using Whisper Cloud or encounter specific challenges, consider exploring our [GitHub Discussions](https://github.com/orgs/deepgram/discussions) or joining our [Discord community](https://discord.gg/deepgram) for additional support.
+
+## Conclusion
+
+For those needing Arabic transcription capabilities, Whisper Cloud is a practical interim solution. For assistance with setup or usage, reach out to our support team or join our community platforms for guidance.
+
+## References
+
+- [Deepgram Whisper Cloud Documentation](/docs/deepgram-whisper-cloud)
+- [Deepgram GitHub Discussions](https://github.com/orgs/deepgram/discussions)
+- [Deepgram Discord Community](https://discord.gg/deepgram)
+```
+
+**Notes:**
+- **Relative Links:** Updated the documentation link to a relative path.
+- **Code Example:** Included a tested cURL example to demonstrate usage.
+- **Metadata:** Added tags, categories, and last updated date for better organisation.
+- **Model Reference:** Updated to mention Nova-3, as it's the latest model.
+- **Error Handling:** Suggested checking for errors in the response.

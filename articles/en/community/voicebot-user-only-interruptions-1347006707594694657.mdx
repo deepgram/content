@@ -1,0 +1,75 @@
+---
+title: "Implementing Voicebot with User-Only Interruptions"
+summary: "Strategies for a voicebot that distinguishes between user input and its own speech output."
+description: "Learn techniques for implementing a voicebot that listens only to user interruptions, avoiding self-interruption."
+tags: ["voicebot", "Deepgram", "speech-to-text", "real-time processing"]
+categories: ["Community", "Voice Agents"]
+last_updated: "2023-10-10"
+---
+
+<CommunityQuestion>I'm building a voice assistant and want it to avoid interrupting itself when a user speaks during its output. How can I achieve user-only interruptions with Deepgram's speech-to-text API?</CommunityQuestion>
+
+Building a voicebot that can listen to user interruptions without interrupting itself can be challenging. The primary issue is the microphone being always on, leading to situations where the bot might inadvertently interrupt itself. Here, we discuss strategies for effectively managing this, focusing on implementations with Python.
+
+## Managing Voicebot Interruptions
+
+When developing a voicebot that listens continuously, it's crucial to differentiate between the bot's voice and the user's voice. The objective is to ensure the bot processes interruptions selectively based on user input.
+
+### Key Strategies
+
+1. **Voice Detection and Filtering**
+   - Implement algorithms to distinguish between user audio input and the bot's voice output.
+   - Use signal processing techniques to filter out the bot's voice, allowing only user-generated sound to trigger the voicebot's interrupt functions.
+
+2. **Microphone Management**
+   - Programmatically control the microphone state. For instance, mute the microphone when the bot is speaking and unmute only when user input is expected.
+
+3. **Using Frameworks and Libraries**
+   - Leverage functionalities in frameworks like Deepgram's Voice Agent API, which offers comprehensive features for handling voice interactions smoothly.
+
+4. **Feedback Suppression**
+   - Use feedback suppression techniques to manage and minimise the feedback loop caused by the bot’s output being picked up by the microphone.
+
+## Example Implementation
+
+Here's a practical example using Deepgram's API:
+
+```python
+import asyncio
+import websockets
+
+async def listen_for_interruptions():
+    uri = "wss://agent.deepgram.com/agent"
+    async with websockets.connect(uri, extra_headers={"Authorization": "Token YOUR_API_KEY"}) as websocket:
+        try:
+            await websocket.send('{"type": "start"}')
+            while True:
+                message = await websocket.recv()
+                print(f"Received message: {message}")
+        except Exception as e:
+            print(f"Error: {e}")
+
+asyncio.run(listen_for_interruptions())
+```
+
+This example opens a WebSocket connection to Deepgram's Voice Agent API, allowing real-time interaction. Make sure to replace `YOUR_API_KEY` with your actual API key.
+
+**Error Handling:** The code includes basic error handling to catch exceptions during the WebSocket connection.
+
+### Key Function: `start_microphone`
+
+The `start_microphone` function in our [Flask Agent Function Calling Demo](https://github.com/deepgram-devs/flask-agent-function-calling-demo) efficiently manages recording sessions, focusing on user interactions.
+
+### Additional Resources
+
+For more insights, Deepgram's documentation on [voice-agent-audio-playback](../docs/voice-agent-audio-playback#the-agent-voice-is-triggering-itself) provides strategies to mitigate self-triggering issues.
+
+## Conclusion
+
+Implementing a voicebot that effectively distinguishes between user voice and self-output requires technical strategies and thoughtful programming. Utilising Deepgram's tools and resources can significantly aid in this process. For continued challenges, seek assistance from Deepgram's support or community.
+
+If issues persist, reach out to Deepgram's support or visit our community: [Discord](https://discord.gg/deepgram), [GitHub Discussions](https://github.com/deepgram-devs).
+
+### References
+- [Flask Agent Function Calling Demo](https://github.com/deepgram-devs/flask-agent-function-calling-demo)
+- [Voice Agent API Documentation](../docs/voice-agent-audio-playback#the-agent-voice-is-triggering-itself)

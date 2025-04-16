@@ -1,0 +1,86 @@
+---
+title: "Handling Long-Running Whisper Requests in Deepgram API"
+description: "Advice on handling long-running Whisper requests with Deepgram's speech-to-text API."
+summary: "This article discusses strategies for managing situations where Deepgram's Whisper speech-to-text requests exceed the 20-minute timeout limit. It provides guidance on verifying request completion, implementing webhooks, and optimising audio file durations."
+tags: ["Deepgram", "Whisper", "Troubleshooting"]
+categories: ["Speech-to-Text", "API"]
+last_updated: 2023-10-20
+---
+
+<CommunityQuestion>I've been using Deepgram's API for speech-to-text transcription, but I've encountered an issue where some requests seem to hang and never complete. Is there a way to handle these long-running requests effectively?</CommunityQuestion>
+
+Deepgram's Whisper requests have a built-in timeout limit of 20 minutes. If a request exceeds this time limit, a `504 Gateway Timeout` response code is typically returned, indicating a timeout. However, there can be instances where requests continue processing beyond this threshold, potentially impacting subsequent requests.
+
+### Problem Statement
+When using Deepgram's Whisper model, requests exceeding the 20-minute timeout may not complete, causing delays and resource management issues.
+
+### Background
+Deepgram's API is designed to handle transcription operations efficiently, but tasks that exceed the expected duration might lead to restrictions or delays in processing new requests. This is usually to maintain the system's overall efficiency and resource management.
+
+### Resolution and Best Practices
+If you are experiencing requests still processing beyond 20 minutes, consider the following strategies:
+
+1. **Verification of Completed Requests**:
+   Use Deepgram's API to check the status of your requests. Here's an example of how to verify request completion using Python:
+
+   ```python
+   import requests
+
+   def check_request_status(api_key, request_id):
+       headers = {
+           'Authorization': f'Token {api_key}',
+       }
+       response = requests.get(f'https://api.deepgram.com/v1/listen/{request_id}', headers=headers)
+       if response.status_code == 200:
+           print("Request completed successfully.")
+       else:
+           print("Request still processing or failed.")
+   
+   check_request_status('YOUR_API_KEY', 'YOUR_REQUEST_ID')
+   ```
+
+   Ensure you replace `'YOUR_API_KEY'` and `'YOUR_REQUEST_ID'` with appropriate values.
+
+2. **Minimise Request Duration**:
+   For long audio files, consider breaking them into smaller segments to avoid hitting the timeout limit and improve processing efficiency. Here's an example of how you could segment audio using FFmpeg:
+
+   ```shell
+   ffmpeg -i input.mp3 -f segment -segment_time 120 -c copy output%03d.mp3
+   ```
+
+   This command splits an audio file into segments of 2 minutes each.
+
+3. **Alternative Models**:
+   Consider using the latest models like Nova 3, which might handle longer audio more efficiently.
+
+4. **Contact Support**:
+   If issues persist or the system behaviour seems inconsistent, reach out to your Deepgram support representative or visit our community for assistance: [Discord](https://discord.gg/deepgram), [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions).
+
+5. **Keep Systems Updated**:
+   Ensure that all SDKs and libraries used for interfacing with Deepgram's API are up-to-date. Updated SDKs may offer more robust handling of long-running requests.
+
+### Error Handling
+Here's how you can handle a `504 Gateway Timeout` error in your application:
+
+```python
+try:
+    response = requests.get(f'https://api.deepgram.com/v1/listen/{request_id}', headers=headers)
+    response.raise_for_status()
+except requests.exceptions.HTTPError as err:
+    if response.status_code == 504:
+        print("Request timed out. Consider segmenting your audio file.")
+    else:
+        print(f"HTTP error occurred: {err}")
+except Exception as err:
+    print(f"An error occurred: {err}")
+```
+
+### Conclusion
+While the timeout feature is designed to maintain server efficiency, sometimes extra load or backlogs could lead to extended processing times. Monitoring request statuses, segmenting long audios, and regular communication with support are crucial in managing these situations effectively.
+
+### References
+- Deepgram API Documentation: [Getting Started](/docs/getting-started)
+- [API Rate Limits](/reference/api-rate-limits)
+- [Deepgram Error Documentation](/reference/errors#504-gateway-timeout)
+
+For further assistance, join our [Discord](https://discord.gg/deepgram) and [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions).

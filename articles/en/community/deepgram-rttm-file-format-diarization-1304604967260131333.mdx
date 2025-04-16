@@ -1,0 +1,91 @@
+---
+title: "Deepgram and RTTM File Format for Diarization"
+description: "Guide on using Deepgram's diarization output for RTTM file format."
+summary: "This article explains how to leverage Deepgram's diarization capabilities and speaker metadata to achieve results similar to RTTM files, which are commonly used for detailed speaker segmentation and alignment in speech processing applications."
+tags: ['diarization', 'RTTM', 'Deepgram']
+categories: ['speech processing', 'audio analysis']
+last_updated: 2023-10-10
+---
+
+<CommunityQuestion>I'm working on a project that requires speaker diarization for audio recordings. However, the output format I need is RTTM, which Deepgram doesn't seem to provide directly. Is there a way to obtain RTTM files from Deepgram's API or process the output into that format?</CommunityQuestion>
+
+## Understanding the Need for RTTM File Format in Diarization
+
+RTTM (Rich Transcription Time Marked) files are a widely-used format in the field of speech processing, often employed for detailed diarization outputs. These files provide rich transcription data, including speaker segmentation details, which can be beneficial for processes where tracking multiple speakers is necessary.
+
+Although Deepgram currently does not directly return RTTM data through its API, the platform handles diarization and provides valuable speaker metadata in a different format that can be used to achieve similar results.
+
+## Use Case for RTTM in Diarization
+
+The use of RTTM files can be particularly helpful in applications involving:
+
+- Speaker segmentation: Identifying and labelling different speakers in audio recordings.
+- Broadcast media: Aligning speech segments with video or audio streams.
+- Advanced analytics: Detailed breakdowns for any audio analysis systems requiring speaker attribution.
+
+## Alternatives Using Deepgram
+
+### Converting Deepgram Output to RTTM
+
+While Deepgram doesn't currently support RTTM output, developers can use the diarization capabilities of the Deepgram platform to export speaker-labeled timestamps. This data can then be programmatically converted to RTTM if required by post-processing the output. Below is a basic example of how you might convert Deepgram's JSON to RTTM:
+
+```python
+import json
+
+def convert_to_rttm(deepgram_json):
+    try:
+        results = deepgram_json['results']['channels'][0]['alternatives'][0]['words']
+        rttm_lines = []
+
+        for word_info in results:
+            speaker = word_info.get('speaker', 'unknown')
+            start_time = word_info['start']
+            duration = word_info['end'] - start_time
+            rttm_line = f"SPEAKER example 1 {start_time:.2f} {duration:.2f} <NA> <NA> {speaker} <NA> <NA>"
+            rttm_lines.append(rttm_line)
+
+        return "\n".join(rttm_lines)
+    except (KeyError, TypeError) as e:
+        print(f"Error during conversion: {e}")
+        return None
+
+# Example usage
+deepgram_output = {
+    "results": {
+        "channels": [
+            {
+                "alternatives": [
+                    {
+                        "words": [
+                            {"word": "hello", "start": 0.5, "end": 1.0, "speaker": 0},
+                            {"word": "world", "start": 1.1, "end": 1.5, "speaker": 1},
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+rttm_content = convert_to_rttm(deepgram_output)
+if rttm_content:
+    with open('output.rttm', 'w') as file:
+        file.write(rttm_content)
+```
+
+### Error Handling
+
+- **Potential Errors**: Ensure the Deepgram JSON structure is as expected. Handle cases where keys might be missing or have unexpected types.
+- **Solution**: Use try-except blocks to catch and respond to errors gracefully.
+
+## Conclusion
+
+While the Deepgram platform doesn’t natively provide RTTM output, it offers robust speaker diarization capabilities that are vital for creating speaker-labeled text. This functionality can be used in conjunction with custom scripts to convert the data to RTTM format if necessary.
+
+## References
+
+- [Deepgram API Documentation](/docs/getting-started)
+- [Diarization Feature Overview](/docs/diarization)
+- [When to Use Multichannel and Diarization](/docs/multichannel-vs-diarization)
+
+For further assistance, consider engaging with the community on [Discord](https://discord.com/invite/deepgram) or [GitHub Discussions](https://github.com/deepgram/deepgram-python/discussions).

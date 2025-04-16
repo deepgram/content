@@ -1,0 +1,76 @@
+---
+title: "Impact of User Removal on API Keys in Deepgram Projects"
+description: "Guide explaining the impact of user removal on API keys in Deepgram projects and how to mitigate disruptions."
+summary: "Understand the effects of user removal on API keys. Learn about key ownership, automatic revocation, and strategies to ensure minimal disruption."
+tags: [Deepgram, API Keys, User Management, Project Management]
+categories: [Guides, Troubleshooting]
+last_updated: 2023-10-15
+---
+
+<CommunityQuestion>I'm collaborating on a project that uses the Deepgram API, and one of my team members has left the company. What happens to the API keys they created, and how can I ensure minimal disruption to our services?</CommunityQuestion>
+
+When working with Deepgram's API in a collaborative environment, it's crucial to understand how the removal of a user from a project affects associated API keys. This documentation outlines this specific scenario to ensure seamless integration and minimal disruption in production environments.
+
+### Understanding API Key Ownership
+
+API keys in Deepgram are tied to the specific user account that created them. They are created within the context of a specific project and are thus bound by the permissions and existence of that user within that project.
+
+- **Key Creator Responsibilities**: The user who creates an API key is considered the owner of that key. The key can only be used within the specific project it was created, and only while the creator has access to the project.
+
+- **Revocation on User Removal**: If a user is removed from a project, any API keys they created for that project are automatically revoked. This ensures security and compliance, preventing orphan keys from remaining active when they’re no longer monitored by the creating account.
+
+### Potential Implications
+
+- **Disruption of Services**: If your production environment relies on an API key that was created by a user who gets removed from your project, the revocation of the key will lead to an interruption in service.
+
+- **Error Message**: When an API key is revoked, you may encounter an error message like `401 Unauthorized` or `Invalid API key`. These errors indicate that the key is no longer valid and requires immediate attention.
+
+### Preventive Measures
+
+1. **Regular Review**: Periodically review the ownership and permissions of API keys to ensure they align with the current project member list.
+
+2. **Establish Clear Guidelines**: Have clear documentation and processes for managing API keys and assigning them to stable service accounts where possible.
+
+3. **Monitoring and Alerts**: Implement monitoring that alerts you when an API key used in production is revoked or when a team member's access is updated, allowing for quick remediation.
+
+4. **Collaboration Tools**: Use collaboration tools or notes to keep track of key ownership and project member changes to minimise unanticipated disruptions.
+
+### Code Example: Checking API Key Validity
+
+Here's a Python example demonstrating how to check for key validity and handle revocations:
+
+```python
+import requests
+
+def check_api_key_validity(api_key):
+    url = "https://api.deepgram.com/v1/auth/token"
+    headers = {
+        "Authorization": f"Token {api_key}"
+    }
+    
+    try:
+        response = requests.get(url, headers=headers)
+        
+        if response.status_code == 200:
+            print("API key is valid.")
+        elif response.status_code == 401:
+            print("Invalid API key. Please update your credentials.")
+        else:
+            print(f"Unexpected error: {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+
+check_api_key_validity("YOUR_API_KEY")
+```
+
+### Conclusion
+
+Understanding the relationship between user accounts and API keys is crucial to maintaining uninterrupted service while utilising Deepgram's powerful APIs. By planning ahead and regularly auditing key ownership, project teams can prevent unnecessary downtime and ensure compliance with best security practices.
+
+### References
+
+- [Managing Projects and API Keys](/docs/managing-projects#manage-api-keys)
+- [Authenticating with Deepgram](/docs/authenticating)
+- [Deepgram API Error Handling](/reference/errors)
+
+For further assistance, consider joining the Deepgram community on [Discord](https://discord.gg/deepgram) or seeking help through [GitHub Discussions](https://github.com/deepgram/deepgram-python-sdk/discussions).

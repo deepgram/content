@@ -1,0 +1,45 @@
+---
+title: "Improving Accuracy of Spelled Words in Transcriptions"
+description: "Strategies for improving transcription accuracy for spelled words using Deepgram's speech-to-text API."
+summary: "This article explores techniques to enhance the accuracy of transcriptions when words are spelled out, such as using keywords and find-and-replace functionality provided by Deepgram's APIs and settings. It addresses scenarios where phonetic representations might disrupt the intended transcription."
+tags: ["transcription", "Deepgram API", "speech recognition"]
+categories: ["API Usage"]
+last_updated: "2023-10-10"
+---
+
+<CommunityQuestion>I'm working on a project where I need to transcribe audio recordings that include words being spelled out. However, the speech-to-text service I'm using tends to interpret these spelled words phonetically instead of recognising the intended spelling. Is there a way to improve the accuracy for these cases with Deepgram's API?</CommunityQuestion>
+
+To enhance the accuracy of transcriptions when words are spelled out, such as "J-A-Y" being interpreted correctly instead of phonetically, several strategies can be applied using Deepgram's APIs and settings. These methods are particularly useful in scenarios where phonetic representations might disrupt the intended transcription.
+
+### Strategies for Accurate Spelling Transcription
+
+#### 1. Use Keywords to Boost Accuracy
+Deepgram allows for the use of keywords to improve the accuracy of certain expected words in the transcription process. By applying this feature, you can significantly enhance the recognition of spelled or commonly misinterpreted words.
+
+- **Keywords Documentation**: [Deepgram Keywords](/docs/keywords)
+- **Error Handling**: Ensure you handle potential issues, such as exceeding the keyword limit of 200 per request, by implementing checks before making API calls.
+
+#### 2. Implement Find and Replace
+For scenarios where certain words or phrases are consistently misrecognized, Deepgram provides a find-and-replace feature. This can be utilised to automatically correct these phrases post-transcription.
+
+- **Find and Replace Documentation**: [Deepgram Find and Replace](/docs/find-and-replace)
+- **Error Handling**: Implement logging to capture any unexpected behaviour during the find-and-replace process to facilitate debugging.
+
+#### 3. Experiment with Different Models
+Different models can yield different transcription results based on their training data and intended use cases. By experimenting with various models that Deepgram offers, you can identify which model best suits your particular audio inputs. Prefer using the latest Nova 3 model for the best results.
+
+- **Available Models Overview**: [Deepgram Models & Languages Overview](/docs/models-languages-overview)
+- **Error Handling**: Monitor model performance and handle any API errors gracefully, possibly using retries or fallbacks.
+
+### Conclusion
+By leveraging these tools and techniques, you can significantly enhance the transcription accuracy of spelled-out words in your audio inputs. Experimenting with keyword boosting, find-and-replace functionalities, and different speech recognition models will allow for the optimal configuration tailored to specific use cases and audio characteristics.
+
+### References
+- [Deepgram Keywords Documentation](/docs/keywords)
+- [Deepgram Find and Replace Documentation](/docs/find-and-replace)
+- [Deepgram Models & Languages Overview](/docs/models-languages-overview)
+- [Voice Agent Application Guide](/docs/build-voice-agent-with-twilio-deepgram-openai)
+- [GitHub Repository for Voice Agent](https://github.com/deepgram/deepgram-twilio-streaming-voice-agent)
+
+### Community Support
+For further assistance, join the Deepgram community on [Discord](https://discord.gg/deepgram) or participate in [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions).

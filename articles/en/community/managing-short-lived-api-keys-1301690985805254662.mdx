@@ -1,0 +1,91 @@
+---
+title: "Managing Short-Lived API Keys in Deepgram"
+description: "Guide to managing short-lived API keys for secure Deepgram speech-to-text integration."
+summary: "This article provides guidance on effectively managing short-lived API keys when integrating Deepgram's speech-to-text API. It covers key considerations for securely creating, using, and deleting API keys, particularly for in-browser applications."
+tags: [API Keys, Security, Deepgram, Web Applications]
+categories: [Integration, Security]
+last_updated: 2023-10-15
+---
+
+<CommunityQuestion>How can I securely manage API keys when using Deepgram's speech-to-text API in a web application? I'm concerned about potential key exposure and misuse.</CommunityQuestion>
+
+Managing API keys efficiently is crucial for establishing secure and effective connections to Deepgram's speech-to-text API. Implementing short-lived API keys is a robust method to enhance security, particularly for in-browser applications. This article will guide you through key considerations when using short-lived API keys.
+
+## Understanding API Key Management
+
+When designing your system to handle short-lived API keys, it's essential to consider the lifecycle of these keys — from creation, active use, to deletion. Here's a basic run-through of the actions:
+
+1. **Creating API Keys**: Generate API keys for user sessions and associate them with user profiles to track usage.
+2. **Using API Keys**: Establish a secure connection using the API key. Ensure API keys are never exposed in client-side code.
+3. **Deleting API Keys**: After successfully establishing a connection, delete the API key to prevent unauthorized reuse.
+
+### Additional Considerations:
+
+- **Tracking Usage**: By associating API keys with users, you can monitor and detect any suspicious activity.
+- **Setting Expiration**: Assign a short expiration to API keys (e.g., 10 seconds) to limit potential misuse.
+- **Rate Limiting**: Implement rate limiting to safeguard against abuse of API calls.
+
+## Code Examples
+
+To create a short-lived API key, you can utilise Deepgram's ephemeral auth API. Here is a cURL example:
+
+```shell
+curl --request POST \
+     --url https://api.deepgram.com/v1/auth/keys \
+     --header 'Authorization: Token YOUR_API_KEY' \
+     --header 'Content-Type: application/json' \
+     --data '{
+       "comment": "Temporary Key",
+       "scopes": ["usage:read"],
+       "expires_in": 10
+     }'
+```
+
+This example demonstrates creating a temporary API key that expires after 10 seconds. Make sure to handle any errors in your implementation:
+
+```python
+import requests
+
+def create_temp_key(api_key):
+    url = "https://api.deepgram.com/v1/auth/keys"
+    headers = {
+        "Authorization": f"Token {api_key}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "comment": "Temporary Key",
+        "scopes": ["usage:read"],
+        "expires_in": 10
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 201:
+        return response.json()
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
+        return None
+
+temp_key = create_temp_key("YOUR_API_KEY")
+```
+
+## Error Handling
+
+Common errors you might encounter include:
+- **Invalid API Key**: Ensure your API key is correct and active.
+- **Expired Key**: Verify the expiration time and recreate the key as necessary.
+- **Permission Denied**: Check the assigned scopes and ensure they match your intended use.
+
+Handling errors appropriately will ensure a more robust application.
+
+## Conclusion
+
+By implementing short-lived keys with these considerations, you can maintain a secure connection environment for your Deepgram integrations. Remember, owing to no automatic expiration policy in Deepgram, manual cleanup is crucial.
+
+## References
+- [Authenticating with Deepgram API](/docs/authenticating)
+- [Deepgram API Management](/docs/security)
+- [Ephemeral Auth API](/reference/ephemeral-auth-api/grant-token)
+
+## Community Support
+- [Join the Deepgram Community on Discord](https://discord.gg/deepgram)
+- [Deepgram GitHub Discussions](https://github.com/deepgram/deepgram-python-sdk/discussions)

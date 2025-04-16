@@ -1,0 +1,76 @@
+---
+title: "Empty Transcripts in STT Streaming with Swift"
+description: "Troubleshooting guide for empty transcripts when using Deepgram's speech-to-text API with Swift for streaming audio."
+summary: "This article provides insights into the causes of empty transcripts when using Deepgram's speech-to-text API with Swift. It offers practical debugging steps, including handling interim results and audio capture issues."
+tags: [Swift, troubleshooting, Deepgram, speech-to-text]
+categories: [Streaming, API, Debugging]
+last_updated: 2023-10-01
+---
+
+<CommunityQuestion>I'm developing a voice application with Swift and the Deepgram API, but sometimes when streaming audio, I receive empty transcripts even though there is speech. Why might this be happening and how can I troubleshoot it?</CommunityQuestion>
+
+### Problem Statement
+
+When using Deepgram's speech-to-text (STT) API with Swift for real-time audio streaming, you may occasionally encounter empty transcripts. This can occur even if there is audible speech, leading to confusion and inefficiencies in processing. Understanding the reasons behind this and how to troubleshoot can enhance the reliability of your application.
+
+### Understanding Transcripts
+
+Speech-to-text transcription involves converting spoken audio into text. During live streaming, transcripts may appear empty due to:
+
+- **Interim Results**: These are preliminary transcriptions that might return empty if there is silence or non-speech segments. They indicate that the engine is active but has no speech to transcribe.
+- **Audio Capture Issues**: Problems with capturing audio data can lead to empty transcripts. This might be due to incorrect setup or transmission errors.
+
+### Debugging Steps
+
+#### 1. Enable Audio Dumping
+
+Implement a mechanism to save the audio stream at the time of transmission. This allows for verification of the captured audio. Here's a Swift example to save audio:
+
+```swift
+import AVFoundation
+
+func saveAudioStream(to filePath: String) {
+    let audioFile = URL(fileURLWithPath: filePath)
+    let audioRecorder = try? AVAudioRecorder(url: audioFile, settings: [AVFormatIDKey: kAudioFormatLinearPCM])
+    audioRecorder?.record()
+    
+    // Ensure the recording is stopped and saved
+    DispatchQueue.main.asyncAfter(deadline: .now() + 5) { // Record for 5 seconds
+        audioRecorder?.stop()
+        print("Audio saved to \(filePath)")
+    }
+}
+```
+
+Ensure to check the saved audio file for correctness. [Refer to Audio Format Documentation](../docs/determining-your-audio-format-for-live-streaming-audio)
+
+#### 2. Examine Request IDs
+
+Use request IDs provided by Deepgram for each transmission to trace and diagnose backend processing issues. Ensure these IDs are logged for support reference.
+
+#### 3. Cross-verify Configurations
+
+Check your configuration settings for interim results, language models, and endpoints. Ensure they align with your application's needs:
+
+```swift
+let deepgramOptions: [String: Any] = [
+    "interim_results": true,
+    "language": "en-US"
+]
+```
+
+Verify these settings in your API requests to ensure proper handling. [View Deepgram Live Streaming Configuration](../reference/streaming)
+
+### Error Handling
+
+If you encounter the following error message: `1008 - DATA-0000`, it indicates a decoding issue. Verify the audio format and ensure it matches Deepgram's requirements.
+
+### Conclusion
+
+By understanding the nuances of interim results and ensuring proper audio capture and configuration, you can reduce instances of empty transcripts. If problems persist, engage with the community through [Deepgram's GitHub Discussions](https://github.com/orgs/deepgram/discussions) or [Discord community](https://discord.gg/deepgram).
+
+### References
+
+- [Deepgram Live Streaming](../docs/getting-started-with-live-streaming-audio)
+- [Deepgram GitHub Discussions](https://github.com/orgs/deepgram/discussions)
+- [Deepgram Discord Community](https://discord.gg/deepgram)

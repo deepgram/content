@@ -1,0 +1,133 @@
+```yaml
+---
+title: "Using UtteranceEnd and Endpointing in Deepgram Speech Recognition"
+description: "Learn how to use UtteranceEnd and endpointing in Deepgram's speech-to-text API for robust speech recognition."
+summary: "This article explains how to leverage Deepgram's UtteranceEnd and endpointing features to accurately detect when a speaker has finished talking, even in environments with background noise or natural pauses in speech – crucial for natural conversational AI and speech recognition systems."
+tags: ["Deepgram", "Speech Recognition", "UtteranceEnd", "Endpointing"]
+categories: ["Community", "Speech-to-Text"]
+last_updated: 2023-10-01
+---
+
+<CommunityQuestion>I'm developing a voice assistant for a noisy environment, and I'm struggling with accurately detecting when a user has finished speaking. How can I leverage Deepgram's features to address this issue?</CommunityQuestion>
+
+In conversational AI and speech recognition systems, accurately detecting when a speaker has finished talking is crucial for natural interactions. Deepgram provides two complementary features to handle this: `UtteranceEnd` and `endpointing`. These features are particularly important in environments with background noise or when speakers pause naturally in their speech.
+
+## Understanding UtteranceEnd and Endpointing
+
+Deepgram's system provides mechanisms to identify the end of an utterance during a speech session:
+
+- **Endpointing**: Uses a Voice Activity Detector (VAD) to determine when audio transitions from speech to silence. When silence is detected for a configurable duration (set by the `endpointing` parameter), Deepgram marks the transcript with `speech_final=true`.
+
+- **UtteranceEnd**: Analyses word timings in transcripts to detect gaps between words, regardless of background noise. When a gap exceeding the specified milliseconds is detected, Deepgram sends a specific `UtteranceEnd` message.
+
+## When to Use Which Feature
+
+- **Endpointing**: Works well in quiet environments with minimal background noise.
+- **UtteranceEnd**: Better for noisy environments where background sounds might prevent endpointing from detecting silence.
+
+## Configuration Parameters
+
+When integrating these features, configure your speech recognition as follows:
+
+```json
+{
+  "interim_results": true,
+  "smart_format": true,
+  "endpointing": 300,
+  "utterance_end_ms": 1000
+}
+```
+
+1. **interim_results**: Must be set to `true` when using `utterance_end_ms`
+2. **smart_format**: Enables better formatting of numbers, addresses, etc.
+3. **endpointing**: Time in milliseconds of silence to wait before finalising speech (recommended: 300ms)
+4. **utterance_end_ms**: Time in milliseconds to wait for a gap between transcribed words (recommended: 1000ms or higher)
+
+## Understanding the Response Data
+
+### UtteranceEnd Message
+
+```json
+{
+  "channel": [0, 1],
+  "last_word_end": 2.395,
+  "type": "UtteranceEnd"
+}
+```
+
+- **type**: Always "UtteranceEnd" for this message
+- **channel**: Interpreted as [channelIndex, totalChannels]
+- **last_word_end**: The timestamp of the end of the last word spoken before the gap
+
+## Implementation Strategy
+
+When using both features together, implement the following logic:
+
+1. Process speech as complete when you receive a transcript with `speech_final=true`
+   - An `UtteranceEnd` message may follow but can be ignored in this case
+
+2. If you receive an `UtteranceEnd` message without a preceding `speech_final=true`:
+   - Process the last received transcript as completed speech
+   - This typically occurs in noisy environments where endpointing can't detect silence
+
+## Python Implementation Example
+
+```python
+from deepgram import DeepgramClient, LiveOptions, LiveTranscriptionEvents
+import asyncio
+
+# Create Deepgram client
+deepgram = DeepgramClient("YOUR_API_KEY")
+
+# Configure live transcription options
+options = LiveOptions(
+    model="nova-3",
+    language="en-US",
+    smart_format=True,
+    encoding="linear16",
+    channels=1,
+    sample_rate=16000,
+    interim_results=True,
+    utterance_end_ms="1000",
+    endpointing=300
+)
+
+async def main():
+    try:
+        # Connect to Deepgram's live transcription API
+        async with deepgram.transcription.live(options) as stream:
+            async for result in stream:
+                handle_message(result)
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Handle different message types
+def handle_message(result):
+    if result.type == "Results" and hasattr(result, "is_final") and result.is_final:
+        print(f"Final transcript: {result.channel.alternatives[0].transcript}")
+    elif result.type == "UtteranceEnd":
+        print(f"UtteranceEnd detected at {result.last_word_end} seconds")
+        # Process last transcript if no speech_final=true was received
+
+asyncio.run(main())
+```
+
+## Key Takeaways
+
+- Use both features together for the most robust end-of-speech detection
+- Set `utterance_end_ms` to 1000ms or higher as Deepgram sends interim results approximately every second
+- Always set `interim_results=true` when using `utterance_end_ms`
+- The combination of these features significantly improves reliability in various acoustic environments
+
+## Alternative Solutions
+
+- Adjust `endpointing` and `utterance_end_ms` parameters to better suit different noise levels or applications
+- Explore using additional audio preprocessing techniques to minimise noise impact
+
+## References
+
+- [Understanding End of Speech Detection](/docs/understanding-end-of-speech-detection)
+- [Utterance End Feature](/docs/utterance-end)
+
+For community support, visit Deepgram's [Discord](https://discord.com/invite/xWRaGZC) or [GitHub Discussions](https://github.com/deepgram/deepgram-python-sdk/discussions).
+```

@@ -1,0 +1,103 @@
+```markdown
+---
+title: "Deepgram Endpointing Parameter in Speech-to-Text API"
+description: "Explains how to configure Deepgram's endpointing parameter for speech-to-text transcription."
+summary: "The Deepgram speech-to-text API allows configuring an 'endpointing' parameter that determines the duration of silence required before finalising transcripts. This article details how to optimise this setting for the needs of your application."
+tags: 
+  - Deepgram
+  - API
+  - Speech-to-Text
+  - Endpointing
+categories: 
+  - Speech Recognition
+  - API Configuration
+last_updated: 2023-10-15
+---
+
+<CommunityQuestion>How do I adjust the timing for when Deepgram finalises speech transcripts after a period of silence? I'm building an app where I'd like the transcripts to wait a bit longer before being returned, to account for natural pauses in speech.</CommunityQuestion>
+
+The Deepgram Speech-to-Text API offers a feature known as "endpointing" that is crucial for understanding when transcriptions should be finalized and returned after a period of silence. This article explains how to configure the `endpointing` parameter to optimize the flow of transcription in your applications.
+
+## Understanding Endpointing
+
+Endpointing is a feature that determines the amount of silence required to decide that a user has paused or finished speaking. By default, Deepgram's endpointing is set to finalize the transcript after detecting 10 milliseconds of silence (`endpointing=10`). This enables a quick response after the completion of speech.
+
+## Configuring Endpointing
+
+You can configure the endpointing parameter by setting it to an integer that represents the millisecond value of desired silence. For example, if you wish to wait 500 milliseconds (0.5 seconds) before finalizing the transcript, you would set the endpointing parameter to 500:
+
+```shell
+curl \
+  --request POST \
+  --header 'Authorization: Token YOUR_API_KEY' \
+  --url 'https://api.deepgram.com/v1/listen?endpointing=500' \
+  --header 'Content-Type: audio/wav' \
+  --data-binary @youraudio.wav
+```
+
+This setup is useful if you expect users to pause for longer periods but still want to capture their complete thoughts before endpointing.
+
+## Disabling Endpointing
+
+If your application's needs are such that endpointing should be disabled—meaning that transcriptions are returned at a cadence determined solely by Deepgram's chunking algorithms—you can set the parameter to `false`:
+
+```shell
+curl \
+  --request POST \
+  --header 'Authorization: Token YOUR_API_KEY' \
+  --url 'https://api.deepgram.com/v1/listen?endpointing=false' \
+  --header 'Content-Type: audio/wav' \
+  --data-binary @youraudio.wav
+```
+
+This ensures continuous transcription without waiting for defined pauses.
+
+## Error Handling
+
+When configuring the endpointing parameter, ensure that your application handles potential errors gracefully. Here's a basic example in Python using error handling:
+
+```python
+import requests
+
+def transcribe_audio(file_path):
+    url = "https://api.deepgram.com/v1/listen?endpointing=500"
+    headers = {
+        "Authorization": "Token YOUR_API_KEY",
+        "Content-Type": "audio/wav"
+    }
+    try:
+        with open(file_path, 'rb') as audio:
+            response = requests.post(url, headers=headers, data=audio)
+            response.raise_for_status()
+            return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+
+# Example usage
+transcription = transcribe_audio('youraudio.wav')
+if transcription:
+    print(transcription)
+```
+
+## Use Cases and Considerations
+
+- **Short Responses:** If your application anticipates brief responses, keeping the default or a lower value is beneficial for quick transcription turnaround.
+- **Long Pauses:** For situations where users may pause for emphasis or due to thought processes, increasing the endpointing value can ensure full sentence capture.
+- **Streamlined Input:** Disabling endpointing might be necessary for real-time continuous speech settings such as lectures or live events.
+
+## Conclusion
+
+Adjust the endpointing parameter to suit the nature of your audio input to achieve an optimal balance between speed and accuracy in transcriptions. If issues persist or the system behaviour seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Community](https://discord.gg/deepgram).
+
+## References
+- [Endpointing](../docs/endpointing)
+- [Using Endpointing and Interim Results](../docs/understand-endpointing-interim-results)
+```
+
+### Improvements Made:
+- **Code Examples**: Added cURL and Python examples with proper syntax highlighting, error handling, and API key placeholders.
+- **Relative Links**: Replaced absolute URL with relative links for internal documentation.
+- **Error Handling**: Included error handling in code examples to demonstrate robust application development practices.
+- **Metadata**: Added tags, categories, and last updated date for better organisation and searchability.
+- **Conciseness**: Streamlined explanations while ensuring accuracy and relevance to current API specifications.

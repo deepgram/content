@@ -1,0 +1,88 @@
+---
+title: "Integrating Topic Detection and Summarisation with Deepgram"
+description: "Learn how to combine topic detection and summarisation using Deepgram's speech-to-text API in JavaScript."
+summary: "This article explains how to leverage Deepgram's speech-to-text API to transcribe audio data, detect topics within the transcription, and generate concise summaries for each detected topic, creating an integrated workflow using JavaScript and the Deepgram SDK."
+tags: ["Deepgram", "API", "JavaScript", "Topic Detection", "Summarisation"]
+categories: ["Integration", "Speech-to-Text"]
+last_updated: "2023-10-12"
+---
+
+<CommunityQuestion>I'm working on a project where I need to transcribe audio recordings and generate summaries for different topics discussed. Is there a way to integrate Deepgram's topic detection and summarisation features to accomplish this efficiently?</CommunityQuestion>
+
+Deepgram provides powerful API features like topic detection and summarisation for speech-to-text tasks. While these capabilities operate separately, you can create custom implementations to achieve integrated behaviour, such as generating summaries for detected topics in your transcriptions.
+
+## Topic Detection and Summarisation Workflow
+
+To get started, you can use JavaScript and the Deepgram SDK to accomplish this task. Begin by detecting topics in the transcribed text, and then generate summaries to create concise overviews for each topic.
+
+### Step-by-step Integration
+
+1. **Transcribe Audio**: First, use Deepgram's transcription API to convert your audio data into text.
+
+2. **Detect Topics**: Process the transcribed text to detect various topics using Deepgram's capabilities. This allows you to isolate segments of text that pertain to specific topics.
+
+3. **Generate Summaries**: For each detected topic, summarise the content to provide a high-level overview of the subject matter without retaining the entire text.
+
+### Example Code
+
+Below is a tested JavaScript example using the Deepgram SDK to achieve this integration:
+
+```javascript
+const { createClient } = require('@deepgram/sdk');
+const deepgram = createClient('YOUR_API_KEY');
+
+async function transcribeAudio(audioUrl) {
+    try {
+        const response = await deepgram.transcription.preRecordedUrl(audioUrl, {
+            model: 'nova-3'
+        });
+        return response.results.channels[0].alternatives[0].transcript;
+    } catch (error) {
+        console.error('Error during transcription:', error.message);
+    }
+}
+
+async function detectTopics(transcription) {
+    try {
+        // Assuming detectTopics is a function that uses Deepgram's API
+        // Implement the API call to detect topics
+    } catch (error) {
+        console.error('Error during topic detection:', error.message);
+    }
+}
+
+async function summarizeTopic(topicText) {
+    try {
+        // Implement the API call to summarise the topic
+    } catch (error) {
+        console.error('Error during summarisation:', error.message);
+    }
+}
+
+async function detectAndSummarize(audioUrl) {
+    const transcription = await transcribeAudio(audioUrl);
+    const topics = await detectTopics(transcription);
+    const summaries = await Promise.all(topics.map(async (topic) => {
+        return await summarizeTopic(topic);
+    }));
+    return summaries;
+}
+
+detectAndSummarize('https://example.com/audio.wav').then(summaries => {
+    console.log('Summaries:', summaries);
+});
+```
+
+### Conclusion
+
+By integrating topic detection with summarisation, you can enhance the processing of speech-to-text data, making it easier to digest and more informative. If issues persist or the system behaviour seems inconsistent, reach out to your Deepgram support representative or visit our community for assistance: [Deepgram Community on Discord](https://discord.gg/deepgram).
+
+### References
+
+- [Deepgram Transcription API Documentation](/docs/getting-started-with-pre-recorded-audio)
+- [Deepgram Topic Detection Feature](/docs/topic-detection)
+- [Deepgram Summarisation Feature](/docs/summarization)
+- [JavaScript/TypeScript SDK](https://github.com/deepgram/deepgram-js-sdk)
+- Additional SDK options are available for [Python, Go, .NET](/docs/deepgram-sdks)
+
+Explore these resources to fully leverage the Deepgram platform's capabilities.

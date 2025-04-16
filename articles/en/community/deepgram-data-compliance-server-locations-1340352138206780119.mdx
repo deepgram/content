@@ -1,0 +1,71 @@
+---
+title: "Deepgram's Data Compliance and Server Locations"
+description: "Overview of Deepgram's data compliance and server locations, with a focus on GDPR and the European Economic Area."
+summary: "This article discusses Deepgram's commitment to data security and compliance, highlighting its GDPR and SOC Type 2 certifications. It also addresses the location of Deepgram's servers in the United States and the implications for businesses requiring data residency within the European Economic Area."
+tags: ["GDPR", "Data Compliance", "Server Locations", "Deepgram"]
+categories: ["Compliance", "Data Security"]
+last_updated: "2023-10-15"
+---
+
+<CommunityQuestion>I'm considering using Deepgram's speech-to-text API for a project involving sensitive data from European users. Can anyone shed light on Deepgram's data compliance measures and server locations, particularly regarding GDPR and the European Economic Area?</CommunityQuestion>
+
+## Problem Statement
+
+When using Deepgram's Speech-to-Text API for projects involving sensitive data from European users, it's essential to understand the implications of Deepgram's data compliance measures and server locations, especially in relation to GDPR regulations and the European Economic Area (EEA).
+
+## Deepgram's Compliance
+
+Deepgram is committed to ensuring data security and compliance, which is critical for users within the context of EEA regulations. Deepgram is both GDPR and SOC Type 2 compliant. These standards ensure that data protection and privacy measures are upheld, making Deepgram a trustworthy choice for handling sensitive information.
+
+- **GDPR Compliance**: This ensures the protection of personal data and privacy in the EEA. Deepgram implements robust data security policies and flexible data retention options to meet GDPR requirements.
+- **SOC Type 2 Compliance**: Demonstrates adherence to stringent security and privacy controls, evaluated by independent auditors.
+
+## Server Locations
+
+Currently, Deepgram's servers are located in the United States. This location may influence decisions for businesses that require data residency within the EEA. However, Deepgram's compliance with GDPR provides significant safeguards for data protection, ensuring that data is processed in accordance with European regulations.
+
+## Alternative Solutions
+
+For businesses needing data residency within the EEA, consider the following strategies:
+
+- **Data Anonymization**: Remove or obscure personal identifiers in data sets to minimise privacy risks.
+- **Encryption**: Apply strong encryption techniques to data in transit and at rest to enhance security.
+- **Contractual Clauses**: Implement Standard Contractual Clauses (SCCs) to ensure GDPR compliance when transferring data outside the EEA.
+
+## Conclusion
+
+While Deepgram's servers are based in the United States, its commitment to GDPR and SOC Type 2 compliance offers strong data protection measures. For businesses requiring data residency within the EEA, evaluating the potential impact and considering compliance mitigation strategies is advised.
+
+## Error Handling and Code Example
+
+Consider the following example for handling data with GDPR compliance in mind:
+
+```python
+import requests
+
+url = "https://api.deepgram.com/v1/listen"
+
+headers = {
+    "Authorization": "Token YOUR_API_KEY",
+    "Content-Type": "audio/wav"
+}
+
+try:
+    response = requests.post(url, headers=headers, data=open("audio.wav", "rb"))
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.HTTPError as err:
+    print(f"HTTP error occurred: {err}")
+except Exception as err:
+    print(f"An error occurred: {err}")
+```
+
+Ensure to replace `YOUR_API_KEY` with your actual API key and follow encryption and anonymization best practices as described.
+
+## References
+
+- [GDPR Compliance at Deepgram](/docs/data-privacy-compliance)
+- [Deepgram Model Improvement Partnership Program](/docs/the-deepgram-model-improvement-partnership-program)
+- [Deepgram Community on Discord](https://discord.gg/deepgram)
+
+For further assistance, join our community on [Discord](https://discord.gg/deepgram) or check out [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions).

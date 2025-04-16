@@ -1,0 +1,80 @@
+---
+title: "Resolving Empty Audio Errors with Deepgram API"
+description: "Guidance on resolving empty audio or invalid data errors with Deepgram's speech-to-text API."
+summary: "This article explains how to correctly format and encode audio data to meet Deepgram's requirements for their speech-to-text API. It covers common error scenarios related to empty files, non-audio formats, and base64 encoding, providing code snippets and guidelines to ensure successful audio submission."
+tags: ["audio-formatting", "error-resolution"]
+categories: ["API Usage", "Troubleshooting"]
+last_updated: "2023-10-16"
+---
+
+<CommunityQuestion>I'm struggling to get my audio files processed by the Deepgram API. It keeps saying the files are empty or not valid audio data. How do I ensure my audio is properly formatted for the API?</CommunityQuestion>
+
+When submitting audio data to the Deepgram API, receiving an error indicating that the file is empty or not a valid audio data can be a common issue. Here’s how you can ensure your audio file is correctly formatted and encoded to work with Deepgram.
+
+## Understanding Deepgram's Audio File Requirements
+
+Deepgram requires audio files to be sent as raw, unencoded binary data. If your audio is **base64 encoded**, the API call will fail, generating an error. Below are some guidelines and code snippets that will help you properly format your audio data for successful transmission.
+
+### Error Scenarios
+
+1. **Empty Audio File** 
+   - If an empty file is received, it may raise an error. Double-check the content of your audio file to ensure it contains valid audio data.
+
+2. **Non-Audio File Format**
+   - Non-audio files will result in errors. Confirm that the file extension and data are both audio-compatible.
+
+3. **Base64 Encoded Audio**
+   - Base64-encoded files are not supported. Ensure you send the file as unencoded binary data.
+
+### Code Example: Submitting Audio with cURL
+
+Here's a tested example using cURL to submit audio data to Deepgram:
+
+```bash
+curl -X POST \
+  --data-binary @youraudio.wav \
+  --header "Authorization: Token YOUR_API_KEY" \
+  --header "Content-Type: audio/wav" \
+  "https://api.deepgram.com/v1/listen?model=nova-3"
+```
+
+### Error Handling in Python
+
+Below is a Python example illustrating error handling when submitting audio files:
+
+```python
+import requests
+
+def submit_audio(file_path):
+    url = "https://api.deepgram.com/v1/listen?model=nova-3"
+    headers = {
+        "Authorization": "Token YOUR_API_KEY",
+        "Content-Type": "audio/wav"
+    }
+    
+    try:
+        with open(file_path, 'rb') as audio_file:
+            response = requests.post(url, headers=headers, data=audio_file)
+            response.raise_for_status()
+            print("Transcription:", response.json())
+    except requests.exceptions.HTTPError as err:
+        print(f"HTTP error occurred: {err}")
+    except Exception as err:
+        print(f"An error occurred: {err}")
+
+submit_audio('youraudio.wav')
+```
+
+### Determine Your Audio Format
+
+Use our [documentation](/docs/determining-your-audio-format-for-live-streaming-audio) to identify your audio format. Properly configuring it is crucial for successful processing.
+
+## Conclusion
+
+By ensuring your audio files are in the correct format and encoding, you can effectively avoid these errors and optimise your use of the Deepgram API. This not only facilitates seamless transcription but also enhances the performance of your applications utilising our services.
+
+## References
+
+- [Determining Your Audio Format](/docs/determining-your-audio-format-for-live-streaming-audio)
+- [Deepgram API Documentation](/docs/overview)
+- Join the community on [Discord](https://discord.com/invite/deepgram) or engage in [GitHub Discussions](https://github.com/deepgram/deepgram-python-sdk/discussions) for support.

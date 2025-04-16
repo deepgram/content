@@ -1,0 +1,91 @@
+```markdown
+---
+title: "Deploying Deepgram Speech-to-Text on AWS with Lambda and WebSockets"
+description: "Deploy Deepgram's Speech-to-Text API on AWS with Lambda and WebSockets."
+summary: "Leverage Deepgram's powerful Speech-to-Text capabilities in a serverless AWS environment by integrating it with AWS Lambda and API Gateway WebSockets. This guide walks through setting up a simple test application for transcribing speech with minimal effort."
+tags: ["AWS", "Lambda", "WebSockets", "Deepgram", "Serverless"]
+categories: ["Integration", "Speech-to-Text", "Cloud Services"]
+last_updated: "2023-10-01"
+---
+
+<CommunityQuestion>I am looking to implement Deepgram's Speech-to-Text API in a serverless environment on AWS. Could someone provide a guide on how to set this up using AWS Lambda and WebSockets?</CommunityQuestion>
+
+## Deploying Deepgram Speech-to-Text on AWS with Lambda and WebSockets
+
+Leverage the power of Deepgram's Speech-to-Text capabilities by integrating it into a serverless environment on AWS using AWS Lambda and API Gateway WebSockets. This guide will walk you through setting up a simple test application to transcribe speech with minimal effort, ideal for quick proof-of-concept (POC) projects.
+
+### Overview
+
+Deepgram provides robust APIs for both pre-recorded and live transcription, ideal for real-time audio processing. Integrating these capabilities into AWS's serverless infrastructure allows for scalability and efficiency, reducing overhead costs and improving responsiveness.
+
+### Prerequisites
+
+- AWS Account with access to Lambda, API Gateway, and IAM roles.
+- Deepgram API Key.
+- Basic understanding of AWS Lambda and WebSockets.
+- Familiarity with any programming language supported by Deepgram SDKs: Node.js, Python, C#, Go, or Rust.
+
+### AWS Lambda Integration
+
+1. **Create a Lambda Function**:
+    - Navigate to AWS Lambda and create a new function.
+    - Use a runtime environment compatible with your Deepgram SDK of choice, such as Node.js or Python.
+    - Include error handling in your function code to manage common errors such as network issues and invalid input.
+
+   ```python
+   import json
+   import requests
+
+   def lambda_handler(event, context):
+       try:
+           response = requests.post(
+               'https://api.deepgram.com/v1/listen',
+               headers={'Authorization': 'Token YOUR_API_KEY'},
+               json={'url': event['audio_url']}
+           )
+           response.raise_for_status()
+           return {
+               'statusCode': 200,
+               'body': json.dumps(response.json())
+           }
+       except requests.exceptions.RequestException as e:
+           return {
+               'statusCode': 500,
+               'body': json.dumps({'error': str(e)})
+           }
+   ```
+
+2. **Set Up API Gateway**:
+    - Create an API and configure WebSocket communication.
+    - Deploy the API and link it with the Lambda function.
+
+3. **Modify Lambda Permissions**:
+    - Ensure your Lambda function has permissions to access the Internet and the Deepgram API.
+
+4. **Deploy and Test**:
+    - Deploy the setup and perform end-to-end testing with different audio scenarios.
+    - Test with various audio formats to ensure compatibility and robustness.
+
+### Conclusion
+
+Embedding Deepgram's transcription services within AWS serverless architecture streamlines the transcription process, enhances scalability, and significantly reduces the entry barrier for quick experimentation or deployment. Refer to the examples on Deepgram’s GitHub repositories for Node.js, Python, Go, and .NET for initial setups and adapt them as needed for AWS Lambda.
+
+### References
+
+- [Deepgram JavaScript SDK](https://github.com/deepgram/deepgram-js-sdk)
+- [Deepgram Python SDK](https://github.com/deepgram/deepgram-python-sdk)
+- [Deepgram Go SDK](https://github.com/deepgram/deepgram-go-sdk)
+- [Deepgram .NET SDK](https://github.com/deepgram/deepgram-dotnet-sdk)
+- [Deepgram Documentation](/reference/deepgram-api-overview)
+- [AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
+- [AWS WebSockets Guide](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-overview.html)
+- [Deepgram Community Support](https://discord.gg/deepgram) - Join discussions and get help from the community
+- [GitHub Discussions](https://github.com/deepgram) - Engage with developers and contribute to projects
+```
+
+### Key Improvements:
+1. **Frontmatter Metadata**: Added tags, categories, and the last updated date.
+2. **Detailed Code Example**: Provided a Python example with error handling for the Lambda function.
+3. **Error Handling**: Included error handling mechanisms in the code example.
+4. **Latest Features**: Ensured the content is updated for the latest Deepgram features and models.
+5. **References**: Enhanced the references section with additional links to resources and community support platforms.

@@ -1,0 +1,114 @@
+---
+title: "Understanding Alternatives in Deepgram's API"
+description: "Learn how to retrieve multiple transcription alternatives from Deepgram's speech-to-text API."
+summary: "This article explains how to use Deepgram's 'alternatives' parameter to receive multiple potential transcriptions for the same audio segment, allowing for better handling of accents, background noise, or other factors that can impact speech recognition accuracy."
+tags: ["Deepgram API", "Speech Recognition", "Alternatives", "Transcription"]
+categories: ["Transcription", "Deepgram"]
+last_updated: 2023-10-01
+---
+
+<CommunityQuestion>I'm developing a speech recognition application and need to provide multiple transcription options to account for different accents or audio quality issues. How can I retrieve alternative transcriptions from Deepgram's API?</CommunityQuestion>
+
+## Problem Statement
+
+When developing a speech recognition application, there is a need to handle variability in accents and audio quality. Multiple transcription alternatives can provide a solution by offering different interpretations of the same audio segment.
+
+## What Are Alternatives?
+
+Alternatives are different possible transcriptions of the same audio segment. Each alternative comes with its own confidence score, allowing you to evaluate which interpretation is most likely to be correct.
+
+## Model Support for Alternatives
+
+The availability of alternatives varies by model. It's crucial to verify the current Deepgram API specifications as model support may change.
+
+| Model  | Alternatives Support |
+|--------|----------------------|
+| Nova-3 | Supported            |
+| Nova-2 | Supported            |
+| Nova   | Supported            |
+| Enhanced | Supported          |
+| Base   | Supported            |
+
+## Using the Alternatives Parameter
+
+For supported models, you can request alternatives by adding the `alternatives` parameter to your API request. The value should be an integer indicating how many alternative transcriptions you want to receive:
+
+```shell
+curl --request POST \
+  --url 'https://api.deepgram.com/v1/listen' \
+  --header 'Authorization: Token YOUR_API_KEY' \
+  --header 'Content-Type: audio/wav' \
+  --data-binary '@youraudio.wav' \
+  --data '{
+      "model": "nova",
+      "alternatives": 2
+  }'
+```
+
+## Understanding the Response
+
+When using alternatives, the API response will include multiple entries in the `alternatives` array, each with its own transcript and confidence score:
+
+```json
+{
+  "results": {
+    "channels": [
+      {
+        "alternatives": [
+          {
+            "transcript": "this is the most likely transcription",
+            "confidence": 0.9842,
+            "words": [...]
+          },
+          {
+            "transcript": "this is the second most likely transcription",
+            "confidence": 0.8765,
+            "words": [...]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Current Best Practices
+
+Since alternatives are supported in newer models like Nova-3, consider these current best practices:
+
+1. **Use Keyterm Prompting**: Nova-3 supports keyterm prompting, which can enhance transcription accuracy by focusing on specific terms.
+
+2. **Word-Level Confidence**: Utilise word-level confidence scores to assess transcription quality and make informed decisions.
+
+3. **Error Handling**: Implement robust error handling in your applications to manage transcription uncertainties effectively.
+
+## Code Example: Working with Word-Level Confidence
+
+```javascript
+// Process results focusing on word-level confidence
+function processTranscription(result) {
+  try {
+    const words = result.results.channels[0].alternatives[0].words;
+    
+    // Find low-confidence words
+    const uncertainWords = words.filter(word => word.confidence < 0.75);
+    
+    // Log uncertain words for further review
+    if (uncertainWords.length > 0) {
+      console.log("Words with low confidence:", uncertainWords);
+    }
+    
+    return result.results.channels[0].alternatives[0].transcript;
+  } catch (error) {
+    console.error("Error processing transcription:", error);
+  }
+}
+```
+
+## References
+
+- [Deepgram API Reference](/api-reference/)
+- [Deepgram Models Overview](/docs/models-languages-overview)
+- [Keyterm Prompting Documentation](/docs/keyterm-prompting)
+
+For specific questions about alternatives or help with transcription confidence, join our [Discord community](https://discord.gg/deepgram).

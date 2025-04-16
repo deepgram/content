@@ -1,0 +1,77 @@
+---
+title: "Enhancing Text-to-Speech for Mathematical Expressions"
+description: "Learn how to enhance text-to-speech for mathematical expressions by converting operators into their word equivalents and leveraging Deepgram's latest features."
+summary: "This article provides a solution for improving the clarity of TTS vocalisation for mathematical expressions by converting operators into word equivalents. It also discusses Deepgram's efforts to enhance character recognition capabilities in future updates."
+tags: ["text-to-speech", "Deepgram", "mathematical expressions", "character recognition"]
+categories: ["TTS", "Deepgram"]
+last_updated: "2023-10-05"
+---
+
+<CommunityQuestion>Is there a way to improve the text-to-speech output when dealing with mathematical expressions? I've noticed that the software often struggles to properly vocalise symbols like plus and minus signs.</CommunityQuestion>
+
+### Problem Statement
+
+When utilising text-to-speech (TTS) technology for mathematical expressions, challenges such as improper verbalisation of operators like "+" or "-" may occur, particularly if not formatted correctly.
+
+### Solution to Improve Mathematical Expression Vocalisation
+
+One effective method to address this issue involves converting mathematical operators into their word equivalents before processing with TTS. For example, converting "3x^2 + 9x + 4 = 0" into "3x squared plus 9x plus 4 equals 0" can significantly improve clarity in the speech output.
+
+### Example Code
+
+Here's a tested example using Deepgram's API to convert and vocalise a mathematical expression:
+
+```shell
+curl --request POST \
+     --header "Content-Type: application/json" \
+     --header "Authorization: Token YOUR_API_KEY" \
+     --output output.mp3 \
+     --data '{"text":"3x squared plus 9x plus 4 equals 0"}' \
+     --url "https://api.deepgram.com/v1/speak?model=nova"
+```
+
+### Error Handling
+
+When implementing TTS solutions, ensure proper error handling by checking for API response errors:
+
+```javascript
+fetch('https://api.deepgram.com/v1/speak', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Token YOUR_API_KEY',
+  },
+  body: JSON.stringify({
+    text: '3x squared plus 9x plus 4 equals 0',
+    model: 'nova'
+  }),
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`Error: ${response.statusText}`);
+  }
+  return response.blob();
+})
+.then(data => {
+  console.log('Audio generated successfully.');
+})
+.catch(error => {
+  console.error('Error processing TTS:', error);
+});
+```
+
+### Upcoming Improvements
+
+Deepgram is consistently working on enhancing its TTS models, such as Nova 3, which aim to improve character recognition, including mathematical symbols, in future updates. This development will facilitate a more seamless transcription of complex expressions.
+
+### Conclusion
+
+For current applications requiring precise equation verbalisation, convert mathematical symbols to words in text inputs. Look forward to future model updates for improved recognition and vocalisation of complex text elements.
+
+### References
+
+- [Deepgram Text-to-Speech Documentation](/docs/tts-rest)
+- [Deepgram Community on Discord](https://discord.gg/deepgram)
+- [Deepgram GitHub Discussions](https://github.com/deepgram)
+
+For further assistance, reach out to the Deepgram community or support: [Deepgram Discord](https://discord.gg/deepgram)

@@ -1,0 +1,73 @@
+---
+title: "Dynamic Endpointing for AI Assistants"
+description: "Guide on dynamically adjusting endpointing settings for Deepgram API in AI assistants."
+summary: "This article explains how to dynamically adjust endpointing settings in the Deepgram speech-to-text API when building AI assistants that need to handle different types of user input, such as short commands and longer sequences like phone numbers or IDs."
+tags: ["Deepgram API", "Endpointing", "AI Assistants", "WebSocket"]
+categories: ["Guides", "AI Integration"]
+last_updated: "2023-10-05"
+---
+
+<CommunityQuestion>I'm building a voice assistant that needs to handle different types of user input, like short commands and longer sequences like phone numbers. How can I dynamically adjust the endpointing settings in the Deepgram API to optimise for these different scenarios?</CommunityQuestion>
+
+## Problem Statement
+
+Creating an AI Assistant that effectively handles user communication involves managing dynamic endpointing settings. Endpointing refers to the ability to detect pauses or the end of a user's speech, which is critical when tailoring an AI system that responds swiftly while handling user interruptions or prolonged inputs like phone numbers or IDs.
+
+## Adjusting Endpointing Settings
+
+In scenarios where a low endpointing setting (such as 10ms) is preferred for snappy responses and quick interruption detection, there might be a necessity to adjust this setting. Specifically, when a user needs to input longer sequences of speech, like a phone number or an insurance ID, a higher endpointing threshold is beneficial to avoid premature speech termination.
+
+### Current Capabilities and Workaround
+
+The latest Deepgram API documentation should be consulted to verify if dynamic adjustment of endpointing settings is now possible without reconnection. If not, managing the connection lifecycle—disconnecting and reconnecting the WebSocket—is a viable strategy. Here's a basic example:
+
+```python
+import websocket
+import json
+
+def on_message(ws, message):
+    print("Received message:", message)
+
+def on_error(ws, error):
+    print("Error encountered:", error)
+
+def on_close(ws, close_status_code, close_msg):
+    print("Connection closed:", close_status_code, close_msg)
+
+def on_open(ws):
+    settings = {
+        "endpointing": 500  # Adjust endpointing setting here
+    }
+    ws.send(json.dumps(settings))
+
+websocket.enableTrace(True)
+ws = websocket.WebSocketApp(
+    "wss://api.deepgram.com/some-endpoint",
+    on_open=on_open,
+    on_message=on_message,
+    on_error=on_error,
+    on_close=on_close,
+    header={"Authorization": "Token YOUR_API_KEY"}
+)
+
+try:
+    ws.run_forever()
+except Exception as e:
+    print(f"Exception occurred: {e}")
+```
+
+### Considerations
+
+- **Buffering Audio:** For handling changes in endpointing settings, buffering audio can assist in maintaining conversation continuity. This involves temporarily holding audio data during connection adjustments.
+- **Connection Management:** Given that Deepgram allows up to 100 concurrent connections on a standard contract, managing multiple connections for different settings might be an option if fine-tuning real-time adjustments is needed.
+
+## Conclusion
+
+Dynamic endpointing in AI applications helps deliver a smoother experience by adapting to different conversational contexts. While direct support for dynamic adjustments within a single connection may be limited, strategic use of connection management and audio buffering can achieve desired outcomes in many setups.
+
+## References
+
+- [Endpointing](/docs/endpointing)
+- [Interim Results](/docs/interim-results)
+- [Deepgram Discord Community](https://discord.gg/deepgram)
+- [GitHub Discussions](https://github.com/orgs/deepgram/discussions)

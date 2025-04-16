@@ -1,0 +1,89 @@
+---
+title: "Troubleshooting Deepgram ConnectionClosed Error"
+description: "A comprehensive guide to resolving the ConnectionClosed error with Deepgram's speech-to-text API, focusing on network checks, audio verification, and SDK configuration adjustments."
+summary: "Identify and resolve the 'ConnectionClosed' error encountered with Deepgram's speech-to-text API, covering network checks, audio verification, and SDK configuration adjustments."
+tags: ["Deepgram", "WebSocket", "Troubleshooting", "ConnectionClosed"]
+categories: ["Troubleshooting"]
+last_updated: "2023-10-15"
+---
+
+<CommunityQuestion>I'm facing an issue with the Deepgram API where I'm getting a 'ConnectionClosed' error with the message 'received 1011 (internal error) Deepgram did not receive audio data or a text message within the timeout window'. Could someone please guide me on how to troubleshoot and resolve this?</CommunityQuestion>
+
+## Understanding the Error
+
+The error message `ConnectionClosed: received 1011 (internal error) Deepgram did not receive audio data or a text message within the timeout window` indicates that Deepgram has closed the connection due to not receiving audio data or a text message within the expected timeframe. This issue can arise due to network problems, incorrect SDK configurations, or issues with the audio data itself.
+
+### Error Codes
+
+- **NET-0000**: This code suggests that Deepgram did not send a text frame to the client within the timeout window. It may indicate an internal issue or insufficient audio data received for transcription.
+- **NET-0001**: This code indicates that Deepgram did not receive a binary or text frame from the client within the timeout window. This can be due to network issues or delayed audio transmission.
+
+## Troubleshooting Steps
+
+### Check Network Connectivity
+
+- Ensure your server or client maintains a stable network connection. Network interruptions can result in timeouts where data isn't sent or received as expected.
+
+### Verify Audio Source
+
+- Confirm that the audio source is correctly configured to send data continuously. Interruptions or pauses in the audio stream can trigger timeouts.
+- Validate the audio format and encoding to ensure compatibility with Deepgram.
+
+### Adjust SDK Configuration
+
+- **KeepAlive**: Ensure that the `KeepAlive` message is periodically sent to maintain the connection. This helps prevent the connection from closing due to inactivity.
+
+  ```javascript
+  const WebSocket = require("ws");
+
+  const ws = new WebSocket("wss://api.deepgram.com/v1/listen", {
+    headers: { Authorization: "Token YOUR_API_KEY" }
+  });
+
+  const keepAliveMsg = JSON.stringify({ type: "KeepAlive" });
+  setInterval(() => ws.send(keepAliveMsg), 5000);
+  ```
+
+- **Utterance End**: If you are using silence detection, ensure that `utterance_end_ms` is set appropriately to determine when an utterance is considered finished. 
+
+  ```javascript
+  const options = {
+    utterance_end_ms: 1000, // Adjust as needed for your application
+  };
+  ```
+
+### Error Handling and Reconnection
+
+Implement a robust error-handling mechanism to manage dropped connections smoothly. Below is an example in JavaScript:
+
+```javascript
+ws.on('close', (code, reason) => {
+  console.error(`Connection closed: ${code} - ${reason}`);
+  // Reconnect logic
+  setTimeout(() => {
+    // Logic to reconnect
+  }, 1000);
+});
+
+ws.on('error', (error) => {
+  console.error(`WebSocket error: ${error.message}`);
+});
+```
+
+### Update Deepgram SDK
+
+- Ensure you're using the latest version of the SDK, as updates may resolve bugs or introduce improvements.
+
+## Seek Further Assistance
+
+If the issue persists, reach out for community support on [Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/orgs/deepgram/discussions).
+
+## Conclusion
+
+The `ConnectionClosed` error typically indicates an issue with consistent data transmission. By verifying network stability, checking audio source integrity, and configuring your Deepgram SDK appropriately, you can often resolve these issues for stable audio processing.
+
+## References
+
+- [Keep Alive](../docs/audio-keep-alive)
+- [Streaming Audio](../docs/streaming)
+- [Error Handling](../docs/error-handling)

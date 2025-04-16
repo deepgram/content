@@ -1,0 +1,82 @@
+```markdown
+---
+title: "Configuring Deepgram Voice Agent for Portuguese TTS with Cartesia"
+description: "Guide to configuring Deepgram Voice Agent for Portuguese text-to-speech with Cartesia."
+summary: "This article provides step-by-step instructions on how to configure Deepgram's Voice Agent to generate Portuguese speech output using Cartesia's text-to-speech (TTS) service. It includes an example configuration and addresses potential issues related to setting up the TTS provider for a specific language."
+tags: [Deepgram, Voice Agent, TTS, Cartesia, Configuration]
+categories: [Integration, Voice Agent, TTS]
+last_updated: 2023-10-01
+---
+
+<CommunityQuestion>I'm working on a project that requires using Deepgram's Voice Agent to generate Portuguese speech with Cartesia's TTS. Could someone explain how to properly configure the settings to achieve this?</CommunityQuestion>
+
+To configure Deepgram's Voice Agent to speak Portuguese using Cartesia's TTS, you need to adjust the settings properly to ensure the correct language output. This article outlines the necessary configuration steps and addresses potential issues related to setting up the Cartesia TTS provider with a specific language.
+
+## Configuration Steps
+
+To use Cartesia as your TTS provider within Deepgram's Voice Agent, you must set the `speak` model configuration correctly. Here is an example of what your configuration might look like:
+
+```json
+{
+  "type": "SettingsConfiguration",
+  "audio": {
+    "input": {
+      "encoding": "mulaw",
+      "sample_rate": 8000
+    },
+    "output": {
+      "encoding": "mulaw",
+      "sample_rate": 8000,
+      "container": "none"
+    }
+  },
+  "agent": {
+    "listen": {
+      "model": "nova-3"
+    },
+    "think": {
+      "provider": {
+        "type": "open_ai"
+      },
+      "model": "gpt-4o-mini"
+    },
+    "speak": {
+      "provider": "cartesia",
+      "voice_id": "<your_voice_id>",
+      "language": "pt-PT"
+    }
+  }
+}
+```
+
+### Adding Language Specification
+
+When using Cartesia, it's important to specify the language to prevent defaulting to English with an accent. In the configuration above, the `"language": "pt-PT"` line specifies Portuguese.
+
+### Error Handling
+
+Ensure your application includes error handling to manage any configuration issues or connectivity problems. For example:
+
+```python
+try:
+    # Your code to connect with Deepgram's Voice Agent
+    # Apply the configuration settings
+    pass
+except Exception as e:
+    print(f"An error occurred: {e}")
+```
+
+## Conclusion
+
+As of recent updates, Deepgram supports specifying language in the Voice Agent Settings Configuration, simplifying TTS configuration with third-party providers like Cartesia.
+
+Keep your configuration files updated and consult [Cartesia documentation](https://docs.cartesia.ai/get-started/overview) for advanced features and settings. If issues persist, reach out to your Deepgram support representative or visit our community on [Discord](https://discord.gg/deepgram) for assistance.
+
+## References
+
+- [Deepgram Voice Agent Documentation](/docs/voice-agent)
+- [Cartesia TTS Documentation](https://docs.cartesia.ai/get-started/overview)
+- [Deepgram Community Discord](https://discord.gg/deepgram)
+```
+
+In this improved article, I have addressed the issues by including a specific language specification, updating the model to the latest version, adding error handling examples, and ensuring references use relative links where applicable. Additional references to relevant documentation have also been provided.

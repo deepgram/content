@@ -1,0 +1,56 @@
+---
+title: "Arabic Language Support in Deepgram Text-to-Speech"
+description: "Explores options for Arabic text-to-speech as Deepgram currently lacks support."
+summary: "This article discusses the current lack of Arabic language support in Deepgram's text-to-speech offerings and explores potential alternatives, including third-party services, open-source libraries, and custom solutions for users requiring Arabic voice synthesis capabilities."
+tags: ["text-to-speech", "Arabic", "Deepgram", "language support", "third-party services"]
+categories: ["Text-to-Speech", "Language Support"]
+last_updated: "2023-10-06"
+---
+
+<CommunityQuestion>I am developing an application that requires Arabic text-to-speech capabilities. Does Deepgram support Arabic language for their text-to-speech API? If not, what alternatives can I explore?</CommunityQuestion>
+
+## Problem Statement
+Deepgram's Text-to-Speech (TTS) offerings are currently centered around the English language, and there is no support for Arabic TTS. Users requiring Arabic language capabilities for TTS need to explore alternative services or solutions.
+
+## Exploring Arabic TTS Options
+
+### Third-Party Services
+Several third-party TTS services offer support for various languages, including Arabic. Here’s a basic example using a hypothetical third-party service:
+
+```shell
+curl --request POST \
+     --header "Content-Type: application/json" \
+     --header "Authorization: Token YOUR_THIRD_PARTY_API_KEY" \
+     --data '{"text":"مرحبا كيف حالك؟"}' \
+     --url "https://api.thirdparty.com/v1/speak?language=ar"
+```
+
+**Error Handling Example:**
+```shell
+curl --request POST \
+     --header "Content-Type: application/json" \
+     --header "Authorization: Token YOUR_THIRD_PARTY_API_KEY" \
+     --data '{"text":"مرحبا كيف حالك؟"}' \
+     --url "https://api.thirdparty.com/v1/speak?language=ar" \
+     --fail-with-body \
+     --silent \
+     || echo "An error occurred. Please check your API key and parameters."
+```
+
+### Open-Source Libraries
+Open-source libraries like Festival or eSpeak offer localized TTS models. These libraries can be integrated into applications for Arabic TTS needs.
+
+### Custom Solutions
+Developing a custom TTS solution tailored to specific language requirements can be considered. This approach may involve significant resources but offers flexibility and customization.
+
+## Conclusion
+While Deepgram does not support Arabic Text-to-Speech, alternatives exist for those with specific language requirements. For users interested in deploying Deepgram for English TTS, robust SDKs are available in multiple languages to facilitate integration.
+
+## Community Support
+For further assistance, consider joining the [Deepgram Community on Discord](https://discord.gg/deepgram) or participating in [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions).
+
+### References
+- [Deepgram Text-to-Speech (TTS) API Documentation](/docs/tts-rest)
+- [Festival TTS System](http://www.cstr.ed.ac.uk/projects/festival/)
+- [eSpeak Text-to-Speech](http://espeak.sourceforge.net/)
+- [Third-Party TTS Services Documentation]

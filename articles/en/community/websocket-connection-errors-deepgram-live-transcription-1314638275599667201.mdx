@@ -1,0 +1,75 @@
+---
+title: "Resolving WebSocket Connection Errors in Deepgram Live Transcription"
+description: "Troubleshoot and resolve WebSocket connection errors when using Deepgram's live transcription API."
+summary: "This guide provides steps to troubleshoot and resolve WebSocket connection errors that may occur when implementing live transcription using Deepgram's API. It covers verifying API key permissions, checking network connectivity, and monitoring Deepgram's service status."
+tags: [Deepgram, WebSocket, Live Transcription, Troubleshooting]
+categories: [API, Troubleshooting]
+last_updated: 2023-10-05
+---
+
+<CommunityQuestion>I'm having trouble getting Deepgram's live transcription to work properly. The WebSocket connection keeps failing, and I'm not sure why. What should I do to resolve these connection errors?</CommunityQuestion>
+
+When implementing live transcription using Deepgram's WebSocket API, you might encounter connection errors. This guide provides steps to troubleshoot and resolve these errors efficiently.
+
+## Initial Setup for Live Transcription
+
+To initiate a live transcription using Deepgram's WebSocket API, ensure your client is configured correctly with the appropriate API endpoint and parameters.
+
+If an error arises, follow the steps below to troubleshoot:
+
+## Troubleshooting WebSocket Connection Errors
+
+1. **Verify API Key Permissions**: Ensure your API key is valid and has the necessary permissions to access Deepgram's WebSocket API. Invalid credentials may result in errors such as `Invalid credentials`.
+
+2. **Network Connectivity**: Check that your internet connection is stable. Use tools like `ping` and `traceroute` to diagnose network issues. Network instability can frequently cause WebSocket connection issues.
+
+3. **Deepgram Service Status**: Check [Deepgram's status page](https://status.deepgram.com/) for any ongoing service outages or downtime that could be affecting your connection.
+
+4. **SDK Version**: Ensure that you are using the most recent version of the Deepgram SDK. Updates often include bug fixes and improvements.
+
+5. **Connection Retry**: If the server is temporarily unavailable, try reconnecting after a short delay. Implement exponential backoff to handle retries gracefully.
+
+6. **Parameter Validity**: Review the parameters you are using in the WebSocket connection to ensure they are supported and correctly formatted. Incorrect parameters can lead to connection failures.
+
+### Example Code with Error Handling
+
+Below is a sample code snippet that demonstrates error handling for WebSocket connections using Python:
+
+```python
+import websockets
+import asyncio
+import json
+
+async def start_transcription():
+    uri = "wss://api.deepgram.com/v1/listen"
+    headers = {
+        'Authorization': 'Token YOUR_API_KEY'
+    }
+    
+    try:
+        async with websockets.connect(uri, extra_headers=headers) as websocket:
+            await websocket.send(json.dumps({"type": "start"}))
+            async for message in websocket:
+                print("Received:", message)
+    except websockets.exceptions.InvalidStatusCode as e:
+        print(f"Connection failed with status code: {e.status_code}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+asyncio.run(start_transcription())
+```
+
+## Additional Resources
+
+- For detailed configuration, see the [Deepgram Live Streaming Audio Documentation](/docs/getting-started-with-live-streaming-audio).
+- For advanced troubleshooting, refer to the [Recovering from Connection Errors](/docs/recovering-from-connection-errors-and-timeouts-when-live-streaming-audio) guide.
+- Explore newer features like [keyterm prompting](/docs/keyterm-prompting) with the Nova 3 model for enhanced functionality.
+- Engage with the community for support: [Deepgram Community on Discord](https://discord.gg/deepgram).
+
+## References
+
+- [Deepgram API Documentation](/docs)
+- [KeepAlive Messages](/docs/keep-alive)
+- [CloseStream Instructions](/reference/streaming#close-stream)
+
+By following these steps, you should be able to resolve common WebSocket connection issues when using Deepgram's live transcription service. For ongoing challenges, our community and support team are available to assist with more complex troubleshooting.

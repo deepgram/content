@@ -1,0 +1,71 @@
+---
+title: "Resolving 'SLOW_UPLOAD' Error in Deepgram's REST API Callback"
+summary: "Learn how to resolve the 'SLOW_UPLOAD' error from Deepgram's API callbacks, with practical solutions and references."
+description: "This comprehensive guide covers the 'SLOW_UPLOAD' error that occurs when using Deepgram's REST API for audio transcription. It explores potential causes such as callback server speed issues, network latencies, and large payloads, and provides tested solutions for troubleshooting the problem."
+tags: ["Deepgram", "API", "Error Resolution", "SLOW_UPLOAD", "Troubleshooting"]
+categories: ["API", "Error Handling"]
+last_updated: 2023-10-15
+---
+
+<CommunityQuestion>I'm experiencing issues with Deepgram's transcription callbacks, where I'm getting a 'SLOW_UPLOAD' error message. How can I resolve this frustrating problem?</CommunityQuestion>
+
+## Understanding the "SLOW_UPLOAD" Error
+
+When working with Deepgram's REST API for audio transcription, you might encounter a "SLOW_UPLOAD" error in your callback. This error, identified by the code `"err_code": "SLOW_UPLOAD"`, indicates a timeout during data upload, often related to server speed or network issues.
+
+### Potential Causes
+- **Callback Server Speed:** Insufficient download speed capabilities on the server handling the callback.
+- **Network Latencies:** Variations in network speed causing slow data transfers.
+- **Large Callback Payloads:** Large payloads can lead to delays if the server isn't optimized for handling them.
+
+## Recommendations and Solutions
+
+1. **Optimize Server Speed:** Ensure the server is capable of high-speed data transfers. Consider using a content delivery network (CDN) if applicable.
+   
+2. **Check Network Load:** Verify that there are no network configuration issues or bandwidth throttling that could affect performance.
+
+3. **Monitor Payload Sizes:** Regularly check the size of callback payloads to ensure they're within manageable limits for your server.
+
+4. **Consider Asynchronous Processing:** For handling large payloads, use asynchronous methods to improve efficiency and avoid blocking operations.
+
+### Practical Example
+
+Below is a Python code snippet demonstrating how to handle a callback with error handling:
+
+```python
+import requests
+
+def handle_callback(callback_url, data):
+    try:
+        response = requests.post(callback_url, json=data, timeout=10)
+        response.raise_for_status()  # Raises an HTTPError if the HTTP request returned an unsuccessful status code
+    except requests.exceptions.Timeout:
+        print("🔴 ERROR: Callback request timed out. Please check server speed and network conditions.")
+    except requests.exceptions.HTTPError as err:
+        print(f"🔴 ERROR: HTTP error occurred: {err}")
+    except requests.exceptions.RequestException as err:
+        print(f"🔴 ERROR: An error occurred: {err}")
+    else:
+        print("✅ Callback successful.")
+
+# Example usage
+callback_url = 'https://your-callback-server.com/endpoint'
+data = {'transcription': 'Example transcription data'}
+
+handle_callback(callback_url, data)
+```
+
+## Additional Resources and Support
+
+- For detailed troubleshooting, refer to the [Deepgram WebSocket Error Troubleshooting Guide](/docs/troubleshooting-websocket-errors).
+- Join the [Deepgram Community on Discord](https://discord.gg/deepgram) for support and discussions.
+
+## Conclusion
+
+Addressing the "SLOW_UPLOAD" error involves optimizing server and network configurations to handle callback data efficiently. By implementing the recommendations and using the provided code example, you can significantly reduce the occurrence of this error.
+
+## References
+
+- [Troubleshooting WebSocket Errors](/docs/troubleshooting-websocket-errors)
+- [Deepgram API Documentation](/developers)
+- [Deepgram Community Support](https://discord.gg/deepgram)

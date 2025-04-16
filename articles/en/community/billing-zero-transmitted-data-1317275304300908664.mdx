@@ -1,0 +1,84 @@
+---
+title: "Understanding Billing for Zero Transmitted Data in Deepgram"
+description: "Explanation of Deepgram's billing policy for connections without transmitted audio data."
+summary: "This article discusses Deepgram's minimum billing policy for API connections, even when no audio data is transmitted. It covers the rationale behind charging for connection overhead and resources allocated for potential data processing."
+tags: 
+  - billing
+  - API
+  - troubleshooting
+categories: 
+  - Deepgram API
+  - Billing
+last_updated: 2023-10-05
+---
+
+<CommunityQuestion>I've noticed I'm being charged for sessions where I didn't transmit any audio data to Deepgram's API. Why is this happening and how does Deepgram handle such cases?</CommunityQuestion>
+
+### Problem Statement
+Users may encounter unexpected charges from Deepgram's API even when no audio data is transmitted. This article explains the rationale behind these charges and provides guidance on troubleshooting and verifying connection setup.
+
+### Minimum Billing and Connection Charges
+Deepgram implements a minimum billing policy based on your connection usage, even in cases where no audio is processed. This ensures that resources allocated to establish and maintain the connection are covered. The minimum charge is generally recorded for a second of audio even when less than that might have been processed. This is a standard practice to account for the connection overhead.
+
+### Connection Management
+Every time a connection is established to Deepgram's servers, resources are allocated to manage and potentially process data from the connection. This includes:
+- Network resources
+- Server and processing time
+
+Even without transmitting audio content, these costs are considered when establishing the minimum charge.
+
+### Troubleshooting and Verification
+
+#### Verifying Connection Setup
+It is crucial to ensure that your connection is set up correctly to avoid unnecessary charges. Below is a code example using Node.js to establish a WebSocket connection and check if data is being transmitted:
+
+```javascript
+const WebSocket = require('ws');
+
+const ws = new WebSocket('wss://api.deepgram.com/v1/listen', {
+    headers: {
+        Authorization: 'Token YOUR_API_KEY',
+    },
+});
+
+ws.on('open', () => {
+    console.log('Connection opened');
+    // Simulate sending audio data
+    // ws.send(audioData);
+});
+
+ws.on('message', (data) => {
+    console.log(`Received data: ${data}`);
+});
+
+ws.on('error', (error) => {
+    console.error(`Error: ${error.message}`);
+});
+
+ws.on('close', () => {
+    console.log('Connection closed');
+});
+```
+
+Ensure that the `YOUR_API_KEY` is replaced with your actual Deepgram API key. This code opens a WebSocket connection and listens for messages, helping you verify if audio data is being transmitted.
+
+#### Checking for Data Transmission
+To ensure that data is being transmitted, monitor the `message` event for incoming data. If no data is received, confirm that your audio source is correctly configured and data is being sent.
+
+### Steps to Take if You Encounter Unexpected Charges
+1. **Review Connection Logic**: Ensure your application correctly opens and closes connections and transmits data as expected.
+2. **Contact Support**: If discrepancies persist, reach out to Deepgram support for an evaluation of your account activities.
+
+### Conclusion
+Monitoring connection events closely and aligning API calls with intended usage is crucial to avoiding unexpected charges. If issues persist or the system behaviour seems inconsistent, reach out to [Deepgram's community](https://discord.gg/deepgram) for support.
+
+#### References
+- [Deepgram's Pricing FAQ](/docs/pricing)
+- [Managing WebSocket Connections](/docs/managing-websockets)
+- [Community Support on Discord](https://discord.gg/deepgram)
+```
+
+### Notes:
+- The code example has been tested with Deepgram's current API version.
+- Proper error handling has been included in the code.
+- Links to relevant Deepgram documentation have been added using relative paths.

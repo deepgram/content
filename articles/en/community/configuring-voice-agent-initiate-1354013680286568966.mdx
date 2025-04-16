@@ -1,0 +1,90 @@
+---
+title: "Configuring a Voice Agent to Initiate Conversations"
+description: "Guide on configuring Deepgram's voice agent to initiate conversations"
+summary: "This article explains how to set up Deepgram's Agent API configuration to allow a voice agent to speak first and initiate a conversation, rather than waiting for the user's input. It covers setting audio, listening, speaking, and thinking models, as well as specifying an initial context message."
+tags: ["Deepgram", "Voice Agent", "Configuration", "API"]
+categories: ["Voice Agent", "API Configuration"]
+last_updated: 2023-10-05
+---
+
+<CommunityQuestion>I'm building a voice assistant application with Deepgram's API. How can I configure the assistant to initiate the conversation by speaking first, rather than waiting for the user to start speaking?</CommunityQuestion>
+
+## Problem Statement
+To enhance user interaction, configuring a voice agent to start a conversation by speaking first can be beneficial. This guide outlines how to configure Deepgram's Agent API to achieve this capability.
+
+## Configuration Setup
+
+To enable the voice agent to speak first, you need to create a configuration object that includes audio settings, model selection for listening and speaking, thought process instructions, and an initial context message.
+
+### Sample Configuration
+
+Below is an updated example of how to configure your voice agent:
+
+```javascript
+const config = {
+  type: 'SettingsConfiguration',
+  audio: {
+    encoding: 'linear16',
+    sample_rate: 16000,
+  },
+  agent: {
+    listen: {
+      model: 'nova-3',
+    },
+    speak: {
+      model: 'aura-asteria-en',
+    },
+    think: {
+      provider: 'openai',
+      instructions: 'Provide helpful responses to user queries.',
+      functions: [
+        // Define your agent functions here
+      ],
+    },
+  },
+  context: {
+    messages: [
+      {
+        content: 'Hello, how can I assist you today?',
+        role: 'assistant',
+      },
+    ],
+    replay: true,
+  },
+};
+```
+
+### Configuration Details
+
+- **Audio Configuration**: Ensure the audio settings match your input source. The example uses `linear16` encoding and a sample rate of 16000 Hz.
+- **Listen Model**: Utilise the latest `nova-3` model for improved accuracy and features.
+- **Speak Model**: The `aura-asteria-en` model is used for text-to-speech output.
+- **Thought Instructions**: Configure reasoning and response logic using a provider like OpenAI. Tailor instructions to improve interaction quality.
+- **Initial Context Message**: Sets the agent to initiate the conversation with a welcoming message.
+
+### Error Handling
+
+Ensure proper error handling by capturing and logging errors during agent configuration and interaction. Here is an example:
+
+```javascript
+try {
+  // Initialize and configure your agent
+  initializeAgent(config);
+} catch (error) {
+  console.error('Error configuring the voice agent:', error.message);
+  // Additional error handling procedures
+}
+```
+
+### Troubleshooting
+
+- **Agent Not Speaking**: Verify the configuration, especially the context messages and replay settings.
+- **Unexpected Errors**: Check API key validity and ensure models are correctly specified.
+
+## References
+- [Deepgram Voice Agent Documentation](/docs/voice-agent)
+- [Deepgram API Playground](https://playground.deepgram.com/?endpoint=agent)
+
+For further assistance, join discussions on [Deepgram Community Support](https://discord.gg/deepgram).
+
+By following these steps, you'll configure your voice agent to initiate conversations, providing a seamless and engaging user experience.
