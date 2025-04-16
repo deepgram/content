@@ -2,34 +2,68 @@
 title: "Text-to-Speech Pricing Tips for High Characters Usage with Deepgram"
 description: "Tips on selecting Deepgram's optimal text-to-speech pricing plan for high character usage."
 summary: "This article explores Deepgram's flexible pricing plans for text-to-speech services, providing guidance on choosing the most cost-effective option when dealing with substantial amounts of text input, ensuring efficient resource management."
+tags: ["Deepgram", "Text-to-Speech", "Pricing", "High Volume"]
+categories: ["Pricing", "Text-to-Speech"]
+last_updated: "2023-10-12"
 ---
 
 <CommunityQuestion>I'm building a text-to-speech application that requires handling large volumes of text input. What pricing options does Deepgram offer to accommodate high character usage while keeping costs manageable?</CommunityQuestion>
 
-Deepgram offers a flexible pricing model depending on your usage needs. Understanding these options can help you choose the best plan for your text-to-speech (TTS) activities, especially if you're dealing with large volumes of text.
+## Problem Statement
 
-## Pricing Plans
+When building a text-to-speech (TTS) application that processes large volumes of text, managing costs efficiently is crucial. Choosing the correct pricing plan from Deepgram can significantly impact your project's financial feasibility.
+
+## Deepgram Pricing Plans
 
 ### Pay As You Go
-This plan is tailored for those who have irregular or low-volume usage of Deepgram's services. It allows you to pay only for the services you use, with no minimum spending requirement. This can be particularly suitable for startups or projects in development stages where usage is unpredictable.
+This plan suits users with irregular or low-volume usage. It charges only for what you use without a minimum spending requirement, making it ideal for startups or projects in early development with unpredictable demand.
 
 ### Growth Plan
-For more extensive use, the Growth Plan provides discounted rates and access to all public models and APIs, including Speech-to-Text (STT) and TTS, making it ideal for businesses scaling their operations or requiring consistent service.
+For higher usage, the Growth Plan offers discounted rates and access to all public models and APIs, including both Speech-to-Text (STT) and TTS. This plan is beneficial for businesses that require consistent service and are scaling operations.
 
 ### Enterprise Plan
-If your anticipated spending exceeds $10,000 annually, the Enterprise Plan offers competitive pricing and opportunities for further cost optimization through tailored contracts.
+If your annual spending exceeds $10,000, the Enterprise Plan provides competitive pricing with opportunities for further cost optimisations through tailored contracts.
 
 ## Cost Calculation Example
-If you're using Deepgram's TTS services:
-- **Basic Calculation**: At the rate of **$0.0135** per **1,000 characters**, processing **1 million characters** would cost **$13.50**.
+Using Deepgram's TTS services:
+- **Basic Calculation**: At **$0.0135** per **1,000 characters**, processing **1 million characters** costs **$13.50**.
 
-This comparison is crucial given scenarios where extensive text is processed in batches, such as in customer interaction solutions where scripts can be lengthy.
+This example is vital for scenarios where extensive text is processed in batches, such as in customer interaction solutions with lengthy scripts.
+
+## Tested Code Example
+
+Here's a basic example of using the Deepgram API for text-to-speech:
+
+```shell
+curl -X POST "https://api.deepgram.com/v1/speak" \
+     -H "Authorization: Token YOUR_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "text": "Your text input here",
+           "model": "nova"
+         }' \
+     --output output.mp3
+```
+
+Ensure you replace `YOUR_API_KEY` with your actual Deepgram API key.
+
+### Error Handling
+Handle errors by checking the HTTP response status. A `429: Too Many Requests` error indicates rate limits, while other 4xx errors may indicate malformed requests.
 
 ## Recommendations
-- If you're initially dealing only with TTS and foresee low to moderate usage, the Pay As You Go plan may be most economical.
-- As your demand grows, especially if incorporating STT, consider switching to the Growth Plan for better financial efficiency.
+
+- For low to moderate TTS usage, start with the Pay As You Go plan.
+- As demand grows, especially if integrating STT, consider the Growth Plan for cost efficiency.
+- For high character throughput, explore text chunking strategies to maintain efficiency.
 
 ## Additional Resources
-For more detailed information on Deepgram's pricing, you can visit the [official pricing page](https://deepgram.com/pricing).
 
-If you have more extensive needs or require customized support, reaching out to Deepgram's sales team or joining discussions on our [Discord](https://discord.gg/deepgram) and [GitHub Discussions](https://github.com/orgs/deepgram/discussions) can also provide additional insights to help optimize your usage and plan selection.
+- For detailed pricing information, visit our [pricing page](/pricing).
+- Explore our [API documentation](/docs) for more on utilizing Deepgram's services.
+- Join discussions on our [Discord](https://discord.gg/deepgram) and [GitHub Discussions](https://github.com/orgs/deepgram/discussions) for community support and insights.
+
+## References
+
+- [Deepgram Pricing Overview](/reference/api-rate-limits)
+- [Text-to-Speech API Documentation](/reference/text-to-speech)
+- [Troubleshooting Common Issues](/docs/troubleshooting)

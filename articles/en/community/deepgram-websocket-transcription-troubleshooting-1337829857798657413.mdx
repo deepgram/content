@@ -1,21 +1,26 @@
 ---
 title: "Troubleshooting Deepgram WebSocket Transcription Setup"
-description: "Troubleshoot common issues with Deepgram's WebSocket API for real-time speech-to-text transcription."
 summary: "This article addresses common challenges faced when setting up real-time transcription with Deepgram's WebSocket API, such as handling audio chunk sizes and WebSocket responses correctly to ensure successful transcription retrieval."
+description: "Troubleshoot common issues with Deepgram's WebSocket API for real-time speech-to-text transcription, including error handling and connection validation."
+tags: ["Deepgram", "WebSocket", "Real-time Transcription", "Troubleshooting"]
+categories: ["API", "WebSocket"]
+last_updated: "2023-10-10"
 ---
 
 <CommunityQuestion>I've been having trouble getting real-time transcription to work with Deepgram's WebSocket API. The audio seems to be sent correctly, but I'm not getting any transcription responses. What could be going wrong?</CommunityQuestion>
 
+### Problem Statement
 
-When setting up the Deepgram real-time transcription with a WebSocket, ensuring proper handling of audio chunks and WebSocket responses is crucial.
+When setting up real-time transcription with Deepgram's WebSocket API, users may encounter issues such as missing transcription responses, connection errors, or misconfigured WebSocket parameters. Common error codes include `1008` - `DATA-0000` and `1011` - `NET-0001`, indicating problems with audio data and connection timeouts, respectively.
 
 ### Using Websockets
+
 Establishing a WebSocket connection for transcribing audio in real-time with Deepgram involves sending audio data in appropriate chunks and handling server responses accurately. Missteps during this process can result in failed transcription retrieval.
 
 ### Common Challenges and Solutions
 
 1. **Audio Chunk Size**
-   
+
    If audio is sent in exceedingly small chunks, such as under 0.03 seconds each, this might not trigger a sufficient processing response from the Deepgram server. Ensure that audio data chunks are of a reasonable size, preferably around a few hundred milliseconds, to be processed efficiently.
 
 2. **Handling WebSocket Responses**
@@ -24,7 +29,12 @@ Establishing a WebSocket connection for transcribing audio in real-time with Dee
 
 3. **Configuration Validation**
 
-   Double-check the WebSocket connection parameters, ensuring they match Deepgram's requirements. This includes verifying the correct WebSocket endpoint, authentication, and any query parameters necessary for your transcription configuration.
+   Double-check the WebSocket connection parameters, ensuring they match Deepgram's requirements. This includes verifying the correct WebSocket endpoint, authentication, and any query parameters necessary for your transcription configuration. Refer to the [Deepgram WebSocket API Documentation](/reference#websockets) for detailed configuration guidance.
+
+4. **Troubleshooting WebSocket Errors**
+
+   - **Error Code `1008` - `DATA-0000`**: This indicates that Deepgram can't decode the audio data. Ensure the audio data is correctly encoded and the encoding parameters are explicitly set.
+   - **Error Code `1011` - `NET-0001`**: This occurs when Deepgram does not receive enough audio data within the first 10 seconds. Make sure to send audio data promptly after establishing the connection and consider sending a [KeepAlive message](/reference/streaming#stream-keepalive) to maintain the connection.
 
 ### Conclusion
 
@@ -32,8 +42,9 @@ Successfully configuring and troubleshooting a Deepgram WebSocket transcription 
 
 ### Further Help
 
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [https://discord.gg/deepgram](https://discord.gg/deepgram).
+If issues persist or the system behaviour seems inconsistent, reach out to your Deepgram support representative or visit our community for assistance: [Discord](https://discord.gg/deepgram) and [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions).
 
 ### References
-- [Deepgram Real-time Transcription Setup](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
-- [WebSocket API Documentation](https://developers.deepgram.com/reference#websockets)
+- [Deepgram Real-time Transcription Setup](/docs/getting-started-with-live-streaming-audio)
+- [WebSocket API Documentation](/reference#websockets)
+- [Troubleshooting WebSocket Data and Net Errors](/troubleshooting-websocket-data-and-net-errors-when-live-streaming-audio)

@@ -2,6 +2,9 @@
 title: "Troubleshooting Docker WebSocket Connection Issues with Deepgram API"
 description: "Troubleshoot WebSocket connection issues when using Deepgram's speech-to-text API from Docker containers."
 summary: "This article explains common causes and solutions for WebSocket connection errors when connecting to the Deepgram API from Docker containers, such as missing environment variables, network configuration issues, and authentication problems."
+tags: ["Deepgram", "WebSocket", "Docker", "API", "Troubleshooting"]
+categories: ["API Usage", "Docker", "WebSockets"]
+last_updated: 2024-10-25
 ---
 
 <CommunityQuestion>I'm having trouble getting my Docker container to connect to the Deepgram API using WebSockets. The connection works fine locally, but fails in the container with an HTTP 400 error. How can I resolve this issue?</CommunityQuestion>
@@ -73,8 +76,11 @@ If you face WebSocket connection issues only during a Docker deployment but not 
 
 ## References
 
+- [Deepgram API Documentation](/docs/)
 - [Deepgram Python SDK GitHub](https://github.com/deepgram/deepgram-python-sdk)
-- [Deepgram Text-to-Speech Docs](https://developers.deepgram.com/docs/tts-rest)
+- [Deepgram WebSocket API](/reference/listen-live/)
 - [dotenv Documentation](https://pypi.org/project/python-dotenv/)
+
+For further assistance, you can reach out to the community via [Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/deepgram/deepgram-python-sdk/discussions).
 
 Use these links as additional resources to help resolve any configuration issues you may encounter with Deepgram's SDKs and API within Docker containers.

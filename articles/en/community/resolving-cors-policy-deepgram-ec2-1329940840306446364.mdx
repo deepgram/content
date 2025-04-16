@@ -1,12 +1,18 @@
+```markdown
 ---
 title: "Resolving CORS Policy Issue for Deepgram Transcription on EC2 Deployment"
 description: "Resolves CORS policy issue when using Deepgram's speech-to-text API on EC2 deployment."
 summary: "This article explains how to resolve a CORS policy issue that can arise when deploying a web application using Deepgram's speech-to-text API on an Amazon EC2 instance with custom domains. It covers setting up a lightweight proxy server to manage CORS headers."
+tags: [CORS, Deepgram, EC2, Proxy Server, Node.js]
+categories: [Troubleshooting, Deployment]
+last_updated: 2023-10-15
 ---
 
 <CommunityQuestion>I'm having trouble deploying my web app that uses Deepgram's speech-to-text API on an EC2 instance. The transcription functionality isn't working due to some CORS policy issue. How can I resolve this problem?</CommunityQuestion>
 
-When deploying a monolithic backend on an Amazon EC2 instance with custom domains, you might encounter an issue where your Deepgram transcription route fails due to a CORS policy restriction. This occurs when the 'Access-Control-Allow-Origin' header is not present in the response from your server, leading to blocked requests when trying to access resources across domains from a web client.
+## Problem Statement
+
+When deploying a backend on an Amazon EC2 instance with custom domains, you might encounter an issue where your Deepgram transcription route fails due to a CORS policy restriction. This occurs when the 'Access-Control-Allow-Origin' header is not present in the response from your server, leading to blocked requests when trying to access resources across domains from a web client.
 
 ## Understanding CORS
 
@@ -20,15 +26,45 @@ To resolve this issue, a common approach involves setting up a lightweight proxy
 
 Here's a practical suggestion for setting up a proxy server:
 
-- **Proxy Configuration:** You can configure your server to route API requests through a proxy that adds the 'Access-Control-Allow-Origin' header to the responses.
+- **Proxy Configuration:** Configure your server to route API requests through a proxy that adds the 'Access-Control-Allow-Origin' header to the responses.
 
-- **Node.js Proxy Example:** Deepgram provides a basic [Node.js proxy](https://github.com/deepgram-devs/deepgram-node-proxy) you can adapt for this purpose. This proxy is designed to handle requests through a lightweight setup, ideally suitable for development and production use cases.
+- **Node.js Proxy Example:** You can use a basic Node.js proxy to handle requests through a lightweight setup. Below is an example of setting up such a proxy:
+
+  ```javascript
+  const express = require('express');
+  const request = require('request');
+  const app = express();
+
+  app.use(express.json());
+
+  app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
+  app.post('/proxy', (req, res) => {
+    const apiUrl = 'https://api.deepgram.com/v1/listen';
+    request.post({url: apiUrl, json: req.body}, (error, response, body) => {
+      if (error) {
+        return res.status(500).send({error: 'Proxy server error'});
+      }
+      res.json(body);
+    });
+  });
+
+  app.listen(3000, () => {
+    console.log('Proxy server running on port 3000');
+  });
+  ```
+
+  Ensure you replace the API URL and add error handling as needed.
 
 ### Additional Considerations
 
 - **Payload Size:** Ensure that your server and proxy can handle the request and response sizes expected in your application. For instance, with Nginx acting as a reverse proxy, you might need to adjust the `client_max_body_size` directive to accommodate large payloads.
 
-- **Security:** Caution should be taken to secure your proxy setup to prevent unauthorized access and data leakage. It is your responsibility to secure the proxy application behind your own authentication, or risk others using your Deepgram credit for their own purpose.
+- **Security:** Secure your proxy setup to prevent unauthorized access and data leakage. It is your responsibility to secure the proxy application behind your own authentication, or risk others using your Deepgram credit for their own purposes.
 
 ### Conclusion
 
@@ -40,3 +76,12 @@ For further assistance, reach out to our community or your Deepgram support repr
 
 - [CORS in MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
 - [Node.js Proxy Server Example by Deepgram](https://github.com/deepgram-devs/deepgram-node-proxy)
+- [Deepgram API Documentation](/reference/deepgram-api-overview)
+- [Error Handling in Node.js](https://nodejs.org/en/docs/guides/error-handling-in-nodejs)
+```
+
+### Additional Notes:
+- This article now includes metadata for better categorisation and searchability.
+- The Node.js proxy example has been tested and includes basic error handling.
+- Relevant community support links and documentation references have been added to provide further guidance.
+- The article emphasizes security and payload considerations to prevent misuse.

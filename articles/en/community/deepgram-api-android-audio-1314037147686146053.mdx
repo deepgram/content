@@ -2,6 +2,9 @@
 title: "Using Deepgram API for Android Audio Transcription"
 description: "Learn how to use Deepgram's speech-to-text API for transcribing audio in Android applications without relying on a dedicated SDK."
 summary: "This article explains how to integrate Deepgram's Live Transcription API for speech-to-text transcription in Android applications. It covers setting up a WebSocket connection, sending audio data, and handling the transcription response, all without needing a dedicated SDK for Java or Kotlin."
+tags: ["Deepgram", "Android", "Audio Transcription", "WebSocket", "Real-time Transcription"]
+categories: ["Integration", "Mobile Development"]
+last_updated: "2023-10-10"
 ---
 
 <CommunityQuestion>How can I integrate Deepgram's speech-to-text API for transcribing audio in my Android application? I'm looking for a way to transcribe audio from the device's microphone without needing a dedicated SDK.</CommunityQuestion>
@@ -10,7 +13,7 @@ Deepgram provides flexible and robust APIs that can be used for audio transcript
 
 ## Getting Started with Audio Transcription on Android
 
-To transcribe streaming audio input from an Android device's microphone, you can utilize Deepgram’s Live Transcription API. The API operates via a WebSocket connection and supports integration in Java-based languages for Android applications.
+To transcribe streaming audio input from an Android device's microphone, you can utilise Deepgram’s Live Transcription API. The API operates via a WebSocket connection and supports integration in Java-based languages for Android applications.
 
 ### Steps to Transcribe Audio Using the Deepgram API:
 
@@ -24,16 +27,39 @@ To transcribe streaming audio input from an Android device's microphone, you can
 
 5. **Handle Transcription Responses:** Implement handlers to receive transcription results from the WebSocket, which can then be displayed or processed in your application as needed.
 
+6. **Error Handling:** Ensure to handle potential errors during WebSocket connection or audio processing. Here's an example:
+
+   ```java
+   WebSocket webSocket = ...; // Initialize WebSocket
+   webSocket.setSocketListener(new WebSocketListener() {
+       @Override
+       public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+           System.err.println("WebSocket Error: " + t.getMessage());
+       }
+
+       @Override
+       public void onMessage(WebSocket webSocket, String text) {
+           // Process incoming transcription
+           System.out.println("Transcription: " + text);
+       }
+
+       @Override
+       public void onClosed(WebSocket webSocket, int code, String reason) {
+           System.out.println("WebSocket closed: " + reason);
+       }
+   });
+   ```
+
 ## Additional Resources
 
 - Explore [Java Code Examples](https://github.com/deepgram-devs/code-samples/tree/main/languages/java) for guidance on using the API with Java.
-- Check [Deepgram Developer Documentation](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio) for comprehensive instructions on setting up live audio transcription.
+- Check [Deepgram Developer Documentation](/docs/getting-started-with-live-streaming-audio) for comprehensive instructions on setting up live audio transcription.
 
 ## Conclusion
 
-Deepgram’s API can be effortlessly integrated into Android applications using Java or Kotlin, providing real-time transcription capabilities without the need for a dedicated SDK. If you require additional support or encounter any issues, reach out to your Deepgram support representative or visit our community: [Discord](https://discord.gg/deepgram).
+Deepgram’s API can be effortlessly integrated into Android applications using Java or Kotlin, providing real-time transcription capabilities without the need for a dedicated SDK. If you require additional support or encounter any issues, visit our community: [Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/deepgram/deepgram-js-sdk/discussions).
 
 ## References
 
-- [Deepgram Documentation for Live Streaming Audio](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
+- [Deepgram Documentation for Live Streaming Audio](/docs/getting-started-with-live-streaming-audio)
 - [Deepgram GitHub - Code Samples](https://github.com/deepgram-devs/code-samples/tree/main/languages)

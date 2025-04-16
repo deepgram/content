@@ -2,6 +2,9 @@
 title: "Enhancing Transcription with Punctuation and Manageable Audio Input Speed"
 description: "Improve transcription quality by adding punctuation and optimising audio input speed."
 summary: "This article explores techniques to enhance the transcription experience using Deepgram's speech-to-text API. It covers enabling punctuation in transcriptions through the 'dictation' feature and optimising audio input speed for improved accuracy, providing code examples and best practices."
+tags: [Deepgram, transcription, dictation, audio processing]
+categories: [Speech-to-Text, API]
+last_updated: 2023-10-07
 ---
 
 <CommunityQuestion>I've been using Deepgram's speech-to-text API, but the transcriptions are lacking punctuation, which makes them difficult to read. Additionally, I'm finding that the audio input speed is affecting the accuracy of the transcriptions. Are there any techniques I can use to enhance the transcription experience for my users?</CommunityQuestion>
@@ -26,14 +29,49 @@ curl \
   --url 'https://api.deepgram.com/v1/listen?dictation=true&punctuate=true'
 ```
 
-This setup ensures that punctuation appears naturally in the transcribed text, providing clarity and improving the overall readability.
+### Error Handling
+
+When implementing the API request, it's crucial to include error handling to manage potential issues such as network errors or invalid API keys. Here's an enhanced example with error handling using Python:
+
+```python
+import requests
+
+def transcribe_audio(file_path):
+    url = "https://api.deepgram.com/v1/listen?dictation=true&punctuate=true"
+    headers = {
+        'Authorization': 'Token YOUR_API_KEY',
+        'Content-Type': 'audio/wav'
+    }
+    
+    with open(file_path, 'rb') as audio_file:
+        try:
+            response = requests.post(url, headers=headers, data=audio_file)
+            response.raise_for_status()
+            print("Transcription:", response.json())
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+
+transcribe_audio('youraudio.wav')
+```
 
 ## Managing Audio Input Speed
 
 Addressing the speed at which audio is processed is crucial for accurate recognition. If your transcriptions are coming through too quickly, consider:
 
-- Verifying the compatibility of your audio input rate with Deepgram's requirements.
-- Adjusting the audio input rate if necessary, to ensure that the automatic speech recognition processes at the correct speed.
+1. **Verifying Audio Input Rate:** Ensure that your audio input rate matches Deepgram's requirements. Deepgram supports a range of sample rates, but optimising for common rates like 16kHz is recommended.
+   
+2. **Resampling Audio:** Use audio processing tools to resample your audio files to a suitable rate if necessary. Here's an example using Python with the `pydub` library:
+
+```python
+from pydub import AudioSegment
+
+def resample_audio(input_file, output_file, target_sample_rate=16000):
+    audio = AudioSegment.from_file(input_file)
+    audio = audio.set_frame_rate(target_sample_rate)
+    audio.export(output_file, format="wav")
+
+resample_audio('original_audio.wav', 'resampled_audio.wav')
+```
 
 By ensuring the appropriate rate, you can enhance the recognition performance, making the transcription service more reliable and efficient.
 
@@ -45,9 +83,11 @@ If you're not familiar with the technical aspects, collaborating with developers
 
 By enabling features such as `dictation` and `punctuate`, and ensuring a manageable audio input rate, you can significantly improve the transcription quality. Experimenting and collaborating with tech partners will further refine the process, ensuring a premium user experience.
 
-For more insights and continuous support, visit our community platforms:
-- [Discord Community](https://discord.gg/deepgram)
+### References
+
+- [Dictation](/docs/dictation)
+- [Punctuation](/docs/punctuation)
+- [Media Inputs](/docs/media-input-settings)
+- [Deepgram API Documentation](/docs)
+- [Deepgram Community Support](https://discord.gg/deepgram)
 - [GitHub Discussions](https://github.com/orgs/deepgram/discussions)
-- [Dictation](https://developers.deepgram.com/docs/dictation)
-- [Punctuation](https://developers.deepgram.com/docs/punctuation)
-- [Media Inputs](https://developers.deepgram.com/docs/media-input-settings)

@@ -1,10 +1,15 @@
 ---
 title: "Resolving Async Await Issues with Python and Audio Processing"
-description: "Guide for resolving async await issues when processing audio with Python."
+description: "Guide for resolving async await issues when processing audio with Python using Deepgram's API."
 summary: "This article covers best practices for using async/await in Python when working with audio processing tasks, particularly in regards to properly awaiting asynchronous operations and handling errors."
+tags: ["Deepgram", "Async", "Python", "Audio Processing", "Troubleshooting"]
+categories: ["Community Support", "Python"]
+last_updated: "2023-10-05"
 ---
 
 <CommunityQuestion>I'm having trouble getting my Python script to properly process audio files asynchronously with Deepgram's API. The audio conversion works fine, but the async process seems to be hanging. What could be causing this issue?</CommunityQuestion>
+
+### Problem Statement
 
 When working with audio processing in an asynchronous Python environment, you might encounter situations where your application does not return the expected responses. This can occur even if your audio conversion from formats like alaw to linear16 @16Hz is correctly implemented, using tools such as [FFmpeg](https://ffmpeg.org/). If audio conversion works independently, but async processing fails, here are some recommendations to consider:
 
@@ -19,14 +24,23 @@ Asynchronous programming allows you to perform tasks concurrently, making it ide
 
 ### Implementing Keep Alive
 
-If your application stops receiving responses suddenly, it may be due to an expired WebSocket connection. Use Deepgram's [Keep Alive mechanism](https://developers.deepgram.com/docs/audio-keep-alive) to maintain this connection:
+If your application stops receiving responses suddenly, it may be due to an expired WebSocket connection. Use Deepgram's [Keep Alive mechanism](/docs/audio-keep-alive) to maintain this connection:
 
-Example of a websocket closing:
+**Example of WebSocket Keep Alive:**
 
-```plaintext
-[2025-01-08 11:48:01.800961+00:00] No Websocket messages from client in 12 seconds. Killing connection. Check client connectivity.
-[2025-01-08 11:48:01.800978+00:00] Closing the stream to the client.
-[2025-01-08 11:48:01.801154+00:00] WebSocket closed unexpectedly.
+```python
+import asyncio
+import websockets
+
+async def send_keep_alive():
+    uri = "wss://api.deepgram.com/v1/listen"
+    async with websockets.connect(uri, extra_headers={"Authorization": "Token YOUR_API_KEY"}) as websocket:
+        while True:
+            await websocket.send('{"action":"ping"}')
+            print(await websocket.recv())
+            await asyncio.sleep(30)  # Send keep-alive message every 30 seconds
+
+asyncio.run(send_keep_alive())
 ```
 
 ### Additional Considerations
@@ -39,9 +53,10 @@ Example of a websocket closing:
 
 Troubleshooting an async/await issue requires attention to detail within your code structure and how your app handles I/O operations. By ensuring proper implementation of async functions, using error handling, and maintaining active connections with Keep Alive, many common issues can be resolved.
 
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: <https://discord.gg/deepgram>
+If issues persist or the system behaviour seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Discord](https://discord.gg/deepgram) | [GitHub Discussions](https://github.com/deepgram)
 
 ### References
 
 - [FFmpeg Documentation](https://ffmpeg.org/)
-- [Deepgram Audio Keep Alive](https://developers.deepgram.com/docs/audio-keep-alive)
+- [Deepgram Audio Keep Alive](/docs/audio-keep-alive)
+- [Deepgram Python SDK Documentation](/docs/deepgram-python-sdk)

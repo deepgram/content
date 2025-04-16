@@ -2,42 +2,68 @@
 title: "Handling Transcription Hallucinations in Deepgram's Nova Models"
 description: "Guide for handling transcription hallucinations with Deepgram's Nova speech-to-text models."
 summary: "This article explains the issue of 'hallucinations' in Deepgram's transcriptions, where the model generates text not present in the original audio. It identifies examples of hallucinations and provides suggestions for mitigating the issue, such as switching to different Nova model versions."
+tags: ["Deepgram", "Speech-to-Text", "Nova Models", "Transcription", "Hallucinations"]
+categories: ["Troubleshooting", "Speech Recognition"]
+last_updated: "2023-10-10"
 ---
 
 <CommunityQuestion>I've been using Deepgram's nova-2 speech-to-text model, but I'm seeing random names and number sequences appearing in the transcriptions that don't seem to be present in the audio file. Is there a way to address these 'hallucinations' and improve the transcription accuracy?</CommunityQuestion>
 
-When using Deepgram's transcription services, users may occasionally encounter what are known as "hallucinations" in the transcriptions provided by the models. These hallucinations manifest as transcribed text that does not correspond to any content in the audio file, such as random names or number patterns.
+## Problem Statement
+
+In some instances, users of Deepgram's speech-to-text services encounter "hallucinations," where the transcription output includes words or phrases not present in the original audio. These often manifest as random names or numerical sequences, which can affect the accuracy of the transcriptions.
 
 ## Understanding Model Hallucinations
 
-Hallucinations occur when the model generates words or phrases that were not present in the original audio. This can lead to unexpected entries like people's names or sequences of numbers appearing in the transcription output.
+Hallucinations occur when the model generates content that was not spoken in the audio file. This can lead to unexpected entries such as names or number patterns appearing in the transcription output.
 
-### Identifying the Issue
+### Examples of Hallucinations
 
-In reports of hallucinations, users have noted the appearance of names such as "Joshua Sandler" and sequences like "(zero zero six:fifty seven)" which were not present in the audio files being transcribed.
+Users have reported instances where names like "Joshua Sandler" and sequences such as "(zero zero six:fifty seven)" were transcribed despite not being present in the audio.
 
-### Suggested Actions
+## Suggested Actions
 
-   1. **Switch Models:** If you encounter hallucinations with nova-2, consider using the nova model. Users have reported fewer hallucinations when switching to this version. Adjust the model parameter in your API request as shown below:
+1. **Switch to Latest Model:** To reduce hallucinations, consider using the latest Nova-3 model, which offers improved accuracy. Modify the model parameter in your API request as follows:
 
-      ```shell
-      curl --location 'https://api.deepgram.com/v1/listen?smart_format=true&language=en&model=nova' \
-      --header 'Content-Type: audio/mpeg' \
-      --header 'Authorization: Token YOUR_API_KEY' \
-      --data-binary '@/YOUR_FILE'
-      ```
+    ```shell
+    curl --location 'https://api.deepgram.com/v1/listen?smart_format=true&language=en&model=nova-3' \
+    --header 'Content-Type: audio/mpeg' \
+    --header 'Authorization: Token YOUR_API_KEY' \
+    --data-binary '@/YOUR_FILE'
+    ```
 
-   2. **Review API Settings:** Use `smart_format=true` to automatically apply punctuation and paragraph formatting without needing to explicitly set `paragraphs` and `punctuate` to true.
+2. **Implement Error Handling:** Ensure to handle potential errors in API responses. Here's an example with error handling:
 
-   3. **Audio Quality:** Ensure your audio input is of good quality and properly formatted. Poor audio quality can sometimes lead to model hallucinations.
+    ```python
+    import requests
 
-### Conclusion
+    url = "https://api.deepgram.com/v1/listen?smart_format=true&language=en&model=nova-3"
+    headers = {
+        "Content-Type": "audio/mpeg",
+        "Authorization": "Token YOUR_API_KEY"
+    }
+    audio_file = '/YOUR_FILE'
 
-Hallucinations in transcription are an acknowledged phenomenon when using advanced models such as nova-2, and can usually be mitigated by trying alternative models like nova. It is always good practice to evaluate the output when processing transcriptions and make model adjustments as necessary.
+    try:
+        with open(audio_file, 'rb') as f:
+            response = requests.post(url, headers=headers, data=f)
+        response.raise_for_status()
+        print(response.json())
+    except requests.exceptions.HTTPError as err:
+        print(f"HTTP error occurred: {err}")
+    except Exception as err:
+        print(f"An error occurred: {err}")
+    ```
 
-If the problem persists, or for more complex troubleshooting, reaching out to Deepgram's support or community channels can provide additional assistance: [Deepgram Community](https://discord.gg/deepgram).
+3. **Check Audio Quality:** Ensure the audio input is clear and correctly formatted. Poor audio quality can contribute to hallucinations.
+
+## Conclusion
+
+Hallucinations in transcriptions are a known issue with advanced models like Nova-2. Switching to Nova-3 and ensuring high-quality audio can help mitigate these occurrences. For persistent issues, contact Deepgram support or engage with community resources for further assistance.
 
 ### References
 
-- [Deepgram API Documentation: Nova Streaming](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
-- [Deepgram Community Github Discussions](https://github.com/orgs/deepgram/discussions)
+- [Using Deepgram Nova Models](../docs/nova-models)
+- [Deepgram API Documentation](../api/)
+- [Deepgram Community Discussions](https://github.com/orgs/deepgram/discussions)
+- [Join the Deepgram Discord Community](https://discord.gg/deepgram)

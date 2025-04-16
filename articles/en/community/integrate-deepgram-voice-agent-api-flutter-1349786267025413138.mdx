@@ -1,52 +1,66 @@
 ---
 title: "Integrating Deepgram Voice Agent API in Flutter Apps"
-description: "Learn how to integrate Deepgram's Voice Agent API into Flutter apps for real-time voice-to-voice interactions."
-summary: "This guide covers the core concepts and steps required to embed Deepgram's advanced speech-to-speech capabilities into your Flutter application, enabling features like real-time transcription and voice interaction."
+description: "Learn how to integrate Deepgram's Voice Agent API into Flutter apps for real-time voice-to-voice interactions using WebSockets."
+summary: "This guide covers the core concepts and steps required to embed Deepgram's advanced speech-to-speech capabilities into your Flutter application, enabling features like real-time transcription and voice interaction using WebSockets."
+tags: [Flutter, Deepgram, Voice Agent, API, WebSockets]
+categories: [Integration, Mobile Development]
+last_updated: 2023-10-20
 ---
 
 <CommunityQuestion>I'm building a Flutter app that needs to incorporate voice-to-voice interactions. How can I integrate Deepgram's Voice Agent API to enable this functionality?</CommunityQuestion>
 
-Integrating Deepgram's Voice Agent API into a Flutter application can open up possibilities for real-time voice-to-voice interactions within your mobile app. This guide will walk you through the core concepts necessary for embedding this capability.
+Integrating Deepgram's Voice Agent API into a Flutter application can open up possibilities for real-time voice-to-voice interactions within your mobile app. This guide will walk you through the core concepts necessary for embedding this capability using WebSockets.
 
 ## Understanding Deepgram's Voice Agent API
 
-Deepgram's Voice Agent API allows developers to leverage advanced speech-to-speech capabilities, enabling apps to perform tasks like real-time transcription or voice interaction. The API endpoint for the Voice Agent service is `https://api.deepgram.com/agent`.
-
-To get started, you need to make an API call to the endpoint specified above from within your Flutter app. This can be done using an HTTP client package appropriate for Flutter, such as [http](https://pub.dev/packages/http) or [dio](https://pub.dev/packages/dio).
+Deepgram's Voice Agent API allows developers to leverage advanced speech-to-speech capabilities, enabling apps to perform tasks like real-time transcription or voice interaction. The correct API endpoint for the Voice Agent service is `wss://agent.deepgram.com/agent`, which requires a WebSocket connection for real-time interactions.
 
 ### Key Steps:
 
-1. **Set Up Dependencies**: Add necessary dependencies in the `pubspec.yaml` file to handle HTTP requests.
+1. **Set Up Dependencies**: Add necessary dependencies in the `pubspec.yaml` file to handle WebSocket connections and audio processing.
 
-2. **Authenticate Requests**: Ensure that each request to the Deepgram Voice Agent API is authenticated. You will typically use an API key provided by Deepgram.
+2. **Authenticate WebSocket Connection**: Ensure that the connection to the Deepgram Voice Agent API is authenticated using an API key.
 
-3. **Handle Audio Input/Output**: Since you're working with voice, manage both the input (recorded from the user's microphone) and the output (response from the API). You may utilize packages such as [flutter_sound](https://pub.dev/packages/flutter_sound) to handle audio streams.
+3. **Handle Audio Input/Output**: Manage both the input (recorded from the user's microphone) and the output (response from the API). You may utilize packages such as [flutter_sound](https://pub.dev/packages/flutter_sound) to handle audio streams.
 
-4. **API Interaction**: Construct and send HTTP requests to the API endpoint, `https://api.deepgram.com/agent`, and handle the responses appropriately based on your application's requirements.
+4. **WebSocket Interaction**: Establish a WebSocket connection to the API endpoint, `wss://agent.deepgram.com/agent`, and handle the messages appropriately based on your application's requirements.
 
-### Example API Request Setup
+### Example WebSocket Setup in Flutter
 
 ```dart
-// Import necessary packages
-import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 
-final String apiKey = 'YOUR_DEEPGRAM_API_KEY';
-final String apiUrl = 'https://api.deepgram.com/agent';
+import 'package:flutter_sound/flutter_sound.dart';
 
-Future<void> sendVoiceCommand() async {
-  final response = await http.post(
-    Uri.parse(apiUrl),
-    headers: {
-      'Authorization': 'Bearer $apiKey',
-      'Content-Type': 'application/json'
-    },
-    body: '{"your_request_payload_here"}'
-  );
+const String apiKey = 'YOUR_DEEPGRAM_API_KEY';
+const String wsUrl = 'wss://agent.deepgram.com/agent';
 
-  if (response.statusCode == 200) {
-    // Process the response
-  } else {
-    thro   w Exception('Failed to communicate with Deepgram API');
+Future<void> connectToDeepgram() async {
+  try {
+    final WebSocket socket = await WebSocket.connect(
+      wsUrl,
+      headers: {'Authorization': 'Token $apiKey'},
+    );
+
+    // Example: Send a settings configuration message
+    socket.add(jsonEncode({
+      'type': 'SettingsConfiguration',
+      'agent': {'listen': {'model': 'nova-3'}},
+    }));
+
+    socket.listen((message) {
+      final response = jsonDecode(message);
+      // Process the response
+    }, onError: (error) {
+      print('Error: $error');
+    }, onDone: () {
+      print('Connection closed');
+    });
+
+    // Handle audio input/output here using flutter_sound
+  } catch (e) {
+    print('Failed to connect: $e');
   }
 }
 ```
@@ -58,13 +72,13 @@ Future<void> sendVoiceCommand() async {
 
 ## Conclusion
 
-Integrating Deepgram's Voice Agent API into a Flutter mobile application involves setting up API requests, managing authentication, and handling audio input and output. By leveraging appropriate packages and ensuring proper setup, you can implement real-time voice interactions within your app.
+Integrating Deepgram's Voice Agent API into a Flutter mobile application involves setting up WebSocket connections, managing authentication, and handling audio input and output. By leveraging appropriate packages and ensuring proper setup, you can implement real-time voice interactions within your app.
 
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Discord Community](https://discord.gg/deepgram).
+If issues persist or the system behaviour seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Discord Community](https://dpgr.am/discord).
 
 ## References
 
-- [Deepgram Voice Agent API Documentation](https://developers.deepgram.com/docs/voice-agent)
+- [Deepgram Voice Agent API Documentation](/docs/voice-agent)
 - [Flutter Sound Plugin](https://pub.dev/packages/flutter_sound)
-- [HTTP Package for Flutter](https://pub.dev/packages/http)
+- [WebSocket Package for Dart](https://pub.dev/packages/web_socket_channel)
 - [Deepgram Blog on Flutter Speech-to-Text Integration](https://deepgram.com/learn/flutter-speech-to-text-tutorial)

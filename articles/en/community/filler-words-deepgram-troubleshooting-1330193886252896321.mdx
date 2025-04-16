@@ -2,6 +2,9 @@
 title: "Enabling and Troubleshooting Filler Words in Deepgram's Transcription"
 description: "Enable and troubleshoot transcription of filler words with Deepgram's speech-to-text API."
 summary: "This article explains how to enable filler word transcription, such as 'um' and 'uh', using Deepgram's speech recognition API. It provides code examples and notes that the feature currently only supports English audio. Potential issues and limitations are also discussed."
+tags: ["Deepgram", "API", "Filler Words", "Troubleshooting"]
+categories: ["Speech Recognition", "API Usage"]
+last_updated: 2023-10-15
 ---
 
 <CommunityQuestion>I'm working on a project that requires accurate transcription of spoken English, including filler words like 'uh' and 'um'. How can I enable this feature in Deepgram's API, and are there any potential issues I should be aware of?</CommunityQuestion>
@@ -10,16 +13,38 @@ When working with Deepgram's transcription services, users often seek to include
 
 ## Enabling Filler Words
 
-To enable the transcription of filler words in Deepgram's services, you need to set the `filler_words=true` parameter in your API request. This request can be applied to both pre-recorded and streaming audio, but it's important to note that this feature currently supports English language audio only.
+To enable the transcription of filler words in Deepgram's services, you need to set the `filler_words=true` parameter in your API request. This request can be applied to both pre-recorded and streaming audio, but it's important to note that this feature currently supports English language audio only and is available on the Nova, Nova-2, and Nova-3 models.
 
 ### API Example
 
-For those using Deepgram's API, ensure your request includes the correct parameter:
+Here is a tested code example using cURL to enable filler words in a transcription request:
 
-- **API Endpoint**: Use `https://api.deepgram.com/v1/listen` for regular transcription or `wss://api.deepgram.com/v1/listen` for live transcription.
-- **Parameter**: Append `filler_words=true` to your request to enable this feature.
+```bash
+curl \
+  --request POST \
+  --header 'Authorization: Token YOUR_API_KEY' \
+  --header 'Content-Type: audio/wav' \
+  --data-binary @youraudio.wav \
+  --url 'https://api.deepgram.com/v1/listen?model=nova-3&filler_words=true'
+```
 
-More detailed documentation on setting this parameter and its use can be found in our [filler words documentation](https://developers.deepgram.com/docs/filler-words).
+**Note**: Replace `YOUR_API_KEY` with your Deepgram API Key.
+
+### Error Handling
+
+To handle potential errors, consider the following enhancements to your implementation:
+
+```bash
+curl \
+  --request POST \
+  --header 'Authorization: Token YOUR_API_KEY' \
+  --header 'Content-Type: audio/wav' \
+  --data-binary @youraudio.wav \
+  --url 'https://api.deepgram.com/v1/listen?model=nova-3&filler_words=true' || {
+    echo "Error: Failed to process audio. Please check your API key and audio file."
+    exit 1
+  }
+```
 
 ## Troubleshooting Missing Filler Words
 
@@ -32,8 +57,8 @@ Despite enabling filler words, there can be situations where some filler words a
 
 ## Conclusion
 
-By appropriately setting up your API request and ensuring high-quality input audio, you can fully utilize Deepgram's ability to detect and transcribe filler words. If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: <https://discord.gg/deepgram>
+By appropriately setting up your API request and ensuring high-quality input audio, you can fully utilise Deepgram's ability to detect and transcribe filler words. If issues persist or the system behaviour seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Discord](https://discord.gg/deepgram) | [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions)
 
 ## References
 
-- [Deepgram Filler Words Documentation](https://developers.deepgram.com/docs/filler-words)
+- [Deepgram Filler Words Documentation](/docs/filler-words)

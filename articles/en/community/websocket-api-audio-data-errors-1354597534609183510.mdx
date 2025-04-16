@@ -2,6 +2,9 @@
 title: "Resolving WebSocket API Audio Data Errors in Deepgram"
 description: "Troubleshooting guide for resolving common errors when using Deepgram's WebSocket API for speech-to-text transcription."
 summary: "This article provides solutions for common errors that can cause WebSocket connections to close unexpectedly when using Deepgram's API for speech-to-text transcription. It covers issues such as sending empty or non-audio data, and problems with Base64 encoding."
+tags: ["WebSocket", "Deepgram API", "Troubleshooting"]
+categories: ["API", "Guides", "Troubleshooting"]
+last_updated: "2023-10-20"
 ---
 
 <CommunityQuestion>I'm having trouble using Deepgram's WebSocket API for speech-to-text transcription. The connection keeps closing unexpectedly, and I'm not sure why. Has anyone else encountered this issue and found a resolution?</CommunityQuestion>
@@ -14,21 +17,27 @@ Below are some errors that users might see in their logs, along with suggestions
 
 #### 1. **Empty Audio Data**
 - **Error Detail:** "Deepgram received an empty file or URL rather than valid audio data."
-- **Solution:** Ensure that the audio data being sent is neither empty nor null. Verify that the source of your audio is correctly reading and transmitting the file.
+- **Solution:** Ensure that the audio data being sent is neither empty nor null. Verify that the source of your audio is correctly reading and transmitting the file. Test the audio file locally to ensure it plays correctly.
 
 #### 2. **Non-Audio Data Sent**
 - **Error Detail:** "A non-audio file was sent to Deepgram."
-- **Solution:** Confirm that the data format is appropriate. The file should be a supported audio format, such as WAV, MP3, or FLAC.
+- **Solution:** Confirm that the data format is appropriate. Use a supported audio format such as WAV, MP3, or FLAC. You can check this by inspecting the audio file's properties or using a tool to convert the file to a supported format.
 
 #### 3. **Base64 Encoding Issues**
 - **Error Detail:** "The customer sent a base64 encoded audio file."
-- **Solution:** Send raw, unencoded binary data, instead of base64 encoded files. This ensures that the WebSocket API can process the data correctly.
+- **Solution:** Send raw, unencoded binary data instead of base64 encoded files. Ensure your WebSocket client is configured to transmit binary data directly. This ensures that the WebSocket API can process the data correctly.
 
 ### Recommendations
 
-If you are constructing your own WebSocket client and encountering issues, you might consider using one [Deepgram's official SDKs](https://developers.deepgram.com/docs/deepgram-sdks). These SDKs simplifies the WebSocket integration process and helps avoid common pitfalls associated with directly handling binary audio data using WebSockets.
+If you are constructing your own WebSocket client and encountering issues, consider using one of [Deepgram's official SDKs](/docs/deepgram-sdks). These SDKs simplify the WebSocket integration process and help avoid common pitfalls associated with directly handling binary audio data using WebSockets.
 
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our [community for assistance](https://discord.gg/deepgram).
+For advanced features, consider enabling keyterm prompting with Nova 3 for more accurate transcriptions if applicable to your use case.
+
+If issues persist or the system behaviour seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our [community for assistance](https://discord.gg/deepgram).
 
 ### References
-- [Deepgram SDKs](https://developers.deepgram.com/docs/deepgram-sdks)
+- [Deepgram SDKs](/docs/deepgram-sdks)
+- [Troubleshooting WebSocket Data and Net Errors](/troubleshooting-websocket-data-and-net-errors-when-live-streaming-audio)
+- [WebSocket API Reference](/reference/streaming)
+- [Join the Deepgram Community on Discord](https://discord.gg/deepgram)
+- [Deepgram GitHub Discussions](https://github.com/deepgram/deepgram-python-sdk/discussions)

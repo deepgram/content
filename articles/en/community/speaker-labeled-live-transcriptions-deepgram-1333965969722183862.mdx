@@ -2,6 +2,9 @@
 title: "How to Implement Speaker-Labeled Live Transcriptions with Deepgram"
 description: "Learn how to implement speaker-labeled live transcriptions using Deepgram's speech-to-text API."
 summary: "This article guides you through the process of setting up Deepgram's live transcription services with speaker diarization, allowing you to generate real-time transcripts that distinguish between multiple speakers in the audio stream."
+tags: ["transcription", "diarization", "Deepgram API"]
+categories: ["Deepgram", "API Integration"]
+last_updated: 2023-10-18
 ---
 
 <CommunityQuestion>I'm working on a project where I need to transcribe audio from multiple speakers in real-time. How can I use Deepgram's API to generate speaker-labeled live transcriptions?</CommunityQuestion>
@@ -10,13 +13,13 @@ To achieve speaker-labeled transcriptions using Deepgram's live transcription se
 
 ### Overview
 
-Deepgram provides the capability to generate real-time transcriptions with speaker diarization from live audio sources, such as microphones. This is particularly valuable for scenarios like interviews, meetings, or any situation where multiple speakers interact and you need to distinguish between them in the transcript.
+Deepgram provides the capability to generate real-time transcriptions with speaker diarization from live audio sources, such as microphones. This is particularly valuable for scenarios like interviews, meetings, or any situation where multiple speakers interact, and you need to distinguish between them in the transcript.
 
 ### Setting Up Live Transcription with Speaker Diarization
 
 #### Step 1: Sign up and Obtain API Key
 
-- Start by creating a [Deepgram account](https://console.deepgram.com/signup?jump=keys) and acquiring an API key. This key will allow you to authenticate and interact with Deepgram's API.
+- Start by creating a Deepgram account and acquiring an API key. This key will allow you to authenticate and interact with Deepgram's API. Visit the [Deepgram API Authentication Guide](/documentation/getting-started/authentication/#create-an-api-key) for more details.
 
 #### Step 2: Choose Your SDK and Implementation Method
 
@@ -28,33 +31,46 @@ Deepgram supports various programming languages through its SDKs. Choose the SDK
 - [.NET SDK](https://github.com/deepgram/deepgram-dotnet-sdk)
 - [Rust SDK](https://github.com/deepgram/deepgram-rust-sdk)
 
-Choose the SDK that fits your development environment and proceed to set it up using the respective documentation.
+Set up the SDK using the respective documentation.
 
 #### Step 3: Enable Speaker Diarization
 
-Access Deepgram's documentation on [speaker diarization](https://developers.deepgram.com/docs/diarization) to understand the required parameters. Make sure to activate the `diarize` option in your API request to receive speaker-separated transcriptions. The `diarize` parameter should be set to `true`.
+To enable speaker diarization, ensure your API request includes the `diarize` parameter set to `true`. This will allow you to receive transcriptions with speakers identified numerically. Here is an example of how you can configure this option using the JavaScript SDK:
 
-Sample output with labeled speakers looks as follows:
+```javascript
+const { Deepgram } = require('@deepgram/sdk');
+const deepgram = new Deepgram('YOUR_API_KEY');
 
+deepgram.transcription.live({
+  punctuate: true,
+  diarize: true
+})
+  .then(response => {
+    console.log(response);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
 ```
-[Speaker:0] Hello, and thank you for calling premier phone service. Please be aware that this call may be recorded for quality and training purposes.
-[Speaker:0] My name is Beth, and I will be assisting you today. How are you doing?
-[Speaker:1] Not too bad. How are you today?
-[Speaker:0] I'm doing well. Thank you. May I please have your name?
-[Speaker:1] My name is Blake...
-```
 
-Note that currently, the feature labels speakers numerically, i.e., Speaker 0, Speaker 1, etc. Custom speaker labels are not yet supported.
+For detailed code examples on using the Deepgram SDK for live transcription, refer to the [Deepgram SDK documentation](/docs/getting-started-with-live-streaming-audio).
 
 #### Step 4: Use Multichannel for Complex Audio
 
-Besides diarization, Deepgram offers [multichannel transcription](https://developers.deepgram.com/docs/multichannel-vs-diarization) for advanced scenarios where separating audio channels is required.
+Besides diarization, Deepgram offers [multichannel transcription](/docs/multichannel-vs-diarization) for advanced scenarios where separating audio channels is required. This can be particularly useful when the audio input is already organized into distinct channels for each speaker.
+
+### Error Handling
+
+When implementing live transcription, ensure to handle errors that may arise during API requests. This can include network issues, invalid API keys, or unsupported audio formats. The code example above includes basic error handling to catch and log any errors that occur.
 
 ### Conclusion
 
-Leveraging Deepgram's live transcription API with diarization enables you to efficiently distinguish between speakers in real-time. For any challenges encountered during implementation, consult the Deepgram [documentation](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio) or join the [Deepgram Discord Community](https://discord.gg/deepgram) for assistance.
+Leveraging Deepgram's live transcription API with diarization enables you to efficiently distinguish between speakers in real-time. For any challenges encountered during implementation, consult the Deepgram [documentation](/docs/getting-started-with-live-streaming-audio) or join the [Deepgram Discord Community](https://discord.gg/deepgram) for assistance.
 
 ### References
 
-- [Deepgram Speaker Diarization Documentation](https://developers.deepgram.com/docs/diarization)
+- [Deepgram Speaker Diarization Documentation](/docs/diarization)
 - [Deepgram SDKs on GitHub](https://github.com/deepgram)
+- [Deepgram API Reference](/reference)
+- Join the [Deepgram Discord Community](https://discord.gg/deepgram) for support
+- Participate in [GitHub Discussions](https://github.com/deepgram/deepgram-js-sdk/discussions) for community help

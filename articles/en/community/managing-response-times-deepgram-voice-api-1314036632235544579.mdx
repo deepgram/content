@@ -2,32 +2,77 @@
 title: "Managing Response Times for Deepgram Voice API"
 description: "Guide to optimising response times when using Deepgram's Speech-to-Text API."
 summary: "This article provides insights into managing response times when utilising Deepgram's Voice API for speech-to-text transcription, particularly in conversational AI applications. It explores factors influencing transcription speed and strategies to mitigate delays for an optimal user experience."
+tags: ["Deepgram", "Speech-to-Text", "API", "Latency", "Transcription"]
+categories: ["Development", "Troubleshooting"]
+last_updated: "2023-10-10"
 ---
 
 <CommunityQuestion>I'm building a chatbot with Deepgram's Speech-to-Text API, but I'm finding the transcription response times to be quite slow at times, causing my chatbot to feel unresponsive. What can I do to improve the transcription speed and maintain a smooth conversational experience?</CommunityQuestion>
-
 
 When developing a conversational AI platform using Deepgram's Speech-to-Text API, ensuring consistent response times is crucial to maintain the fluidity and effectiveness of interactions. Delays over a few seconds can interrupt the flow of conversation, leading to a suboptimal user experience.
 
 ## Understanding Transcription Speed
 
-Deepgram provides several model options for transcription, including their in-house models such as *nova-2*, which are optimized for speed and scalability. In contrast, the Whisper models tend to be slower due to their architectural design, which may contribute to longer transcription times.
+Deepgram offers several model options for transcription, including their latest *Nova 3* model, which is optimised for speed and accuracy. Using the latest model can significantly improve transcription times compared to older or non-Deepgram models.
 
 ### Predicting and Preventing Delays
 
-While specific guarantees on response times (Service-Level Agreements) are not available, there are strategies you can employ to potentially mitigate delay issues:
+While specific guarantees on response times (Service-Level Agreements) are not available, there are strategies you can employ to mitigate delay issues:
 
-- **Model Selection:** Opt for Deepgram's proprietary models like *nova-2* for faster and more reliable transcription.
-- **Optimize Audio Files:** Consider splitting larger audio files into smaller segments; this can sometimes reduce processing delays.
-- **Parameter Tuning:** Carefully adjust the parameters in your API requests to match your needs without overloading the system.
+- **Model Selection:** Use Deepgram's *Nova 3* model for faster and more reliable transcription.
+  
+  ```shell
+  curl -X POST \
+    -H "Authorization: Token YOUR_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "model": "nova3"
+    }' \
+    "https://api.deepgram.com/v1/listen"
+  ```
 
-### API Timeout Considerations
+- **Optimise Audio Files:** Consider splitting larger audio files into smaller segments to reduce processing delays.
 
-Be aware of the system's default timeout settings. For example, Deepgram imposes a 10-minute timeout on all transcription requests, meaning that any request that takes longer will be terminated with a 504 error.
+- **Parameter Tuning:** Carefully adjust parameters in your API requests. For instance, using the `tier` parameter can help balance between speed and cost. 
+
+  ```shell
+  curl -X POST \
+    -H "Authorization: Token YOUR_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "tier": "enhanced"
+    }' \
+    "https://api.deepgram.com/v1/listen"
+  ```
+
+### Error Handling and Timeout Considerations
+
+Be aware of the system's default timeout settings. For example, Deepgram imposes a 10-minute timeout on all transcription requests. If exceeded, requests are terminated with a 504 error.
+
+```python
+import requests
+
+try:
+    response = requests.post(
+        "https://api.deepgram.com/v1/listen",
+        headers={"Authorization": "Token YOUR_API_KEY"},
+        json={"url": "your-audio-url"},
+        timeout=600
+    )
+    response.raise_for_status()
+except requests.exceptions.Timeout:
+    print("The request timed out. Try reducing the audio length or checking your network connection.")
+except requests.exceptions.HTTPError as err:
+    if err.response.status_code == 504:
+        print("Error 504: Gateway Timeout. The request took too long to process.")
+    else:
+        print(f"HTTP error occurred: {err}")
+
+```
 
 ## Troubleshooting and Support
 
-In case of persistent delays or unexpected system behavior, gather as much contextual information about the problem as possible, such as:
+In case of persistent delays or unexpected system behaviour, gather as much contextual information about the problem as possible, such as:
 
 - `request_id` for your API transactions.
 - The full API request URL with parameters.
@@ -37,9 +82,11 @@ With this data, reach out to your Deepgram support representative or visit the c
 
 ## Conclusion
 
-By selecting the appropriate model and optimizing your requests, you can potentially achieve faster response times conducive to live conversation workflows. Additionally, staying in tune with Deepgram's community channels provides a resource for troubleshooting and improving your integration.
+By selecting the appropriate model and optimising your requests, you can achieve faster response times conducive to live conversation workflows. Additionally, staying in tune with Deepgram's community channels provides a resource for troubleshooting and improving your integration.
 
 ## References
 
-- [Deepgram API Documentation](https://developers.deepgram.com/docs/)
+- [Deepgram API Documentation](/docs/)
+- [Model Selection Guide](/docs/models/)
+- [Parameter Tuning](/docs/api-parameters/)
 - [Join Deepgram Community on Discord](https://discord.gg/deepgram)

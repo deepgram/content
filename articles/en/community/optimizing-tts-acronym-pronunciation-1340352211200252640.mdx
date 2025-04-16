@@ -1,16 +1,21 @@
 ---
-title: "Optimizing TTS for Accurate Acronym Pronunciation"
-description: "Tips for optimising acronym pronunciation in Deepgram's text-to-speech API."
+title: "Optimising TTS for Accurate Acronym Pronunciation"
+description: "Techniques for managing acronym pronunciation in Deepgram's text-to-speech API."
 summary: "Accurately pronouncing acronyms in text-to-speech applications can be challenging. This guide explains techniques for managing acronym pronunciation when using Deepgram's TTS API, including spelling out letters and using special formatting."
+tags: ["text-to-speech", "acronyms", "Deepgram", "API"]
+categories: ["Community Guides"]
+last_updated: 2023-10-14
 ---
 
 <CommunityQuestion>I'm building a text-to-speech application that needs to handle acronyms accurately. How can I ensure that acronyms like 'BBC' or 'HMRC' are pronounced correctly using Deepgram's TTS API?</CommunityQuestion>
 
-In text-to-speech (TTS) applications, accurately pronouncing acronyms can be challenging. This guide provides insights into managing acronym pronunciation effectively using Deepgram's TTS API.
+## Problem Statement
+
+Accurately pronouncing acronyms in text-to-speech (TTS) applications can be challenging. This guide provides insights into managing acronym pronunciation effectively using Deepgram's TTS API.
 
 ## Understanding Acronym Pronunciation
 
-Acronyms, such as "ABC" or "USP," can sometimes be articulated as words (e.g., "abse" instead of "A-B-C") by TTS systems. This often occurs due to the system interpreting the letters as a unit rather than individual characters. 
+Acronyms, such as "ABC" or "USP," can sometimes be articulated as words (e.g., "abse" instead of "A-B-C") by TTS systems. This often occurs due to the system interpreting the letters as a unit rather than individual characters.
 
 ### Deepgram's Approach to Acronym Pronunciation
 
@@ -32,31 +37,53 @@ In most cases, Deepgram's Aura model will attempt to determine whether an acrony
 
 ### Implementation Examples
 
+#### Acronyms Pronounced as Letters
+
 For acronyms like "NBA" that should be pronounced as individual letters:
 
-```json
-{
-  "text": "I love watching En Beee Eigh Basketball.",
-  "model": "aura-asteria-en"
-}
+```bash
+curl --request POST \
+     --header "Content-Type: application/json" \
+     --header "Authorization: Token YOUR_API_KEY" \
+     --output nba.mp3 \
+     --data '{"text":"I love watching En Beee Eigh Basketball."}' \
+     --url "https://api.deepgram.com/v1/speak?model=aura-asteria-en"
 ```
 
-For acronyms like "NASA" that are typically pronounced as words, you can use the standard format, as Deepgram will handle common acronyms appropriately:
+#### Acronyms Pronounced as Words
 
-```json
-{
-  "text": "NASA launched a new satellite yesterday.",
-  "model": "aura-asteria-en"
-}
+For acronyms like "NASA" that are typically pronounced as words:
+
+```bash
+curl --request POST \
+     --header "Content-Type: application/json" \
+     --header "Authorization: Token YOUR_API_KEY" \
+     --output nasa.mp3 \
+     --data '{"text":"NASA launched a new satellite yesterday."}' \
+     --url "https://api.deepgram.com/v1/speak?model=aura-asteria-en"
 ```
 
-## Testing and Optimization
+### Error Handling Example
 
-Always test how your acronyms are pronounced in context:
+Always include error handling:
 
-1. **Context Matters**: The same acronym might need different treatment in different contexts
-2. **Common vs. Uncommon**: Common acronyms are often handled correctly by default
-3. **Consistency**: Maintain consistent pronunciation of acronyms throughout your application
+```bash
+response=$(curl --write-out "%{http_code}" --silent --output /dev/null --request POST \
+     --header "Content-Type: application/json" \
+     --header "Authorization: Token YOUR_API_KEY" \
+     --data '{"text":"I love watching En Beee Eigh Basketball."}' \
+     --url "https://api.deepgram.com/v1/speak?model=aura-asteria-en")
+
+if [ "$response" -ne 200 ]; then
+  echo "Error: Unable to process the request. HTTP Status: $response"
+fi
+```
+
+## Testing and Optimisation
+
+1. **Context Matters**: The same acronym might need different treatment in different contexts.
+2. **Common vs. Uncommon**: Common acronyms are often handled correctly by default.
+3. **Consistency**: Maintain consistent pronunciation of acronyms throughout your application.
 
 ## Conclusion
 
@@ -66,5 +93,6 @@ For persistent issues or inconsistencies, engage with the community via [Discord
 
 ## References
 
-- [Deepgram TTS API Documentation](https://developers.deepgram.com/docs/tts-rest)
-- [Deepgram TTS Prompting Guide](https://developers.deepgram.com/docs/text-to-speech-prompting)
+- [Deepgram TTS API Documentation](/docs/tts-rest)
+- [Deepgram TTS Prompting Guide](/docs/text-to-speech-prompting)
+- [Deepgram Community Support](https://github.com/deepgram/deepgram-js-sdk/discussions)

@@ -1,40 +1,60 @@
 ---
-title: "Resolving Discrepancies in Finalized Transcripts with Smart Formatting"
-description: "Resolving inconsistencies between interim and finalised transcripts with Deepgram's Speech-to-Text API."
-summary: "This article explains why discrepancies can occur between interim and finalised transcripts when using certain configuration parameters with Deepgram's Speech-to-Text API. It provides guidance on resolving these inconsistencies through proper parameter usage."
+title: "Resolving Discrepancies in Finalised Transcripts with Smart Formatting"
+description: "Understand and resolve inconsistencies between interim and finalised transcripts using Deepgram's Speech-to-Text API parameters."
+summary: "Learn how to address discrepancies between interim and finalised transcripts in Deepgram's Speech-to-Text API by managing parameters like `numerals` and `smart_format`."
+tags: ["Deepgram", "Speech-to-Text", "Transcription", "API", "Smart Formatting"]
+categories: ["Troubleshooting", "API Usage"]
+last_updated: 2023-10-16
 ---
 
 <CommunityQuestion>I've been using the Deepgram Speech-to-Text API, but sometimes the finalised transcripts differ from the interim ones, even though the interim transcripts seemed accurate. What could be causing this discrepancy?</CommunityQuestion>
 
-When using Deepgram's Speech-to-Text API, some users may encounter discrepancies in the finalized transcripts, even when previous interim transcripts appear accurate.
-
 ## Understanding the Issue
 
-A situation was encountered where a finalized transcript returned an empty or incorrect result, whereas the interim transcript appeared accurate. This issue was linked to the configuration parameters used during the API request. Specifically, using both `numerals` and `smart_format` parameters simultaneously can lead to such inconsistencies.
+When using Deepgram's Speech-to-Text API, discrepancies may occur between interim and finalised transcripts. This often stems from specific configuration parameters used during API requests. Notably, using both `numerals` and `smart_format` parameters can lead to conflicts, resulting in empty or incorrect finalised transcripts.
 
 ### Parameters Overview
 
-- **`numerals` Parameter:** This parameter formats numbers in the transcript.
-- **`smart_format` Parameter:** Smart Formatting automatically formats numbers, dates, times, and more within the transcript for certain language models.
+- **`numerals` Parameter:** Converts spoken numbers into digit format (e.g., "twenty" to "20").
+- **`smart_format` Parameter:** Automatically formats numbers, dates, times, and more, optimising for specific language models.
 
-Both parameters attempt to handle number formatting, which can lead to conflicts if both are enabled. To resolve this issue, you should choose either `numerals` or `smart_format`, but not both, when dealing with number formatting.
+Using both parameters may cause conflicts, as they attempt to format numbers simultaneously. It is advisable to use either `numerals` or `smart_format`, but not both, to avoid discrepancies.
 
 ## Solution
 
-Review and adjust the parameters used in your API request configurations:
+To resolve these inconsistencies, review and adjust your API request parameters:
 
-1. **Disable One of the Parameters:** If you're using `smart_format` with EN models, consider disabling `numerals` as Smart Formatting should handle number formatting adequately.
+1. **Disable One of the Parameters:** If you're using `smart_format`, especially with English models, consider disabling `numerals`. Smart Formatting should adequately handle number formatting.
 
-2. **Request Adjustments:** Ensure the parameters you use are appropriate for your needed outcome and compatible with one another.
+   ```shell
+   curl -X POST "https://api.deepgram.com/v1/listen" \
+   -H "Authorization: Token YOUR_API_KEY" \
+   -F "file=@/path/to/audio.wav" \
+   -F "smart_format=true"
+   ```
 
-## Additional Support
+2. **Ensure Compatibility:** Verify that the parameters chosen align with your desired outcomes and are compatible with one another. Review Deepgram's [API documentation](/docs/api-reference) for parameter specifics.
 
-If issues persist or the system behaves inconsistently even after adjusting parameters, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Community](https://discord.gg/deepgram).
+## Error Handling
+
+If discrepancies persist, consider the following error handling strategies:
+
+- Check for error messages in API responses indicating parameter conflicts.
+- Use logging to track when and where discrepancies occur in the transcription process.
+- Experiment with different parameter combinations in a controlled environment to identify the optimal setup.
+
+## Community Support
+
+For persistent issues or further assistance, consult the Deepgram community resources:
+
+- [Deepgram Community on Discord](../community) for real-time support.
+- [GitHub Discussions](https://github.com/deepgram/deepgram-js-sdk/discussions) for community-driven solutions.
 
 ## Conclusion
 
-Utilizing either `smart_format` or individual formatting parameters like `numerals` can prevent discrepancies in your Deepgram transcription results. Refer to the [Smart Formatting documentation](https://developers.deepgram.com/docs/smart-format) for a more comprehensive understanding of what Smart Formatting offers.
+Choosing either `smart_format` or individual formatting parameters like `numerals` can help prevent transcription discrepancies in your Deepgram results. For more details, refer to the [Smart Formatting documentation](/docs/smart-format).
 
 ## References
-- [Smart Formatting Documentation](https://developers.deepgram.com/docs/smart-format)
-- [Deepgram Community](https://discord.gg/deepgram)
+- [Deepgram API Reference](/docs/api-reference)
+- [Smart Formatting Documentation](/docs/smart-format)
+- [Deepgram Community](../community)

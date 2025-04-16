@@ -1,7 +1,9 @@
 ---
 title: "Understanding Latency in Deepgram's Speech-to-Text API Responses"
 description: "Learn about factors influencing latency in Deepgram's Speech-to-Text API and best practices for reducing delays."
-summary: "This article explores the common causes of increased latency when using Deepgram's Speech-to-Text API, such as network issues, audio file size and quality, concurrency limits, and API configurations. It also provides practical tips for optimising performance and minimising response times."
+summary: "This article explores the common causes of increased latency when using Deepgram's Speech-to-Text API, such as network issues, audio file size and quality, concurrency limits, and API configurations. It also provides practical tips for optimising performance and minimizing response times."
+tags: ["latency", "performance", "API", "Deepgram"]
+last_updated: 2023-10-01
 ---
 
 <CommunityQuestion>I've been using Deepgram's Speech-to-Text API, but sometimes the transcription results take a while to come through. What could be causing this delay, and how can I optimise for better performance?</CommunityQuestion>
@@ -26,7 +28,38 @@ When leveraging Deepgram's Speech-to-Text API, users may occasionally experience
 
 - **Monitor Network Connections**: Use tools to assess and stabilize your network connection to the API, taking into consideration time zone differences.
 
+```shell
+# Use cURL to check network latency to Deepgram's API
+curl -sSf -w "latency: %{time_connect}\n" -so /dev/null https://api.deepgram.com
+# Output: latency: {number in decimal seconds}
+```
+
 - **Configuration Review**: Review your API configuration options to ensure they align with your use case, enabling only necessary features.
+
+## Error Handling
+
+To handle latency-related errors, monitor for specific error codes such as `429: Too Many Requests`, which indicates concurrency limit issues.
+
+```python
+import requests
+
+url = "https://api.deepgram.com/v1/listen"
+headers = {"Authorization": "Token YOUR_API_KEY"}
+data = {"url": "https://example.com/audio.wav"}
+
+try:
+    response = requests.post(url, headers=headers, json=data)
+    response.raise_for_status()
+except requests.exceptions.HTTPError as err:
+    if response.status_code == 429:
+        print("Error: Too Many Requests - Consider optimizing concurrency.")
+    else:
+        print(f"HTTP error occurred: {err}")
+except Exception as err:
+    print(f"Other error occurred: {err}")
+else:
+    print("Request successful")
+```
 
 ## Troubleshooting Latency Issues
 
@@ -37,6 +70,8 @@ When leveraging Deepgram's Speech-to-Text API, users may occasionally experience
 Understanding and addressing these factors can help you optimize your use of Deepgram's Speech-to-Text API, reducing latency and improving overall performance. For ongoing support, don't hesitate to reach out to our community platforms.
 
 **References:**
-- [Getting Started with Pre-Recorded Audio](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)  
-- [Deepgram Discord Community](https://discord.gg/deepgram)  
+- [Measuring Streaming Latency](/docs/measuring-streaming-latency)
+- [Working With Concurrency Rate Limits](/docs/working-with-concurrency-rate-limits)
+- [Getting Started with Pre-Recorded Audio](/docs/getting-started-with-pre-recorded-audio)
+- [Deepgram Discord Community](https://discord.gg/deepgram)
 - [Deepgram GitHub Discussions](https://github.com/orgs/deepgram/discussions)

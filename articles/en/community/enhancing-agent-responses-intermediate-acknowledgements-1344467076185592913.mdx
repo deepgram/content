@@ -2,21 +2,28 @@
 title: "Enhancing Deepgram Agent Responses with Intermediate Acknowledgements"
 description: "Enhance Deepgram agent responses with intermediate acknowledgements for improved conversation flow."
 summary: "This article discusses a solution for improving the conversational flow of Deepgram voice agents by providing an initial acknowledgement after receiving a user command, followed by a confirmation once the backend processing is complete."
+tags: ["Deepgram", "Voice Agent", "Conversational AI"]
+categories: ["API Usage", "Best Practices"]
+last_updated: 2023-10-01
 ---
 
 <CommunityQuestion>I'm developing a voice interface for my application using Deepgram's API. How can I make the conversational flow feel more natural and engaging while processing user commands that might take some time?</CommunityQuestion>
 
-In conversational AI, providing an interactive and engaging user experience involves not only understanding user commands but also managing response timing effectively. Often, when users input a command that triggers a processing task, they might be left wondering if their command was heard while the processing takes place.
+## Problem Statement
+
+Users may experience uncertainty during processing delays in voice interactions, leading to a less engaging conversational experience. Addressing this challenge is crucial for improving user satisfaction and interaction flow.
 
 ## Enhancing User Engagement
 
-A suggested approach to enhance Deepgram's voice agent's capabilities is by mimicking more natural human-like conversational patterns through a two-part response process when handling function callbacks.
+In conversational AI, providing an interactive and engaging user experience involves not only understanding user commands but also managing response timing effectively. Often, when users input a command that triggers a processing task, they might be left wondering if their command was heard while the processing takes place.
 
 ### Proposed Solution
 
+To enhance Deepgram's voice agent's capabilities, consider mimicking more natural human-like conversational patterns through a two-part response process when handling function callbacks.
+
 **1. Initial Acknowledgement:**
-   - After receiving a user command such as "Record my weight of 80 kilos," the agent should first provide an immediate acknowledgment with a response like "Sure, just give me a moment."
-   
+   - After receiving a user command, such as "Record my weight of 80 kilos," the agent should first provide an immediate acknowledgment with a response like "Sure, just give me a moment."
+
 **2. Completion Confirmation:**
    - Once the backend processing (e.g., storing the weight) is complete, the agent should confirm the task completion with a response like "Okay, your weight of 80 kilos has been recorded."
 
@@ -24,7 +31,7 @@ This approach helps reduce the uncertainty users may feel during short processin
 
 ## Implementation with InjectAgentMessage
 
-To implement this behavior, Deepgram provides the `InjectAgentMessage` feature, which allows developers to inject messages from the agent at precise moments during the interaction.
+To implement this behaviour, Deepgram provides the `InjectAgentMessage` feature, which allows developers to inject messages from the agent at precise moments during the interaction.
 
 ### Steps to Implement:
 
@@ -34,16 +41,46 @@ To implement this behavior, Deepgram provides the `InjectAgentMessage` feature, 
 - **Post-Processing Message Injection:**
   Once the function callback completes its process (e.g., database update), use another instance of `InjectAgentMessage` to confirm completion to the user.
 
-By configuring your Deepgram agent using these steps, you can provide a more natural and engaging experience.
+### Example Code
 
-For more detailed information on how to implement this feature, refer to Deepgram's documentation on [InjectAgentMessage](https://developers.deepgram.com/docs/voice-agent-inject-agent-message).
+```javascript
+const WebSocket = require('ws');
+
+const ws = new WebSocket('wss://agent.deepgram.com/agent', {
+  headers: {
+    Authorization: 'Token YOUR_API_KEY'
+  }
+});
+
+ws.on('open', function open() {
+  // Initial Acknowledgement
+  ws.send(JSON.stringify({
+    type: 'InjectAgentMessage',
+    message: 'Sure, just give me a moment.'
+  }));
+
+  // Simulate backend processing
+  setTimeout(() => {
+    // Post-Processing Confirmation
+    ws.send(JSON.stringify({
+      type: 'InjectAgentMessage',
+      message: 'Okay, your weight of 80 kilos has been recorded.'
+    }));
+  }, 3000); // Simulate a 3-second processing delay
+});
+
+ws.on('error', function error(err) {
+  console.error('WebSocket error observed:', err);
+});
+```
+
+Ensure to test this implementation with the current Deepgram API version for accuracy and include error handling to manage potential connection issues effectively.
 
 ## Conclusion
 
 Implementing a double-response process using `InjectAgentMessage` can significantly improve how your voice agent communicates during command processing. This technique ensures users feel acknowledged while their commands are being processed, thus mirroring more human-like interactions.
 
 ## References
-- [Deepgram Voice Agent Documentation](https://developers.deepgram.com/docs/voice-agent)
-- [InjectAgentMessage Documentation](https://developers.deepgram.com/docs/voice-agent-inject-agent-message)
-
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: https://discord.gg/deepgram
+- [Deepgram Voice Agent Documentation](/docs/voice-agent)
+- [InjectAgentMessage Documentation](/docs/voice-agent-inject-agent-message)
+- Join the community on [Discord](https://discord.gg/deepgram) or participate in [GitHub Discussions](https://github.com/deepgram/deepgram-js/discussions) for support and feedback.

@@ -8,14 +8,17 @@ alwaysApply: false
 
 ## ONLY Instructions
 - ONLY apply these rules to markdown files inside `articles/en/commumity`
-- ONLY use H1 (#) for the main article title
-- ONLY include code examples that have been tested with the current API version
-- ONLY reference official Deepgram documentation or verified community resources
-- ONLY use relative links for internal documentation references
+- ONLY include very small code examples exactly as they are in the docs
+- ONLY use frontmatter for the article's title
+- ONLY reference official Deepgram documentation
+- ONLY use absolute URLs for documentation references
 - ONLY include API keys in example code as placeholders (e.g., `YOUR_API_KEY`)
 
 ## ALWAYS Instructions
-- ALWAYS add frontmatter when missing, based on the content - including a `title`, `summary` and `description`
+- ALWAYS add frontmatter when missing, based on the content - including a `title`, `summary` and `description`.
+- ALWAYS add frontmatter tags in this format: `tags: ["Errors", "Troubleshooting"]`
+- ALWAYS add frontmatter categories in this format: `categories: ["API"]`
+- ALWAYS add frontmatter dates in ISO format.
 - ALWAYS compare articles for accuracy against known Deepgram API Specs (openapi.yml and asyncapi.yml)
 - ALWAYS check articles for accuracy against similar content on https://developers.deepgram.com
 - ALWAYS include a clear problem statement at the beginning of troubleshooting articles
@@ -32,6 +35,7 @@ alwaysApply: false
 - ALWAYS prefer latest features (keyterm prompting > keywords - but it requires Nova 3)
 
 ## NEVER Instructions
+- NEVER use Deepgram or a product name as an article tag.
 - NEVER include actual API keys or sensitive credentials
 - NEVER use deprecated API endpoints or methods
 - NEVER publish untested code examples

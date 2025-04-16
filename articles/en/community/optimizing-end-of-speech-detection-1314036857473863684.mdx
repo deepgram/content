@@ -1,50 +1,82 @@
 ---
-title: "Optimizing End of Speech Detection in Noisy Environments"
+title: "Optimising End of Speech Detection in Noisy Environments"
 description: "Strategies for improving Deepgram's end of speech detection in noisy environments."
 summary: "This article provides guidance on configuring Deepgram's speech-to-text API to enhance end of speech detection accuracy when working with audio containing significant background noise, such as phone call recordings."
+tags: [Deepgram, Speech Recognition, API, Noisy Environments, End of Speech Detection]
+categories: [Speech-to-Text, API Integration]
+last_updated: 2023-10-15
 ---
 
 <CommunityQuestion>I'm working on a project that involves transcribing phone calls with a lot of background noise. The standard settings on Deepgram's API aren't handling the noisy audio very well. Could anyone offer some tips on optimising the end of speech detection for these kinds of challenging environments?</CommunityQuestion>
 
-In projects involving speech recognition, particularly in scenarios where an AI assistant analyzes phone call audio, optimizing end of speech detection becomes pivotal. This can be challenging, especially in environments with significant background noise. This article walks you through strategies to improve end of speech detection using Deepgram's API, optimizing configurations for more reliable results.
+### Problem Statement
+
+Detecting the end of speech in audio with substantial background noise can be challenging. This is particularly true in scenarios involving phone calls, where background noise might interfere with the accuracy of speech recognition. This article provides strategies to enhance end of speech detection using Deepgram's API by optimising configurations and selecting the appropriate models.
 
 ### Configuring Deepgram API for Noisy Environments
 
-When working with audio that may contain background noise, the default parameters might not achieve the best results for detecting the end of speech. Adjusting parameters such as `endpointing` and `utterance_end_ms` within the Deepgram API can aid in fine-tuning speech detection in these conditions:
+When working with audio that contains background noise, fine-tuning parameters such as `endpointing` and `utterance_end_ms` within the Deepgram API can significantly improve detection accuracy:
 
-- **`endpointing` Parameter**: This setting controls the sensitivity of end of speech detection. Lower values make the system more sensitive to detecting the end of speech by identifying shorter pauses. You may need to decrease this value to ensure that the model doesn't miss speech endings in a noisier environment.
+- **`endpointing` Parameter**: Controls the sensitivity of end of speech detection. Lower values increase sensitivity by detecting shorter pauses. Adjust this to prevent missing speech endings in noisy environments.
+  
+- **`utterance_end_ms` Parameter**: Determines the duration the system waits before considering speech ended. Increasing this value helps avoid interpreting pauses as speech end in intermittent noise scenarios.
 
-- **`utterance_end_ms` Parameter**: This determines how long the system waits before considering speech ended. By increasing this value, the system is less likely to interpret pauses as the end of the speech, which can be beneficial in speech scenarios with intermittent noise.
+```json
+{
+  "encoding": "mulaw",
+  "sample_rate": "8000",
+  "model": "nova-3-phonecall",
+  "smart_format": true,
+  "interim_results": true,
+  "endpointing": 150,
+  "utterance_end_ms": 1200
+}
+```
 
-```markdown
-- Sample Configuration:
+**Error Handling Example**:
+Ensure to incorporate error handling in production environments:
 
-  ```json
-  {
-    "encoding": "mulaw",
-    "sample_rate": "8000",
-    "model": "nova-2",
-    "smart_format": true,
-    "interim_results": true,
-    "endpointing": 150,
-    "utterance_end_ms": 1200
-  }
-  ```
+```python
+import requests
 
-**Testing and Optimization**: Adjust and test these parameters iteratively. Start with the baseline settings and progressively tune them while testing with actual noisy audio data. It's crucial to find the right balance that captures the end of speech without excessive latency or false detections from noise.
+def transcribe_audio(audio_url, api_key):
+    try:
+        response = requests.post(
+            'https://api.deepgram.com/v1/listen',
+            headers={'Authorization': f'Bearer {api_key}'},
+            json={
+                "url": audio_url,
+                "encoding": "mulaw",
+                "sample_rate": 8000,
+                "model": "nova-3-phonecall",
+                "smart_format": True,
+                "interim_results": True,
+                "endpointing": 150,
+                "utterance_end_ms": 1200
+            }
+        )
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+
+# Replace 'YOUR_AUDIO_URL' and 'YOUR_API_KEY' with actual values
+transcription_result = transcribe_audio('YOUR_AUDIO_URL', 'YOUR_API_KEY')
+```
 
 ### Selecting the Right Model
 
-Different models may perform differently under varying conditions. Considering an environment with phone call audio, potentially using a model trained specifically for this type of data can yield improvements. Deepgram's `nova-2-phonecall` model might provide enhancements in terms of performance as it's optimized for this specific context.
+Choosing the correct model can enhance performance under specific conditions. For phone call audio, the `nova-3-phonecall` model is optimised for this context, improving accuracy in noisy environments.
 
-You can [find more about models and their contexts here](https://developers.deepgram.com/docs/models-languages-overview#nova-2).
+For more information on models, see [Deepgram Models & Languages Overview](/docs/models-languages-overview#nova-3).
 
 ### Conclusion
 
-Adjusting speech detection sensitivity in the presence of noise can greatly enhance the responsiveness and accuracy of AI assistants in phone call environments. By carefully modifying the `endpointing` and `utterance_end_ms` parameters and selecting the appropriate model for the situation, users can optimize the performance of their applications. Continuous testing with real-world data remains critical to identify the ideal settings.
+Adjusting parameters such as `endpointing` and `utterance_end_ms`, along with selecting the appropriate model, can significantly improve the accuracy of speech detection in noisy environments. Regular testing with real-world data is essential to fine-tune these settings effectively.
 
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Community](https://discord.gg/deepgram).
+For further assistance, join our [Deepgram Community](https://discord.gg/deepgram) or consult with your Deepgram support representative.
 
 ### References
-- [Deepgram Models & Languages Overview](https://developers.deepgram.com/docs/models-languages-overview#nova-2)
-- [Deepgram Pre-recorded Audio API Documentation](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)
+- [Deepgram Models & Languages Overview](/docs/models-languages-overview#nova-3)
+- [Deepgram Pre-recorded Audio API Documentation](/docs/getting-started-with-pre-recorded-audio)

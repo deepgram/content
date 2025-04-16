@@ -4,6 +4,49 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
+// Load .env file into process.env
+function loadEnv() {
+    try {
+        const envPath = path.resolve(process.cwd(), '.env');
+        if (fs.existsSync(envPath)) {
+            const envContent = fs.readFileSync(envPath, 'utf8');
+            const envLines = envContent.split('\n');
+            
+            for (const line of envLines) {
+                const trimmedLine = line.trim();
+                // Skip empty lines and comments
+                if (trimmedLine === '' || trimmedLine.startsWith('#')) {
+                    continue;
+                }
+                
+                // Split by the first equals sign
+                const equalIndex = trimmedLine.indexOf('=');
+                if (equalIndex > 0) {
+                    const key = trimmedLine.substring(0, equalIndex).trim();
+                    let value = trimmedLine.substring(equalIndex + 1).trim();
+                    
+                    // Remove quotes if present
+                    if ((value.startsWith('"') && value.endsWith('"')) || 
+                        (value.startsWith("'") && value.endsWith("'"))) {
+                        value = value.substring(1, value.length - 1);
+                    }
+                    
+                    // Only set if not already defined in process.env
+                    if (!process.env[key]) {
+                        process.env[key] = value;
+                    }
+                }
+            }
+            console.log('Loaded environment variables from .env file');
+        }
+    } catch (error) {
+        console.error('Error loading .env file:', error.message);
+    }
+}
+
+// Load environment variables from .env
+loadEnv();
+
 // Colours for logging
 const colours = {
     reset: '\x1b[0m',

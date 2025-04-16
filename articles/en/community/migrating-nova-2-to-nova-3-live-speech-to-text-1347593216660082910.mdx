@@ -1,7 +1,11 @@
 ---
 title: "Migrating from Nova-2 to Nova-3 for Live Speech-to-Text with Deepgram SDK"
+subtitle: "A guide to transitioning from Nova-2 to Nova-3, focusing on keyterm usage and enhanced features."
 description: "Guide to migrating from Nova-2 to Nova-3 language model for live speech-to-text with Deepgram SDK."
 summary: "This article outlines the major differences between Deepgram's Nova-2 and Nova-3 language models, focusing on the transition from keywords to keyterms. It provides guidance and examples for adapting to the new Nova-3 syntax when making live speech-to-text requests with the Deepgram SDK."
+tags: ["Deepgram", "Nova-3", "live speech-to-text", "SDK"]
+categories: ["Migration", "Deepgram SDK"]
+last_updated: "2023-10-05"
 ---
 
 <CommunityQuestion>I've been using the Deepgram Nova-2 model for live speech-to-text in my application, but I need to migrate to Nova-3. What are the key differences I should be aware of when making this transition?</CommunityQuestion>
@@ -14,12 +18,12 @@ When migrating from the Nova-2 to the Nova-3 language model for live speech-to-t
 
 The most significant change is the transition from keywords to keyterms:
 
-- **Nova-2 uses Keywords**: The older model uses the `keywords` parameter with the syntax `keyword:intensifier`
-- **Nova-3 uses Keyterms**: The newer model uses the `keyterm` parameter with a simplified syntax
+- **Nova-2 uses Keywords**: The older model uses the `keywords` parameter with the syntax `keyword:intensifier`.
+- **Nova-3 uses Keyterms**: The newer model uses the `keyterm` parameter with a simplified syntax.
 
 Example of Nova-3 keyterm usage:
 
-```curl
+```shell
 curl \
   --request POST \
   --header 'Authorization: Token YOUR_DEEPGRAM_API_KEY' \
@@ -34,7 +38,7 @@ Nova-3 introduces support for multilingual codeswitching, which allows the model
 
 ### 3. Enhanced Accuracy
 
-Nova-3 generally offers improved transcription accuracy and performance across various use cases, particularly for non-English languages and specialized domains.
+Nova-3 generally offers improved transcription accuracy and performance across various use cases, particularly for non-English languages and specialised domains.
 
 ## Updating Your API Requests
 
@@ -56,16 +60,16 @@ When migrating from Nova-2 to Nova-3, make the following changes to your API req
    keyterm=example&keyterm=test
    ```
 
-3. Remove any intensifier values (the numbers after colons in keywords)
+3. Remove any intensifier values (the numbers after colons in keywords).
 
 ## SDK Implementation Example
 
-Here's an example of how to implement Nova-3 with the JavaScript SDK:
+Here's an example of how to implement Nova-3 with the JavaScript SDK, including improved error handling:
 
 ```javascript
 import { createClient, LiveTranscriptionEvents } from '@deepgram/sdk';
 
-const deepgram = createClient(YOUR_DEEPGRAM_API_KEY);
+const deepgram = createClient('YOUR_DEEPGRAM_API_KEY');
 
 // Nova-3 configuration
 const options = {
@@ -75,7 +79,6 @@ const options = {
   interim_results: true,
   endpointing: 300,
   utterance_end_ms: 1000,
-  // Use keyterm instead of keywords
   keyterm: ['example', 'test']
 };
 
@@ -86,11 +89,20 @@ const connection = deepgram.listen.live(options);
 connection.addListener(LiveTranscriptionEvents.TRANSCRIPT_RECEIVED, (data) => {
   console.log(data);
 });
+
+// Error handling
+connection.addListener('error', (error) => {
+  console.error('Error in transcription:', error.message);
+  // Additional error handling logic can be implemented here
+});
 ```
 
 ## Additional Considerations
 
-1. **Testing**: Always test your implementation thoroughly after migration, as there may be subtle differences in the transcription output.
+1. **Testing**: Always test your implementation thoroughly after migration. Focus on:
+   - Transcription accuracy
+   - Handling of multilingual inputs
+   - Performance under different audio conditions
 
 2. **Language Support**: Verify the languages you need are supported by Nova-3.
 
@@ -98,7 +110,9 @@ connection.addListener(LiveTranscriptionEvents.TRANSCRIPT_RECEIVED, (data) => {
 
 ## References
 
-- [Deepgram Models Overview](https://developers.deepgram.com/docs/models-languages-overview)
-- [Keyterm Documentation](https://developers.deepgram.com/docs/keyterm)
-- [Legacy Keywords Documentation](https://developers.deepgram.com/docs/keywords)
-- [Deepgram API Documentation](https://developers.deepgram.com/api-reference/)
+- [Deepgram Models Overview](../docs/models-languages-overview)
+- [Keyterm Documentation](../docs/keyterm)
+- [Legacy Keywords Documentation](../docs/keywords)
+- [Deepgram API Documentation](../api-reference/)
+
+For further assistance, join the [Deepgram Community on Discord](https://discord.com/invite/deepgram) or engage in [GitHub Discussions](https://github.com/deepgram#discussions).

@@ -2,21 +2,24 @@
 title: "Understanding Deepgram Rate Limits and How to Manage Them"
 description: "Learn about Deepgram's rate limits and how to effectively manage them for optimal API performance."
 summary: "This article explains Deepgram's rate limits, which are in place to ensure fair resource usage across all users. It discusses how to assess your API usage, monitor request patterns, and implement strategies to manage concurrency and avoid hitting the rate limits."
+tags: [Deepgram, API, Rate Limits, Concurrency, HTTP 429]
+categories: [API Management, Troubleshooting]
+last_updated: 2023-10-15
 ---
 
 <CommunityQuestion>I'm developing an app that relies heavily on Deepgram's speech-to-text API, but I've been facing frequent HTTP 429 errors. What's causing this, and how can I manage the rate limits effectively?</CommunityQuestion>
 
-When utilizing Deepgram's API services, it's essential to understand how rate limits may impact your application performance, especially if you're experiencing HHTP 429 errors, which indicate that you've reached the concurrency limits of your plan.
+When utilising Deepgram's API services, understanding rate limits is crucial, especially if you're experiencing HTTP 429 errors, which indicate that you've reached the concurrency limits of your plan.
 
-**Understanding Rate Limits**
+## Understanding Rate Limits
 
-Deepgram imposes concurrency limits on API requests to ensure fair resource usage across all users. For PayGo plans, the guaranteed limit is 55 concurrent requests, although Deepgram can allow up to 100 requests based on system load. These limits are crucial for maintaining the performance and reliability of the services for all users.
+Deepgram enforces concurrency limits on API requests to ensure fair resource usage across all users. For Pay as You Go and Growth plans, the standard limit is 100 concurrent requests. These limits help maintain performance and reliability of services for all users.
 
-**Assessing Your Usage**
+## Assessing Your Usage
 
-Monitoring and analyzing your request patterns helps in identifying concurrency peaks over time. Review your API logs to observe the maximum number of concurrent requests on a daily basis. This data can provide valuable insights into whether you are consistently hitting or approaching the rate limits.
+Monitoring and analysing your request patterns helps identify concurrency peaks over time. Review your API logs to observe the maximum number of concurrent requests on a daily basis. This data provides valuable insights into whether you are consistently hitting or approaching the rate limits.
 
-Here's an example log summary:
+Example log summary:
 
 | Date (UTC)       | Max Concurrent Requests |
 |------------------|-------------------------|
@@ -29,24 +32,37 @@ Here's an example log summary:
 | 2024-12-12       | 30                      |
 | 2024-12-13       | 33                      |
 
-**Implementing Rate Limiting Strategies**
+## Implementing Rate Limiting Strategies
 
 To mitigate the risk of hitting concurrency limits and encountering 429 errors, consider implementing a rate limiting strategy or a back-off mechanism in your application:
 
-1. **Back-off Strategy**: Automatically throttle your requests when nearing concurrency limits. This can prevent spikes that may lead to rate limiting.
+1. **Exponential Back-off Strategy**: Automatically throttle your requests when nearing concurrency limits. Increase the delay between retries exponentially to prevent spikes that may lead to rate limiting.
 2. **Rate Limiting Middleware**: Deploy middleware within your application to pace the request sending rate.
 3. **Queue Requests**: Manage request flow by queuing requests and processing based on current system capacity.
 
-**Additional Resources**
+## Error Handling for HTTP 429
 
-For more comprehensive insights on handling rate limits, please refer to [Deepgram's documentation on concurrency and rate limits](https://developers.deepgram.com/docs/working-with-concurrency-rate-limits).
+When you encounter a `429: Too Many Requests` error, it indicates that your project has more concurrent requests than allowed. The full error message typically looks like this:
 
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: https://discord.gg/deepgram.
+```json
+{
+  "err_code": "TOO_MANY_REQUESTS",
+  "err_msg": "Too many requests. Please try again later",
+  "request_id": "uuid"
+}
+```
 
----
+Implementing an exponential back-off strategy as mentioned above can help manage this effectively.
+
+## Additional Resources
+
+For more insights on handling rate limits, refer to [Deepgram's documentation on concurrency and rate limits](/reference/api-rate-limits).
+
+If issues persist or the system behaviour seems inconsistent, reach out for help through our community support: join the [Deepgram Discord community](https://discord.gg/deepgram) or participate in [GitHub Discussions](https://github.com/orgs/deepgram/discussions).
 
 **References**
 
-- [Concurrency and Rate Limits](https://developers.deepgram.com/docs/working-with-concurrency-rate-limits)
+- [Concurrency and Rate Limits](/reference/api-rate-limits)
+- [Error Handling Strategies](/reference/errors#429-rate-limit-exceeded-1)
 
-By understanding and managing your API concurrency usage, you can optimize your application's performance and reduce the likelihood of encountering rate limit issues.
+By understanding and managing your API concurrency usage, you can optimise your application's performance and reduce the likelihood of encountering rate limit issues.

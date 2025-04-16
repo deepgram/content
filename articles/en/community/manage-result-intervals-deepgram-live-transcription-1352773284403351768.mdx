@@ -2,40 +2,64 @@
 title: "Managing Result Intervals in Deepgram Live Transcription"
 description: "How to manage transcription result intervals in Deepgram's live speech-to-text API."
 summary: "This article explains how Deepgram's live transcription API sends finalised transcription results every 3-5 seconds, and provides guidance on managing the output frequency when integrating with other services like language models."
+tags: ["Deepgram", "Live Transcription", "API", "Language Models"]
+categories: ["Transcription", "Integration"]
+last_updated: "2023-10-08"
 ---
 
 <CommunityQuestion>How can I control the frequency at which Deepgram's live transcription service sends final transcription results? I'm integrating it with a language model and need to optimise the output intervals.</CommunityQuestion>
 
-Using Deepgram's live transcription service, users may need to customize the frequency of transcription results and understand how to interpret certain signals to efficiently manage transcription output.
+### Problem Statement
+
+Integrating Deepgram's live transcription service with other technologies, such as language models, requires managing the frequency of transcription results. Users often need to customise result intervals and interpret specific markers to efficiently manage transcription output.
 
 ### Frequency of Final Results in Live Transcription
 
-Deepgram sends transcription results labeled as `is_final=True` every few seconds during live processing. Understanding how to manage these results can help optimize integration, especially when combining transcriptions with other processing stages like language models.
+Deepgram's live transcription service processes audio and returns results approximately every 3-5 seconds as `is_final: true` during live processing. Understanding how to manage these results is crucial for optimising integration, especially alongside other processing stages, like language models.
 
 #### How It Works
 
-- **Result Frequency:** Transcription results are processed and returned approximately every 3-5 seconds. This timeframe is largely determined by the internal mechanism that processes and batches audio data for transcription.
-- **Customization Options:** Currently, Deepgram's API does not allow direct configuration to set a specific interval for receiving `is_final` results, such as extending this to 10 seconds. Users seeking less frequent updates may need to implement a custom solution that buffers and aggregates results on the client-side.
+- **Result Frequency:** By default, transcription results are processed and returned every 3-5 seconds. This interval is determined by Deepgram's internal processing mechanisms.
+- **Configuration Options:** Deepgram currently does not support direct configuration of the result interval. However, users can implement custom client-side buffering solutions to adjust how frequently results are aggregated and processed.
 
 #### Aggregating Results
 
-If users wish to gather results over a longer period before processing them further, such as sending them to a language model, they can use a client-side buffering system. This setup would accumulate interim results into larger batches for processing.
+To gather results over a longer period before sending them to a language model, users can implement a client-side buffering system. This method accumulates interim results into larger batches for processing.
 
-### Interpreting `speech_final`
+### Understanding `is_final` and `speech_final`
 
-The `speech_final` parameter is an essential part of understanding transcriptions:
+Both `is_final` and `speech_final` are important parameters in managing transcription results:
 
-- **Defining End of Utterance:** This parameter indicates the completion of a segment, marking the transcription's finality for the current utterance.
-- **Optimizing Processing:** Relying on `speech_final` ensures that processing, such as sending data to a language model, occurs only when a full and final transcription has been generated, avoiding partial or incomplete interpretation.
+- **`is_final`:** Indicates that Deepgram has finalised the transcript for a segment of audio. It does not imply the end of an utterance.
+- **`speech_final`:** Marks the end of an utterance or a significant pause in speech, signalling that the transcription for that segment is complete.
+
+### Error Handling in Client-Side Buffering
+
+When implementing client-side solutions, it is important to handle potential errors to ensure robust performance. Here is a basic example in JavaScript:
+
+```javascript
+try {
+  const buffer = [];
+  socket.on("transcript-result", (result) => {
+    buffer.push(result);
+    if (buffer.length >= MAX_BUFFER_SIZE) {
+      processBuffer(buffer);
+      buffer.length = 0; // Clear the buffer
+    }
+  });
+} catch (error) {
+  console.error("Error processing transcription results:", error);
+}
+```
 
 ### Conclusion
 
-Understanding and managing the behavior of Deepgram's live transcription results enables users to effectively integrate the transcription service into broader systems, such as those using language models. While some custom handling may be necessary, particularly around buffering results, awareness of parameters like `speech_final` ensures a clearer and more accurate transcription flow.
+Effectively managing the behaviour of Deepgram's live transcription results enables seamless integration with broader systems. While some custom handling may be necessary, particularly around buffering results, understanding parameters like `is_final` and `speech_final` ensures a clearer and more accurate transcription flow.
 
-For further assistance or up-to-date information, always refer to [Deepgram's official documentation](https://developers.deepgram.com/docs/streaming). If system behaviors vary or problems persist, consider reaching out via [Deepgram's community](https://discord.gg/deepgram) for support.
+For further assistance or up-to-date information, refer to the [Deepgram Live API documentation](/reference/listen-live). For community support, visit [Deepgram's Discord](https://discord.gg/deepgram) or [GitHub Discussions](https://github.com/orgs/deepgram/discussions).
 
 #### References
-- [Using Interim Results: is_final](https://developers.deepgram.com/docs/understand-endpointing-interim-results#using-interim-results-is_final
-- [Using Endpointing: speech_final](https://developers.deepgram.com/docs/understand-endpointing-interim-results#using-endpointing-speech_final)
-- [Community Discussions](https://github.com/orgs/deepgram/discussions/1156)
+- [Using Interim Results (`is_final`)](/docs/understand-endpointing-interim-results#using-interim-results-is_final)
+- [Using Endpointing (`speech_final`)](/docs/understand-endpointing-interim-results#using-endpointing-speech_final)
+- [Deepgram Community Discussions](https://github.com/orgs/deepgram/discussions)
 - [Discord Community](https://discord.gg/deepgram)

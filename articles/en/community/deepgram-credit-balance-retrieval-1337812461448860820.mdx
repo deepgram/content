@@ -1,40 +1,64 @@
 ---
 title: "Understanding Deepgram Credit Balance Retrieval Options"
 description: "Learn about Deepgram's API endpoints for retrieving credit balance details."
-summary: "This article explores the different options provided by Deepgram's API to retrieve credit balance information for your projects. It covers the 'Get All Balances' and 'Get Specific Balance' endpoints, explaining their purposes, usage, and relevant documentation links."
+summary: "This article explores the different options provided by Deepgram's API to retrieve credit balance information for your projects. It covers the 'Get All Project Balances' and 'Get a Project Balance' endpoints, explaining their purposes, usage, and relevant documentation links."
+tags:
+  - Deepgram
+  - API
+  - Balance Retrieval
+  - SDK
+categories:
+  - API Usage
+  - Deepgram
+last_updated: 2023-10-10
 ---
 
 <CommunityQuestion>I've been using Deepgram's speech-to-text API for my project, but I'm unsure how to check my current credit balance. Could someone please guide me on the different options available to retrieve this information?</CommunityQuestion>
 
-Deepgram allows users to retrieve their current credit balance through API endpoints specifically designed for this purpose. Understanding how to utilize these endpoints can help in managing and tracking your usage effectively.
+Deepgram allows users to retrieve their current credit balance through API endpoints specifically designed for this purpose. Understanding how to utilise these endpoints can help in managing and tracking your usage effectively.
 
 ## Retrieving Credit Balances
 
 Deepgram provides two main API endpoints to access balance information related to a project:
 
-1. **Get All Balances**:
-   - **Endpoint:** `/v1/balances`
+1. **Get All Project Balances**:
+   - **Endpoint:** `/v1/projects/{project_id}/balances`
    - **Description:** Fetches all balance details related to your project. This is useful to get an overview of all your credits.
-   - **Documentation:** [Deepgram Get All Balances](https://developers.deepgram.com/reference/get-all-balances)
+   - **Documentation:** [Deepgram Get All Balances](/reference/get-all-balances)
 
-2. **Get Specific Balance**:
-   - **Endpoint:** `/v1/balance`
-   - **Description:** Retrieves the balance for a specific project, providing essential details like balance amount, units, and purchase order ID.
-   - **Documentation:** [Deepgram Get Balance](https://developers.deepgram.com/reference/get-balance)
+2. **Get a Project Balance**:
+   - **Endpoint:** `/v1/projects/{project_id}/balances/{balance_id}`
+   - **Description:** Retrieves the balance for a specific balance ID, providing essential details like balance amount, units, and purchase order ID.
+   - **Documentation:** [Deepgram Get Balance](/reference/get-balance)
+
+### Example API Call
+
+To retrieve all balances for a project using cURL, you can use the following command:
+
+```shell
+curl --request GET \
+     --url 'https://api.deepgram.com/v1/projects/YOUR_PROJECT_ID/balances' \
+     --header 'Authorization: Token YOUR_API_KEY' \
+     --header 'accept: application/json'
+```
+
+Replace `YOUR_PROJECT_ID` and `YOUR_API_KEY` with your actual Deepgram project ID and API key.
 
 ### Example Response
 
 Upon querying these endpoints, you might receive a response structured as follows:
 
 ```json
-"balances": [
-    {
-        "balance_id": "12345678910",
-        "amount": 104.56822227,
-        "units": "usd",
-        "purchase_order_id": "12345678910"
-    }
-]
+{
+    "balances": [
+        {
+            "balance_id": "12345678910",
+            "amount": 104.56822227,
+            "units": "usd",
+            "purchase_order_id": "12345678910"
+        }
+    ]
+}
 ```
 
 Each balance entry in the response typically includes:
@@ -43,16 +67,25 @@ Each balance entry in the response typically includes:
 - **units:** The currency unit, such as USD.
 - **purchase_order_id:** A unique identifier for the purchase order linked to the balance.
 
+## Error Handling and Troubleshooting
+
+When retrieving balances, you may encounter the following errors:
+
+- **401 Unauthorized**: Ensure that your API key is correct and has the necessary permissions.
+- **404 Not Found**: Verify that the project ID and balance ID are correct and exist.
+
+Refer to the [Deepgram Errors Documentation](/docs/errors) for more detailed error messages and solutions.
+
 ## Using Deepgram SDKs for Balance Retrieval
 
-While the above endpoints provide HTTP-based access, you can also utilize Deepgram's SDKs to seamlessly integrate balance retrieval into your applications. Deepgram offers SDKs in various languages, which you can find at:
+While the above endpoints provide HTTP-based access, you can also utilise Deepgram's SDKs to seamlessly integrate balance retrieval into your applications. Deepgram offers SDKs in various languages, which you can find at:
 - [JavaScript/TypeScript SDK](https://github.com/deepgram/deepgram-js-sdk)
 - [Python SDK](https://github.com/deepgram/deepgram-python-sdk)
 - [Go SDK](https://github.com/deepgram/deepgram-go-sdk)
 - [.NET SDK](https://github.com/deepgram/deepgram-dotnet-sdk)
 - [Rust SDK](https://github.com/deepgram/deepgram-rust-sdk)
 
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Discord](https://discord.gg/deepgram)
+If issues persist or the system behaviour seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Discord](https://discord.gg/deepgram)
 
 ## Conclusion
 
@@ -60,6 +93,7 @@ Understanding these API endpoints and SDK integrations can greatly enhance your 
 
 ## References
 
-- [Deepgram Get All Balances API](https://developers.deepgram.com/reference/get-all-balances)
-- [Deepgram Get Balance API](https://developers.deepgram.com/reference/get-balance)
+- [Deepgram Get All Balances API](/reference/get-all-balances)
+- [Deepgram Get Balance API](/reference/get-balance)
+- [Deepgram Errors Documentation](/docs/errors)
 - [Deepgram Community Discord](https://discord.gg/deepgram)

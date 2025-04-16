@@ -2,11 +2,16 @@
 title: "Understanding Alternatives in Deepgram's API"
 description: "Learn how to retrieve multiple transcription alternatives from Deepgram's speech-to-text API."
 summary: "This article explains how to use Deepgram's 'alternatives' parameter to receive multiple potential transcriptions for the same audio segment, allowing for better handling of accents, background noise, or other factors that can impact speech recognition accuracy."
+tags: ["Deepgram API", "Speech Recognition", "Alternatives", "Transcription"]
+categories: ["Transcription", "Deepgram"]
+last_updated: 2023-10-01
 ---
 
 <CommunityQuestion>I'm developing a speech recognition application and need to provide multiple transcription options to account for different accents or audio quality issues. How can I retrieve alternative transcriptions from Deepgram's API?</CommunityQuestion>
 
-When transcribing audio with Deepgram, you may want to receive multiple possible interpretations of the same speech. The `alternatives` parameter allows you to receive multiple transcription options, helping you choose the most appropriate one based on your specific context or implement confidence-based decision making.
+## Problem Statement
+
+When developing a speech recognition application, there is a need to handle variability in accents and audio quality. Multiple transcription alternatives can provide a solution by offering different interpretations of the same audio segment.
 
 ## What Are Alternatives?
 
@@ -14,28 +19,30 @@ Alternatives are different possible transcriptions of the same audio segment. Ea
 
 ## Model Support for Alternatives
 
-The availability of alternatives varies by model:
+The availability of alternatives varies by model. It's crucial to verify the current Deepgram API specifications as model support may change.
 
-| Model | Alternatives Support |
-|-------|---------------------|
-| Nova-3 | Not supported |
-| Nova-2 | Not supported |
-| Nova | Supported |
-| Enhanced | Supported |
-| Base | Supported |
-
-As Deepgram continues to evolve its models, support for alternatives is generally being phased out in favor of other approaches for managing uncertainty in transcription.
+| Model  | Alternatives Support |
+|--------|----------------------|
+| Nova-3 | Supported            |
+| Nova-2 | Supported            |
+| Nova   | Supported            |
+| Enhanced | Supported          |
+| Base   | Supported            |
 
 ## Using the Alternatives Parameter
 
 For supported models, you can request alternatives by adding the `alternatives` parameter to your API request. The value should be an integer indicating how many alternative transcriptions you want to receive:
 
-```bash
+```shell
 curl --request POST \
-  --url 'https://api.deepgram.com/v1/listen?alternatives=2&model=nova' \
-  --header 'Authorization: Token YOUR_DEEPGRAM_API_KEY' \
+  --url 'https://api.deepgram.com/v1/listen' \
+  --header 'Authorization: Token YOUR_API_KEY' \
   --header 'Content-Type: audio/wav' \
-  --data-binary '@youraudio.wav'
+  --data-binary '@youraudio.wav' \
+  --data '{
+      "model": "nova",
+      "alternatives": 2
+  }'
 ```
 
 ## Understanding the Response
@@ -67,36 +74,41 @@ When using alternatives, the API response will include multiple entries in the `
 
 ## Current Best Practices
 
-Since alternatives are not supported in the newest models (Nova-2 and Nova-3), consider these current best practices:
+Since alternatives are supported in newer models like Nova-3, consider these current best practices:
 
-1. **Use Word-Level Confidence**: Both Nova-2 and Nova-3 provide detailed confidence scores for each word, which can be more useful than alternatives for many applications.
+1. **Use Keyterm Prompting**: Nova-3 supports keyterm prompting, which can enhance transcription accuracy by focusing on specific terms.
 
-2. **Consider Search Feature**: If you're looking for specific phrases or terms, the [search feature](https://developers.deepgram.com/docs/search) might be more appropriate.
+2. **Word-Level Confidence**: Utilise word-level confidence scores to assess transcription quality and make informed decisions.
 
-3. **Model Selection Trade-offs**: If alternatives are critical for your use case, you may need to use the Nova model instead of Nova-2 or Nova-3. Consider the trade-offs in accuracy and features.
+3. **Error Handling**: Implement robust error handling in your applications to manage transcription uncertainties effectively.
 
 ## Code Example: Working with Word-Level Confidence
 
 ```javascript
 // Process results focusing on word-level confidence
 function processTranscription(result) {
-  const words = result.results.channels[0].alternatives[0].words;
-  
-  // Find low-confidence words
-  const uncertainWords = words.filter(word => word.confidence < 0.75);
-  
-  // Log uncertain words for further review
-  if (uncertainWords.length > 0) {
-    console.log("Words with low confidence:", uncertainWords);
+  try {
+    const words = result.results.channels[0].alternatives[0].words;
+    
+    // Find low-confidence words
+    const uncertainWords = words.filter(word => word.confidence < 0.75);
+    
+    // Log uncertain words for further review
+    if (uncertainWords.length > 0) {
+      console.log("Words with low confidence:", uncertainWords);
+    }
+    
+    return result.results.channels[0].alternatives[0].transcript;
+  } catch (error) {
+    console.error("Error processing transcription:", error);
   }
-  
-  return result.results.channels[0].alternatives[0].transcript;
 }
 ```
 
 ## References
 
-- [Deepgram API Reference](https://developers.deepgram.com/api-reference/)
-- [Deepgram Models Overview](https://developers.deepgram.com/docs/models-languages-overview)
+- [Deepgram API Reference](/api-reference/)
+- [Deepgram Models Overview](/docs/models-languages-overview)
+- [Keyterm Prompting Documentation](/docs/keyterm-prompting)
 
 For specific questions about alternatives or help with transcription confidence, join our [Discord community](https://discord.gg/deepgram).

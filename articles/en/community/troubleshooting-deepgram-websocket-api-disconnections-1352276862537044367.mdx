@@ -1,7 +1,10 @@
 ---
 title: "Troubleshooting Deepgram WebSocket API Disconnections"
-description: "Troubleshoot Deepgram WebSocket API disconnections with common error codes and solutions."
-summary: "This guide covers common disconnection issues with Deepgram's WebSocket API for live audio streaming and transcription. It explains error codes, root causes, and steps to resolve problems like no audio data being received or payload decoding failures."
+description: "Understand and resolve common WebSocket disconnection issues with Deepgram's API for live audio streaming and transcription."
+summary: "This guide covers common disconnection issues with Deepgram's WebSocket API, detailing error codes, root causes, and steps to solve problems like no audio data being received or payload decoding failures."
+tags: [WebSocket, Deepgram API, Troubleshooting, Audio Streaming]
+categories: [Technical Guides, Deepgram Usage]
+last_updated: 2023-10-15
 ---
 
 <CommunityQuestion>I've been having trouble with my Deepgram WebSocket connection dropping unexpectedly. What might be causing this, and how can I resolve the issue?</CommunityQuestion>
@@ -27,15 +30,15 @@ This is the most common disconnection error, triggered when Deepgram doesn't rec
 #### Solutions:
 
 1. **Send Audio Promptly**: 
-   - Begin sending audio data immediately after establishing the WebSocket connection
-   - Don't wait longer than 10 seconds before sending your first audio packet
+   - Begin sending audio data immediately after establishing the WebSocket connection.
+   - Don't wait longer than 10 seconds before sending your first audio packet.
 
 2. **Implement KeepAlive Messages**:
    - Send KeepAlive messages when there's no audio to transmit:
    ```json
    { "type": "KeepAlive" }
    ```
-   - Note: KeepAlive alone won't prevent disconnection - you must send some audio data first
+   - Note: KeepAlive alone won't prevent disconnection—you must send some audio data first.
 
 3. **Avoid Empty Audio Packets**:
    - Check audio packet size before sending:
@@ -51,7 +54,7 @@ This is the most common disconnection error, triggered when Deepgram doesn't rec
    ```json
    { "type": "CloseStream" }
    ```
-   - Don't send empty binary data (`Uint8Array(0)` or `b''`) as this is deprecated
+   - Avoid sending empty binary data (`Uint8Array(0)` or `b''`) as this is deprecated.
 
 ### For 1008 DATA-0000 (Invalid Audio Data)
 
@@ -60,15 +63,15 @@ This error occurs when Deepgram can't decode the audio data you're sending.
 #### Solutions:
 
 1. **Verify Audio Format**:
-   - Ensure you're sending raw audio data (not containerized files like MP3 or WAV)
+   - Ensure you're sending raw audio data (not containerised files like MP3 or WAV).
    - Specify the correct encoding and sample rate in your connection parameters:
    ```
    wss://api.deepgram.com/v1/listen?encoding=linear16&sample_rate=16000
    ```
 
 2. **Validate Audio Data**:
-   - Test your audio capture process by saving the same data to a file to verify it's valid
-   - Check that audio buffers aren't corrupted during transmission
+   - Test your audio capture process by saving the same data to a file to verify it's valid.
+   - Check that audio buffers aren't corrupted during transmission.
 
 ## Implementation Example: Maintaining a Robust Connection
 
@@ -81,7 +84,7 @@ ws.binaryType = 'arraybuffer';
 ws.onopen = () => {
   ws.send(JSON.stringify({
     type: 'Authorization',
-    token: 'YOUR_DEEPGRAM_API_KEY'
+    token: 'YOUR_API_KEY'
   }));
   
   // Start sending audio immediately
@@ -116,8 +119,14 @@ ws.onclose = (event) => {
 
 ## Additional Resources
 
-- [Deepgram WebSocket Errors Documentation](https://developers.deepgram.com/docs/troubleshooting-websocket-data-and-net-errors-when-live-streaming-audio)
-- [Using KeepAlive Messages](https://developers.deepgram.com/docs/keep-alive)
-- [Live Streaming Starter Kit](https://github.com/deepgram/streaming-test-suite)
+- [Troubleshooting WebSocket Data and NET Errors When Live Streaming Audio](/docs/troubleshooting-websocket-data-and-net-errors-when-live-streaming-audio)
+- [Using KeepAlive Messages](/docs/audio-keep-alive)
+- [Live Streaming Starter Kit on GitHub](https://github.com/deepgram/streaming-test-suite)
 
 If issues persist, join our [Discord community](https://discord.gg/deepgram) for additional assistance.
+
+## References
+
+- [Deepgram API Documentation](https://developers.deepgram.com/docs)
+- [WebSockets Protocol Specification](https://tools.ietf.org/html/rfc6455)
+- [Using KeepAlive with Deepgram](/docs/keep-alive)

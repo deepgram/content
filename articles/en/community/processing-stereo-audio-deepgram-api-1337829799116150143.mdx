@@ -2,11 +2,16 @@
 title: "Processing Stereo Audio with Two Channels using Deepgram API"
 description: "Guide on handling stereo audio with Deepgram's speech-to-text API for macOS."
 summary: "This technical guide explains how to process stereo audio containing system audio and microphone input using Deepgram's speech recognition API. It covers combining the two channels into a stereo buffer and formatting the audio data correctly for the API."
+tags: ["Deepgram API", "Stereo Audio", "macOS", "Audio Processing"]
+categories: ["Audio", "Deepgram"]
+last_updated: 2023-10-10
 ---
 
 <CommunityQuestion>I'm working on an app that needs to record system audio and microphone input separately. How can I process this stereo audio with the Deepgram API to get accurate transcriptions for both channels?</CommunityQuestion>
 
-When integrating stereo audio with separate channels (e.g., system audio and microphone input) into the Deepgram API, it's important to ensure that each channel remains distinct in the transcription. This guide describes a method to handle stereo audio input for macOS users, including system audio and microphone, by ensuring proper API usage and formatting.
+## Problem Statement
+
+To achieve accurate transcriptions using the Deepgram API for stereo audio inputs, it is crucial to separate and process the audio channels independently. This article provides a comprehensive guide on handling stereo audio input on macOS, including system audio and microphone, ensuring the correct use of API features and audio formatting.
 
 ## Understanding the Audio Input and Processing
 
@@ -26,7 +31,7 @@ let format = AVAudioFormat(commonFormat: .pcmFormatFloat32,
                           interleaved: false)!
 guard let stereoBuffer = AVAudioPCMBuffer(pcmFormat: format,
                                          frameCapacity: AVAudioFrameCount(chunkSize)) else {
-    return
+    fatalError("Failed to create stereo buffer")
 }
 ```
 
@@ -40,8 +45,7 @@ guard let targetFormat = AVAudioFormat(
     channels: 2,
     interleaved: true
 ) else {
-    print("Failed to create target format")
-    return nil
+    fatalError("Failed to create target format")
 }
 
 // Use AVAudioConverter for high-quality resampling
@@ -52,8 +56,7 @@ let status = converter.convert(to: targetBuffer, error: &error) {
 }
 
 if status != .haveData || error != nil {
-    print("Audio conversion failed with status: \(status) and error: \(String(describing: error))")
-    return nil
+    fatalError("Audio conversion failed with status: \(status) and error: \(String(describing: error))")
 }
 ```
 
@@ -62,7 +65,7 @@ Ensure that the audio data is formatted correctly before sending it to the API. 
 
 ```json
 {
-  "model": "nova",
+  "model": "nova 3",
   "encoding": "linear16",
   "sample_rate": 16000,
   "channels": 2,
@@ -70,7 +73,7 @@ Ensure that the audio data is formatted correctly before sending it to the API. 
 }
 ```
 
-- **model**: Use "nova" for best results with stereo audio
+- **model**: Use "nova 3" for best results with stereo audio
 - **encoding**: Set to "linear16" for 16-bit PCM
 - **sample_rate**: Set to 16000 for optimal performance
 - **channels**: Set to 2 for stereo input
@@ -114,9 +117,9 @@ If the transcription results merge the input from both channels, check the follo
 
 ## Reach Out for Support
 
-If issues persist or the system behavior seems inconsistent, reach out to our community for assistance: [Deepgram Community](https://discord.gg/deepgram)
+If issues persist or the system behaviour seems inconsistent, reach out to our community for assistance: [Deepgram Community](https://discord.gg/deepgram)
 
 ## References
 - [AVAudioPCMBuffer Documentation](https://developer.apple.com/documentation/avfaudio/avaudiopcmbuffer)
-- [Deepgram API Documentation](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
-- [Deepgram Multichannel Audio Guide](https://developers.deepgram.com/docs/multichannel-audio)
+- [Deepgram API Documentation](/docs/getting-started-with-live-streaming-audio)
+- [Deepgram Multichannel Audio Guide](/docs/multichannel-audio)

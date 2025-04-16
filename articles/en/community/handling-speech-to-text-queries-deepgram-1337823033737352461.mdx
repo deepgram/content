@@ -2,55 +2,92 @@
 title: "Handling Speech-to-Text Queries in Deepgram"
 description: "Guide on using Deepgram's speech-to-text API for transcribing pre-recorded and live audio."
 summary: "This technical article provides an overview of Deepgram's speech-to-text API and demonstrates how to effectively utilise its capabilities for transcribing pre-recorded audio files and live audio streams, covering the relevant API endpoints and developer resources."
+tags: ["Deepgram", "Speech-to-Text", "API", "Pre-recorded Audio", "Live Streaming"]
+categories: ["Integration", "Troubleshooting"]
+last_updated: "2023-10-05"
 ---
 
 <CommunityQuestion>I'm building a voice assistant app and need to transcribe audio recordings of user queries. What's the best way to integrate Deepgram's speech-to-text API for handling pre-recorded audio files?</CommunityQuestion>
 
-Deepgram offers powerful speech-to-text capabilities, accessible through our various API endpoints and SDKs. Ensuring effective use of these resources can speed up handling of queries related to speech-to-text transcription, live streaming, and text analysis. This guide illustrates standard practices when working with our systems.
+## Problem Statement
+
+To effectively transcribe audio recordings in your voice assistant app, integrating Deepgram's speech-to-text API is essential. This guide will provide you with best practices, tested code examples, and error handling techniques to ensure a smooth integration process.
 
 ## Using Deepgram's Speech-to-Text API
 
 ### Overview of the API
 
-Deepgram's speech-to-text service is accessed through its API endpoint for pre-recorded audio: `https://api.deepgram.com/v1/listen`. You can find a detailed guide to getting started with transcription on our [developers' website](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio).
+Deepgram's speech-to-text service can be accessed through its API endpoints for both pre-recorded and live audio. For pre-recorded audio, use the following endpoint:
 
-For live audio streaming, the API endpoint is `wss://api.deepgram.com/v1/listen`. Visit the [live streaming audio documentation](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio) for comprehensive instructions on using this feature.
+```shell
+https://api.deepgram.com/v1/listen
+```
 
-### Common Libraries and Tools
+For live audio streaming, use:
 
-Several SDKs make integrating Deepgram into your projects more straightforward. See the respective GitHub repositories for setup instructions and example usage:
+```shell
+wss://api.deepgram.com/v1/listen
+```
 
-- [JavaScript/TypeScript SDK](https://github.com/deepgram/deepgram-js-sdk)
-- [Python SDK](https://github.com/deepgram/deepgram-python-sdk)
-- [Go SDK](https://github.com/deepgram/deepgram-go-sdk)
-- [.NET SDK](https://github.com/deepgram/deepgram-dotnet-sdk)
-- [Rust SDK](https://github.com/deepgram/deepgram-rust-sdk)
+Visit the [Pre-Recorded Audio Documentation](/docs/pre-recorded-audio) and [Live Streaming Audio Documentation](/docs/live-streaming-audio) for detailed instructions on using these features.
+
+### Integrating with Pre-Recorded Audio
+
+Here is a basic example using cURL to transcribe a pre-recorded audio file:
+
+```shell
+curl \
+  --request POST \
+  --header "Authorization: Token YOUR_API_KEY" \
+  --header "Content-Type: application/json" \
+  --data '{"url":"https://dpgr.am/spacewalk.wav"}' \
+  --url "https://api.deepgram.com/v1/listen?model=nova-3&smart_format=true"
+```
+
+Ensure you replace `'YOUR_API_KEY'` with your actual Deepgram API key.
+
+### Error Handling Example
+
+When using the API, handle errors to ensure robust application behaviour. Here's an example in Python that includes error handling:
+
+```python
+import os
+from deepgram import Deepgram
+
+DEEPGRAM_API_KEY = 'YOUR_API_KEY'
+AUDIO_URL = 'https://dpgr.am/spacewalk.wav'
+
+deepgram = Deepgram(DEEPGRAM_API_KEY)
+
+try:
+    response = deepgram.transcription.pre_recorded(
+        audio_url=AUDIO_URL,
+        options={'model': 'nova-3', 'smart_format': True}
+    )
+    print(response)
+except Exception as e:
+    print(f"An error occurred: {e}")
+```
+
+### Alternative Features
+
+Consider using advanced features like keyterm prompting with Nova 3 to enhance transcription accuracy. Keyterm prompting allows you to specify key phrases that you expect to appear in the audio, which can improve recognition accuracy.
 
 ## Best Practices for Handling Requests
 
-### Debugging and Problem-solving
-
-When issues arise, check for common problems such as incorrect API keys, mismatched endpoint usage, or incorrect configuration settings.
-
-If problems persist, gather details including error messages and request IDs. This information will be crucial if you need to escalate the issue for more support.
-
-### Source Control and Collaboration
-
-If you're touching on open-source projects or public platforms like GitHub Discussions, ensure your contributions are clear and well-documented. Providing links to relevant documentation and keeping the conversation focused can enhance collaboration.
-
-### Support
-
-If issues persist or the system behavior seems inconsistent, reach out to your Deepgram support representative (if you have one) or visit our community for assistance: [Deepgram Community Discord](https://discord.gg/deepgram).
+- Always verify your API keys and endpoint configurations.
+- Use relative links for internal documentation references.
+- Leverage Deepgram's community resources like [Discord](https://discord.gg/deepgram) and [GitHub Discussions](https://github.com/deepgram/deepgram-js-sdk/discussions) for support and collaboration.
 
 ## Conclusion
 
-Deepgram provides a comprehensive suite of APIs and SDKs to facilitate seamless speech-to-text integration. Utilize our detailed documentation and community tools to optimize your workflow and tackle any issues efficiently.
+Deepgram's comprehensive suite of APIs and SDKs facilitate seamless integration of speech-to-text capabilities in your applications. By following best practices and utilising community resources, you can optimise your workflow and efficiently resolve any issues.
 
-## Resources
+## References
 
-- [Deepgram API Documentation](https://developers.deepgram.com/docs/getting-started-with-pre-recorded-audio)
-- [Live Streaming Documentation](https://developers.deepgram.com/docs/getting-started-with-live-streaming-audio)
-- [JavaScript SDK on GitHub](https://github.com/deepgram/deepgram-js-sdk)
-- [Python SDK on GitHub](https://github.com/deepgram/deepgram-python-sdk)
-- [Go SDK on GitHub](https://github.com/deepgram/deepgram-go-sdk)
-- [Deepgram Discord Community](https://discord.gg/deepgram)
+- [Pre-Recorded Audio Documentation](/docs/pre-recorded-audio)
+- [Live Streaming Audio Documentation](/docs/live-streaming-audio)
+- [Features Overview](/docs/features-overview)
+- [API Specifications](/docs/api-specifications)
+- [Deepgram API Documentation](/docs/getting-started-with-pre-recorded-audio)
+- [Deepgram Community Discord](https://discord.gg/deepgram)

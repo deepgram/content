@@ -1,7 +1,10 @@
 ---
 title: "Troubleshooting WebSocket Connection Errors in Deepgram Python SDK"
-description: "Troubleshooting guide for resolving WebSocket connection errors with Deepgram's Python SDK."
-summary: "This article explains the potential causes of WebSocket connection errors when using Deepgram's Python SDK for live transcription, and provides step-by-step instructions for troubleshooting and resolving the issue, such as updating the SDK and verifying the API key."
+description: "Detailed guide to resolve WebSocket connection errors using Deepgram's Python SDK for live transcription."
+summary: "This article provides solutions for WebSocket connection errors in the Deepgram Python SDK, including SDK updates, API key verification, and network configuration checks."
+tags: ["Deepgram", "WebSocket", "Python SDK", "Troubleshooting"]
+categories: ["SDK", "Errors", "Guides"]
+last_updated: "2023-10-13"
 ---
 
 <CommunityQuestion>I'm getting a WebSocket connection error when trying to use the Deepgram Python SDK for live transcription. What could be causing this, and how can I fix it?</CommunityQuestion>
@@ -15,7 +18,7 @@ A WebSocket connection error usually indicates issues with the request sent from
 ## Steps to Resolve
 
 1. **Update the SDK:**
-   - Ensure you are using the latest version of the Python SDK. Deepgram's SDK versions update frequently, fixing bugs and improving functionality. Upgrading to the latest version can resolve compatibility issues. 
+   - Ensure you are using the latest version of the Python SDK. Deepgram's SDK versions update frequently, fixing bugs and improving functionality. Upgrading to the latest version can resolve compatibility issues.
    - You can update the SDK by using the package manager:
      ```bash
      pip install deepgram-sdk --upgrade
@@ -33,6 +36,30 @@ A WebSocket connection error usually indicates issues with the request sent from
 5. **Network Issues:**
    - Ensure your network configurations allow WebSocket connections and that no firewall settings are blocking the connection.
 
+## Error Handling Example
+
+Here's a simple error handling implementation using the Python SDK:
+
+```python
+import websockets
+import json
+import asyncio
+
+async def main():
+    try:
+        async with websockets.connect(
+            'wss://api.deepgram.com/v1/listen',
+            extra_headers={'Authorization': 'Token YOUR_API_KEY'}
+        ) as ws:
+            # Send audio data or handle connection
+            pass
+    except websockets.exceptions.InvalidStatusCode as e:
+        print(f"Error: Could not connect to Deepgram! {e.headers.get('dg-error')}")
+        print(f"Request ID: {e.headers.get('dg-request-id')}")
+
+asyncio.run(main())
+```
+
 ## Additional Support
 
 - [Deepgram Python SDK](https://github.com/deepgram/deepgram-python-sdk)
@@ -43,3 +70,8 @@ For further assistance, our community is available on Discord and GitHub Discuss
 ## Conclusion
 
 By following the steps above, users can methodically resolve WebSocket connection issues when using the Deepgram Python SDK for live transcription. Keeping your SDK up to date and verifying connection settings are critical steps in ensuring smooth operation.
+
+## References
+
+- [WebSocket Errors and Troubleshooting](../../docs/troubleshooting-websocket-data-and-net-errors-when-live-streaming-audio)
+- [Deepgram API Documentation](../../reference)

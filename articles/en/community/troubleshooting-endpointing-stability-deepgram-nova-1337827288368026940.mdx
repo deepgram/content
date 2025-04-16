@@ -1,41 +1,54 @@
 ---
 title: "Troubleshooting Endpointing and Stability Issues in Deepgram Nova Transcription Models"
-description: "Troubleshoot endpointing and stability issues with Deepgram's nova speech-to-text models."
-summary: "This technical article provides troubleshooting steps and configuration recommendations for developers experiencing erratic endpointing behavior or instability when using Deepgram's nova transcription models, especially in scenarios involving multilingual audio or live transcription via websockets."
+description: "Troubleshoot endpointing and stability issues with Deepgram's Nova speech-to-text models, with practical configuration recommendations."
+summary: "This technical article provides troubleshooting steps and configuration recommendations for developers experiencing erratic endpointing behavior or instability when using Deepgram's Nova transcription models, especially in scenarios involving multilingual audio or live transcription via websockets."
+tags: [Deepgram, Nova, Endpointing, Multilingual, Troubleshooting]
+categories: [Technical, Speech-to-Text, Configuration]
+last_updated: 2023-10-05
 ---
 
-<CommunityQuestion>I've been encountering recurring issues with unstable endpointing when using Deepgram's nova transcription models for live multilingual transcription. The system seems to repeat non-final responses and fails to properly mark utterance endings. Is there any guidance on resolving these types of endpointing and stability problems?</CommunityQuestion>
+<CommunityQuestion>I've been encountering recurring issues with unstable endpointing when using Deepgram's Nova transcription models for live multilingual transcription. The system seems to repeat non-final responses and fails to properly mark utterance endings. Is there any guidance on resolving these types of endpointing and stability problems?</CommunityQuestion>
 
-In some scenarios, users may experience erratic endpointing behavior and instability when using Deepgram's nova transcription models, especially with multilingual audio settings or specific configurations in live transcription via websockets. 
+## Problem Statement
+
+In some scenarios, users may experience erratic endpointing behaviour and instability when using Deepgram's Nova transcription models, especially with multilingual audio settings or specific configurations in live transcription via websockets.
 
 Multilingual transcription, while powerful, can introduce complexity and issues with endpointing—when the system identifies the end of a sentence or utterance. Unstable endpointing can lead to repeated non-final responses or lack of utterance end markers, disrupting the flow of a transcription service or application.
 
 ## Common Issues and Configuration Recommendations
 
 ### Erratic Endpointing
-Some users may notice intermittent errors in endpointing where transcriptions continue without finalizing (`is_final: false`), potentially repeating transcriptions multiple times with false non-final indicators.
+
+Some users may notice intermittent errors in endpointing where transcriptions continue without finalising (`is_final: false`), potentially repeating transcriptions multiple times with false non-final indicators.
 
 #### Configuration Parameters:
-- **Model Version:** Switching model versions (`nova-2`, `nova-3`, `nova-2-conversationalai`) may help, as each version may handle language settings differently.
+
+- **Model Version:** Use the latest `Nova-3` model for improved performance and feature support.
 - **Language Settings:** Using `language=es` instead of `language=multi`, if applicable to your audience, can sometimes rectify these issues.
-- **Endpointing and Interim Results:** Adjusting `endpointing` and `utterance_end_ms` parameters can stabilize outputs. 
-    - Default value changes may be beneficial when switching from `nova-2` to newer models. Consider starting with `endpointing=300` and `utterance_end_ms=1200` as a baseline.
+- **Endpointing and Interim Results:** Adjusting `endpointing` and `utterance_end_ms` parameters can stabilise outputs.
+    - Consider starting with `endpointing=300` and `utterance_end_ms=1200` as a baseline.
 
 ### Streaming Instability
+
 Some users may experience rare instances where the stream fails to respond or becomes unstable. This could be due to complex audio inputs or server-side anomalies.
 
 #### Actions to Consider:
-- **API Request Monitoring:** Check for response codes or lack of metadata packets which might indicate failures.
+
+- **API Request Monitoring:** Check for response codes or lack of metadata packets which might indicate failures. Specific error codes like `1011` - `NET-0001` should be monitored.
 - **Review API Configurations:** Ensure that complex settings like `diarize` or multiple keywords aren't conflicting with the model's capabilities or limitations.
 
 ### Recommendations
+
 - **Troubleshoot with Different Endpoint Values:** Trial and error with endpoint and utterance parameters could uncover specific values that offer stability in your scenario.
 - **Engage with Deepgram Support:** Persistent or unexplained issues should be brought to support representatives or via our community channels for more tailored assistance. You can reach us at our [Discord community](https://discord.gg/deepgram).
 
 ## Conclusion
+
 Users may encounter unique challenges when configuring Deepgram's transcription models to handle diverse and multilingual audio streams. Adjusting API parameters, keeping track of model versions, and seeking support can provide pathways to resolving complex endpointing and stability issues.
 
 ## References
-- [Deepgram Multilingual Code Switching Documentation](https://developers.deepgram.com/docs/multilingual-code-switching#streaming-audio)
-- [Deepgram Endpointing and Interim Results Documentation](https://developers.deepgram.com/docs/understand-endpointing-interim-results)
+
+- [Deepgram Multilingual Code Switching Documentation](/docs/multilingual-code-switching#streaming-audio)
+- [Understanding Endpointing and Interim Results](/docs/understand-endpointing-interim-results)
 - [Join Our Deepgram Community on Discord](https://discord.gg/deepgram)
+- [Deepgram API Overview](/reference/deepgram-api-overview)

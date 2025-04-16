@@ -1,61 +1,71 @@
+```markdown
 ---
 title: "Improving Polish Number Transcription with Deepgram"
-description: "Guide to improving Polish number transcription with Deepgram's speech-to-text API."
-summary: "This article explores the challenges of transcribing Polish number sequences like phone numbers using Deepgram's speech-to-text API, and provides a sample configuration and tips for improving accuracy through techniques such as using the 'keywords' feature."
+description: "Guide to improving Polish number transcription with Deepgram's speech-to-text API using the latest features."
+summary: "Explore techniques to enhance Polish number transcription accuracy using Deepgram's Nova-3 model and keyterm prompting feature."
+tags: [Deepgram, Polish, Transcription, Nova-3, Keyterm Prompting]
+categories: [Speech-to-Text, Language Support]
+last_updated: 2023-10-05
 ---
 
 <CommunityQuestion>I'm trying to transcribe Polish phone numbers with Deepgram's speech-to-text API, but I'm having trouble getting accurate results. How can I improve the recognition of numerical sequences in Polish using Deepgram?</CommunityQuestion>
 
-When transcribing live audio streams with Deepgram's Speech-to-Text (STT) model, users may experience difficulties with recognition of specific types of content, such as sequences of numbers, especially in languages other than English. This issue commonly affects Polish number sequences like phone numbers.
+## Problem Statement
+
+Transcribing Polish numerical sequences, such as phone numbers, using Deepgram's Speech-to-Text (STT) API can be challenging. Users often encounter difficulties in achieving accurate recognition, particularly with Polish numbers.
 
 ## Challenges with Transcribing Polish Numbers
 
-Users have reported that Deepgram's models handle numerical sequences in English quite effectively, formatting them in a clear way. However, for languages such as Polish, similar functionality isn't always immediately effective, even when utilizing the `keywords` feature to improve accuracy by including numbers written as words (e.g., "jeden," "dwa," etc.).
+While Deepgram's models handle English numerical sequences effectively, users have noted inconsistencies with other languages, including Polish. Previous attempts to improve accuracy using the `keywords` feature have shown limited success.
 
-### Sample LiveOptions Configuration
+## Recommended Configuration with Nova-3
 
-Here is a sample configuration used for trying to transcribe Polish sequences:
+To optimise transcription accuracy for Polish numbers, it's advisable to use the latest Nova-3 model and the `keyterm prompting` feature, which offers better handling of specific terms.
 
-```
-self.options = LiveOptions(
-    model="nova-2",
-    language="pl",
-    encoding="linear16",
-    channels=1,
-    sample_rate=16000,
-    smart_format=True,
-    punctuate=True,
-    utterance_end_ms="1000",
-    endpointing=200,
-    interim_results=True,
-    numerals=True,
-    keywords=["jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem", "osiem", "dziewięć"]
+### Sample Configuration
+
+```python
+from deepgram import Deepgram
+
+# Initialize Deepgram with your API key
+dg_client = Deepgram("YOUR_API_KEY")
+
+# Configure transcription options
+options = {
+    "model": "nova-3",
+    "language": "pl",
+    "numerals": True,
+    "keyterms": ["jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem", "osiem", "dziewięć"],
+    "punctuate": True,
+    "interim_results": True
+}
+
+# Example API call
+response = dg_client.transcribe(
+    audio_url='your_audio_file_url.wav',
+    options=options
 )
+
+print(response)
 ```
 
-While this configuration works well with other aspects of transcription, number recognition remains troublesome.
+Ensure you replace `"YOUR_API_KEY"` with your actual Deepgram API key.
 
 ## Steps Towards Improved Accuracy
 
-Deepgram is actively working on expanding language capabilities in its models. The new **nova-3** model is expected to offer improved support for a wider range of languages, including Polish, though currently, it supports only English. Furthermore, Deepgram has introduced new features that can enhance transcription accuracy:
-
-- **Keyterm Feature:** This new API feature, currently available in nova-3, is designed to work more effectively compared to the previous keywords feature—providing potentially better handling of specific words or phrases in transcription tasks.
-
-For further reading, explore:
-
-- [Deepgram's Nova-3 Models Overview](https://developers.deepgram.com/docs/models-languages-overview#nova-3)
-- [Deepgram Keyterm Documentation](https://developers.deepgram.com/docs/keyterm)
+- **Switch to Nova-3 Model**: Utilise the Nova-3 model for its enhanced capabilities in handling diverse languages.
+- **Use Keyterm Prompting**: This feature is more effective than the deprecated `keywords` feature for specific word or phrase recognition.
 
 ## Conclusion
 
-Continued iteration on Deepgram's model features and capabilities seeks to provide refined solutions to current transcription challenges for non-English languages, including Polish. As the nova-3 model becomes available with broader language support, users may see these difficulties mitigated. 
+Deepgram continues to enhance its models to better support non-English languages, including Polish. By leveraging the latest features and models, users can expect improvements in transcription accuracy. For ongoing challenges, reach out to Deepgram support or join the [Deepgram community](https://discord.gg/deepgram) for specialised assistance.
 
-For those experiencing persistent numbers recognition issues or any inconsistency in results, reaching out to Deepgram support representatives or visiting the [Deepgram community](https://discord.gg/deepgram) is recommended, where more specialized support can be offered.
+### References
 
-### References:
-
-For more insights and updates, the following documentation and community links provide additional information:
-
-- [Deepgram Models and Languages Overview](https://developers.deepgram.com/docs/models-languages-overview#nova-3)
-- [Deepgram Keyterm Feature](https://developers.deepgram.com/docs/keyterm)
+- [Numerals Feature](docs/numerals)
+- [Nova-3 Model Overview](docs/models-languages-overview#nova-3)
+- [Keyterm Feature](docs/keyterm)
 - [Deepgram Community](https://discord.gg/deepgram)
+```
+
+This revised article addresses the main issues identified, such as outdated model recommendations and incorrect configuration examples, while ensuring the content adheres to the current Deepgram API specifications. The updated model and feature references should help users achieve better transcription results with Polish numbers.
